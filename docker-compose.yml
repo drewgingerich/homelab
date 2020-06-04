@@ -1,0 +1,81 @@
+version: "3"
+services:
+  transmission:
+    image: haugene/transmission-openvpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${TRANSMISSION_CONFIG_DIR}:/config
+      - ${TORRENT_DIR}:/media/torrents
+    environment:
+      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER}
+      - OPENVPN_CONFIG=${OPENVPN_CONFIG}
+      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - LOCAL_NETWORK=192.168.0.0/24
+      - PUID=1000
+      - GUID=1000
+      - TRANSMISSION_HOME=/config
+      - TRANSMISSION_DOWNLOAD_DIR=${TORRENT_COMPLETE_DIR}
+      - TRANSMISSION_INCOMPLETE_DIR=${TORRENT_INCOMPLETE_DIR}
+      - TRANSMISSION_WATCH_DIR=${TORRENT_WATCH_DIR}
+    ports:
+      - ${TRANSMISSION_PORT}:9091
+
+
+  sonarr:
+    image: linuxserver/sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${SONARR_CONFIG_DIR}:/config
+      - ${MEDIA_DIR}:/media
+    ports:
+      - ${SONARR_PORT}:8989
+
+
+  radarr:
+    image: linuxserver/radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${RADARR_CONFIG_DIR}:/config
+      - ${MEDIA_DIR}:/media
+    ports:
+      - ${RADARR_PORT}:7878
+
+
+  jackett:
+    image: linuxserver/jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${JACKETT_CONFIG_DIR}:/config
+    ports:
+      - ${JACKETT_PORT}:9117
+
+  plex:
+    image: linuxserver/plex
+    network_mode: host
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=public
+      - PLEX_CLAIM=${PLEX_CLAIM}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PLEX_CONFIG_DIR}:/config
+      - ${TV_DIR}:/media/tv
+      - ${MOVIE_DIR}:/media/movies
+      - ${MUSIC_DIR}:/media/music
