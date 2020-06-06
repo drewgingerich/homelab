@@ -10,18 +10,16 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${TRANSMISSION_CONFIG_DIR}:/config
       - ${TORRENT_DIR}:/media/torrents
+    env_file:
+      - ./openvpn.env
     environment:
-      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER}
-      - OPENVPN_CONFIG=${OPENVPN_CONFIG}
-      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - LOCAL_NETWORK=192.168.0.0/24
       - PUID=1000
       - GUID=1000
       - TRANSMISSION_HOME=/config
-      - TRANSMISSION_DOWNLOAD_DIR=${TORRENT_COMPLETE_DIR}
-      - TRANSMISSION_INCOMPLETE_DIR=${TORRENT_INCOMPLETE_DIR}
-      - TRANSMISSION_WATCH_DIR=${TORRENT_WATCH_DIR}
+      - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
+      - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
+      - TRANSMISSION_WATCH_DIR=/media/torrents/watch
     ports:
       - ${TRANSMISSION_PORT}:9091
 
@@ -68,11 +66,12 @@ services:
     network_mode: host
     devices:
       - /dev/dri:/dev/dri
+    env_file:
+      - ./plex.env
     environment:
       - PUID=1000
       - PGID=1000
       - VERSION=public
-      - PLEX_CLAIM=${PLEX_CLAIM}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${PLEX_CONFIG_DIR}:/config
