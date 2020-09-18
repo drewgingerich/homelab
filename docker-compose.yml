@@ -23,7 +23,6 @@ services:
     ports:
       - ${TRANSMISSION_PORT}:9091
 
-
   sonarr:
     image: linuxserver/sonarr
     environment:
@@ -36,7 +35,6 @@ services:
     ports:
       - ${SONARR_PORT}:8989
 
-
   radarr:
     image: linuxserver/radarr
     environment:
@@ -48,7 +46,6 @@ services:
       - ${MEDIA_DIR}:/media
     ports:
       - ${RADARR_PORT}:7878
-
 
   jackett:
     image: linuxserver/jackett
@@ -78,3 +75,39 @@ services:
       - ${TV_DIR}:/media/tv
       - ${MOVIE_DIR}:/media/movies
       - ${MUSIC_DIR}:/media/music
+
+  monica-db:
+    image: mysql:5.7
+    volumes:
+      - /wish/app-data/monica-db:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+
+  monica:
+    image: monicahq/monicahq
+    depends_on:
+      - monica-db
+    volumes:
+      - /wish/app-data/monica:/var/www/monica/storage
+    environment:
+      - APP_KEY=IjVuPC2jO8RXTInlK0PH5rJYcNFi2PlF
+      - DB_HOST=monica-db
+      - APP_ENV=local
+      - APP_DISABLE_SIGNUP=false
+    ports:
+      - 8080:80
+  # nextcloud:
+  #   image: linuxserver/nextcloud
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /path/to/appdata:/config
+  #     - /path/to/data:/data
+  #   ports:
+  #     - 443:443
+  #   restart: unless-stopped

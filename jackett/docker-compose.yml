@@ -1,0 +1,12 @@
+version: "3"
+services:
+  jackett:
+    image: linuxserver/jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${JACKETT_CONFIG_DIR}:/config
+    ports:
+      - ${JACKETT_PORT}:9117

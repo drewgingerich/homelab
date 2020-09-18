@@ -1,15 +1,23 @@
 #!/bin/bash
 
-function generateExamples {
-    for file in $(find . -maxdepth 1 -type f -name '*.env')
+function generate-env-examples {
+    for file in $(find . -type f -name '*.env')
     do
         echo Generating example for: $file
         cat "$file" | cut -d '=' -f 1 | xargs -I "%" echo "%=" > "${file}.example"
     done
 }
 
-function default {
-    generateExamples
+function doco {
+    docker-compose \
+        -p media-server \
+        -f transmission-openvpn/docker-compose.yml \
+        -f jackett/docker-compose.yml \
+        -f sonarr/docker-compose.yml \
+        -f radarr/docker-compose.yml \
+        -f plex/docker-compose.yml \
+        -f monica/docker-compose.yml \
+        $@
 }
 
 function help {

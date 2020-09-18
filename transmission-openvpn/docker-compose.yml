@@ -1,0 +1,24 @@
+version: "3"
+services:
+  transmission:
+    image: haugene/transmission-openvpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${TRANSMISSION_CONFIG_DIR}:/config
+      - ${TORRENT_DIR}:/media/torrents
+    env_file:
+      - ./container.env
+    environment:
+      - LOCAL_NETWORK=192.168.0.0/24
+      - PUID=1000
+      - GUID=1000
+      - TRANSMISSION_HOME=/config
+      - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
+      - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
+      - TRANSMISSION_WATCH_DIR=/media/torrents/watch
+    ports:
+      - ${TRANSMISSION_PORT}:9091

@@ -1,0 +1,25 @@
+version: "3"
+services:
+  monica-db:
+    image: mysql:5.7
+    volumes:
+      - /wish/app-data/monica-db:/var/lib/mysql
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+
+  monica:
+    image: monicahq/monicahq
+    depends_on:
+      - monica-db
+    volumes:
+      - /wish/app-data/monica:/var/www/monica/storage
+    environment:
+      - APP_KEY=IjVuPC2jO8RXTInlK0PH5rJYcNFi2PlF
+      - DB_HOST=monica-db
+      - APP_ENV=local
+      - APP_DISABLE_SIGNUP=false
+    ports:
+      - 8080:80
