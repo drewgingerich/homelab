@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minecraft
+data:
+  EULA: "TRUE"
+  TYPE: FORGE
+  DIFFICULTY: normal
+  MAX_PLAYERS: "10"
+  LEVEL_TYPE: BIOMESOPLENTY
+  INIT_MEMORY: 1G
+  MAX_MEMORY: 3G
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minecraft
+  labels:
+    app.kubernetes.io/name: minecraft-server
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: minecraft
+spec:
+  volumes:
+    - name: data
+      hostPath:
+        path: /appData/minecraft/data/plant-fronds
+        type: DirectoryOrCreate
+    - name: mods
+      hostPath:
+        path: /appData/minecraft/modpacks/minecraft-modpack-plant-fronds/server/mods
+        type: Directory
+    - name: config
+      hostPath:
+        path: /appData/minecraft/modpacks/minecraft-modpack-plant-fronds/server/config
+        type: Directory
+  containers:
+    - name: minecraft
+      image: itzg/minecraft-server:java8
+      imagePullPolicy: Always
+      envFrom:
+        - configMapRef:
+            name: minecraft
+      volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: mods
+          mountPath: /mods
+        - name: config
+          mountPath: /config
+      ports:
+        - name: game
+          containerPort: 25565
+          hostPort: 25565
+      resources:
+        requests:
+          cpu: 1000m
+          memory: 1.5Gi
+        limits:
+          cpu: 2000m
+          memory: 3.5Gi
