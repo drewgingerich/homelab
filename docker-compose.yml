@@ -1,17 +1,71 @@
-version: "3"
+version: "3.9"
+
+networks:
+  traefik-docker-socket-proxy:
+    driver: bridge
+    name: traefik-docker-socket-proxy
+  traefik:
+    driver: bridge
+    name: traefik
+  transmission:
+    driver: bridge
+    name: transmission
+  monica:
+    driver: bridge
+    name: monica
+
 services:
+  traefik-docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    restart: unless-stopped
+    networks:
+      - traefik-docker-socket-proxy
+    environment:
+      CONTAINERS: 1
+    expose:
+      - 2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  traefik:
+    image: traefik
+    restart: unless-stopped
+    depends_on:
+      - traefik-docker-socket-proxy
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik
+      - traefik-docker-socket-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.dashboard=true"
+      - "--providers.docker.endpoint=tcp://traefik-docker-socket-proxy:2375"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.blep.network`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      # - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
+
   transmission:
     image: haugene/transmission-openvpn
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${TRANSMISSION_CONFIG_DIR}:/config
-      - ${TORRENT_DIR}:/media/torrents
+      - ${APP_DATA_DIR}/transmission/data:/config
+      - ${MEDIA_DIR}/torrents:/media/torrents
     env_file:
-      - ./openvpn.env
+      - openvpn.env
     environment:
       - LOCAL_NETWORK=192.168.0.0/24
       - PUID=1000
@@ -20,11 +74,20 @@ services:
       - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
       - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
       - TRANSMISSION_WATCH_DIR=/media/torrents/watch
+    networks:
+      - transmission
+      - traefik
     ports:
-      - ${TRANSMISSION_PORT}:9091
+      - "9091:9091"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.entrypoints=web"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.blep.network`)"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
 
   sonarr:
     image: linuxserver/sonarr
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
@@ -32,11 +95,17 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${SONARR_CONFIG_DIR}:/config
       - ${MEDIA_DIR}:/media
-    ports:
-      - ${SONARR_PORT}:8989
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=web"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.blep.network`)"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   radarr:
     image: linuxserver/radarr
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
@@ -44,40 +113,84 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${RADARR_CONFIG_DIR}:/config
       - ${MEDIA_DIR}:/media
-    ports:
-      - ${RADARR_PORT}:7878
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=web"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.blep.network`)"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
   jackett:
     image: linuxserver/jackett
+    restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${JACKETT_CONFIG_DIR}:/config
-    ports:
-      - ${JACKETT_PORT}:9117
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.entrypoints=web"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.blep.network`)"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
+
+  # plex:
+  #   image: linuxserver/plex
+  #   network_mode: host
+  #   devices:
+  #     - /dev/dri:/dev/dri
+  #   env_file:
+  #     - plex.env
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - ${APP_DATA_DIR}/plex:/config
+  #     - ${MEDIA_DIR}/tv:/media/tv
+  #     - ${MEDIA_DIR}/movies:/media/movies
+  #     - ${MEDIA_DIR}/music:/media/music
 
   plex:
     image: linuxserver/plex
-    network_mode: host
+    restart: unless-stopped
     devices:
       - /dev/dri:/dev/dri
     env_file:
-      - ./plex.env
+      - plex.env
     environment:
       - PUID=1000
       - PGID=1000
-      - VERSION=public
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${PLEX_CONFIG_DIR}:/config
-      - ${TV_DIR}:/media/tv
-      - ${MOVIE_DIR}:/media/movies
-      - ${MUSIC_DIR}:/media/music
+      - ${APP_DATA_DIR}/plex:/config
+      - ${MEDIA_DIR}/tv:/media/tv
+      - ${MEDIA_DIR}/movies:/media/movies
+      - ${MEDIA_DIR}/music:/media/music
+    ports:
+      - "32400:32400"
+      - "1900:1900/udp"
+      - "3005:3005"
+      - "5353:5353/udp"
+      - "8324:8324"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:32414/udp"
+      - "32469:32469"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.entrypoints=web"
+      - "traefik.http.routers.plex.rule=Host(`plex.blep.network`)"
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
 
   monica-db:
     image: mysql:5.7
+    restart: unless-stopped
     volumes:
       - /wish/app-data/monica-db:/var/lib/mysql
     environment:
@@ -85,9 +198,12 @@ services:
       - MYSQL_DATABASE=monica
       - MYSQL_USER=homestead
       - MYSQL_PASSWORD=secret
+    networks:
+      - monica
 
   monica:
     image: monicahq/monicahq
+    restart: unless-stopped
     depends_on:
       - monica-db
     volumes:
@@ -97,17 +213,24 @@ services:
       - DB_HOST=monica-db
       - APP_ENV=local
       - APP_DISABLE_SIGNUP=false
-    ports:
-      - 8080:80
-  # nextcloud:
-  #   image: linuxserver/nextcloud
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #   volumes:
-  #     - /etc/localtime:/etc/localtime:ro
-  #     - /path/to/appdata:/config
-  #     - /path/to/data:/data
-  #   ports:
-  #     - 443:443
-  #   restart: unless-stopped
+    networks:
+      - traefik
+      - monica
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monica.entrypoints=web"
+      - "traefik.http.routers.monica.rule=Host(`monica.blep.network`)"
+
+  nextcloud:
+    image: linuxserver/nextcloud
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /wish/app-data/nextcloud:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.entrypoints=web"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.blep.network`)"
