@@ -49,7 +49,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.blep.network`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.service=api@internal"
       # - "traefik.http.services.api@internal.loadbalancer.server.port=8080"
 
@@ -64,12 +64,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/transmission/data:/config
       - ${MEDIA_DIR}/torrents:/media/torrents
-    env_file:
-      - openvpn.env
     environment:
       - LOCAL_NETWORK=192.168.0.0/24
       - PUID=1000
       - GUID=1000
+      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER}
+      - OPENVPN_CONFIG=${OPENVPN_CONFIG}
+      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - TRANSMISSION_HOME=/config
       - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
       - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
@@ -82,7 +84,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.transmission.entrypoints=web"
-      - "traefik.http.routers.transmission.rule=Host(`transmission.blep.network`)"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
 
   sonarr:
@@ -93,14 +95,14 @@ services:
       - PGID=1000
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${SONARR_CONFIG_DIR}:/config
+      - ${APP_DATA_DIR}/sonarr/data:/config
       - ${MEDIA_DIR}:/media
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.entrypoints=web"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.blep.network`)"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   radarr:
@@ -111,14 +113,14 @@ services:
       - PGID=1000
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${RADARR_CONFIG_DIR}:/config
+      - ${APP_DATA_DIR}/radarr/data:/config
       - ${MEDIA_DIR}:/media
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.entrypoints=web"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.blep.network`)"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
   jackett:
@@ -129,42 +131,25 @@ services:
       - PGID=1000
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${JACKETT_CONFIG_DIR}:/config
+      - ${APP_DATA_DIR}/jackett/data:/config
     networks:
       - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jackett.entrypoints=web"
-      - "traefik.http.routers.jackett.rule=Host(`jackett.blep.network`)"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.${DOMAIN}`)"
       - "traefik.http.services.jackett.loadbalancer.server.port=9117"
-
-  # plex:
-  #   image: linuxserver/plex
-  #   network_mode: host
-  #   devices:
-  #     - /dev/dri:/dev/dri
-  #   env_file:
-  #     - plex.env
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #   volumes:
-  #     - /etc/localtime:/etc/localtime:ro
-  #     - ${APP_DATA_DIR}/plex:/config
-  #     - ${MEDIA_DIR}/tv:/media/tv
-  #     - ${MEDIA_DIR}/movies:/media/movies
-  #     - ${MEDIA_DIR}/music:/media/music
 
   plex:
     image: linuxserver/plex
     restart: unless-stopped
     devices:
       - /dev/dri:/dev/dri
-    env_file:
-      - plex.env
     environment:
       - PUID=1000
       - PGID=1000
+      - PLEX_CLAIM=${PLEX_CLAIM}
+      - VERSION=${PLEX_VERSION}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/plex:/config
@@ -185,7 +170,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.plex.entrypoints=web"
-      - "traefik.http.routers.plex.rule=Host(`plex.blep.network`)"
+      - "traefik.http.routers.plex.rule=Host(`plex.${DOMAIN}`)"
       - "traefik.http.services.plex.loadbalancer.server.port=32400"
 
   monica-db:
@@ -219,7 +204,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.monica.entrypoints=web"
-      - "traefik.http.routers.monica.rule=Host(`monica.blep.network`)"
+      - "traefik.http.routers.monica.rule=Host(`monica.${DOMAIN}`)"
 
   nextcloud:
     image: linuxserver/nextcloud
@@ -233,4 +218,4 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.entrypoints=web"
-      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.blep.network`)"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${DOMAIN}`)"

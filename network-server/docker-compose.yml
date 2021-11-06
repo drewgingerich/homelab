@@ -1,0 +1,39 @@
+version: "3.9"
+
+networks:
+  pihole:
+    name: pihole
+    driver: bridge
+  ddclient:
+    name: ddclient
+    driver: bridge
+
+volumes:
+  piholeServerData:
+  piholeDnsmasqData:
+
+services:
+  pihole:
+    restart: unless-stopped
+    image: pihole/pihole
+    environment:
+      ServerIP: ${SERVER_IP}
+      DNSSEC: true
+    volumes:
+      - "piholeServerData:/etc/pihole"
+      - "piholeDnsmasqData:/etc/dnsmasq.d"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+
+  ddclient:
+    restart: unless-stopped
+    build:
+      context: "./ddclient"
+    environment:
+      PUID: 1000
+      PGID: 1000
+      NAMECHEAP_DOMAIN: ${NAMECHEAP_DOMAIN}
+      NAMECHEAP_API_KEY: ${NAMECHEAP_API_KEY}
