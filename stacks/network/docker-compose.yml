@@ -8,10 +8,6 @@ networks:
     name: ddclient
     driver: bridge
 
-volumes:
-  piholeServerData:
-  piholeDnsmasqData:
-
 services:
   pihole:
     restart: unless-stopped
@@ -20,8 +16,8 @@ services:
       ServerIP: ${SERVER_IP}
       DNSSEC: true
     volumes:
-      - "piholeServerData:/etc/pihole"
-      - "piholeDnsmasqData:/etc/dnsmasq.d"
+      - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
+      - "${APP_DATA_DIR}/pihole/dnsmasq:etc/dnsmasq.d"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
