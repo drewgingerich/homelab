@@ -1,16 +1,18 @@
 version: "3.9"
 
 services:
-  minecraft-${SERVER_NAME}:
+  minecraft-kk:
     image: itzg/minecraft-server
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${APP_DATA_DIR}/minecraft/${SERVER_NAME}:/config
+      - ${APP_DATA_DIR}/minecraft/kk/data:/data
     environment:
       - EULA=TRUE
       - DIFFICULTY=normal
       - ENABLE_WHITELIST=true
+      - WHITELIST=${ADMIN_USERNAME}
+      - OPS=${ADMIN_USERNAME}
       - SNOOPER_ENABLED=false
       - ALLOW_FLIGHT=true
       - MEMORY=8G
