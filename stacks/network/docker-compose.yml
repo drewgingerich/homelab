@@ -1,10 +1,6 @@
 networks:
-  pihole:
-    name: pihole
-    driver: bridge
-  ddns:
-    name: ddns
-    driver: bridge
+  pihole: {}
+  ddns: {}
 
 services:
   pihole:
