@@ -80,3 +80,20 @@ services:
       - ${MEDIA_DIR}/movies:/media/movies
       - ${MEDIA_DIR}/music:/media/music
     network_mode: "host"
+
+  minecraft:
+    image: itzg/minecraft-server
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${APP_DATA_DIR}/minecraft/kk/data:/data
+    environment:
+      - EULA=TRUE
+      - DIFFICULTY=normal
+      - ENABLE_WHITELIST=true
+      - WHITELIST=${MINECRAFT_ADMIN_USERNAME}
+      - OPS=${MINECRAFT_ADMIN_USERNAME}
+      - SNOOPER_ENABLED=false
+      - ALLOW_FLIGHT=true
+      - MEMORY=${MINECRAFT_MEMORY}
+    network_mode: 'host'
