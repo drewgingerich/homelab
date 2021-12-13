@@ -15,5 +15,5 @@ services:
       - OPS=${ADMIN_USERNAME}
       - SNOOPER_ENABLED=false
       - ALLOW_FLIGHT=true
-      - MEMORY=8G
+      - MEMORY=${MEMORY}
     network_mode: 'host'
