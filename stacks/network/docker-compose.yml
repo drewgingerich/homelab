@@ -4,8 +4,8 @@ networks:
   pihole:
     name: pihole
     driver: bridge
-  ddclient:
-    name: ddclient
+  ddns:
+    name: ddns
     driver: bridge
 
 services:
@@ -14,10 +14,15 @@ services:
     image: pihole/pihole
     environment:
       ServerIP: ${SERVER_IP}
-      DNSSEC: true
+      DNSSEC: 'true'
     volumes:
       - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
-      - "${APP_DATA_DIR}/pihole/dnsmasq:etc/dnsmasq.d"
+      - "${APP_DATA_DIR}/pihole/dnsmasq:/etc/dnsmasq.d"
+    networks:
+      - pihole
+    dns:
+      - "127.0.0.1"
+      - "8.8.8.8"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -33,3 +38,5 @@ services:
       PGID: 1000
       NAMECHEAP_DOMAIN: ${NAMECHEAP_DOMAIN}
       NAMECHEAP_API_KEY: ${NAMECHEAP_API_KEY}
+    networks:
+      - ddns
