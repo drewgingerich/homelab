@@ -1,4 +1,66 @@
+networks:
+  traefik-docker-socket-proxy: {}
+
 services:
+  traefik-docker-socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    restart: unless-stopped
+    networks:
+      - traefik-docker-socket-proxy
+    environment:
+      CONTAINERS: 1
+    expose:
+      - 2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  traefik:
+    image: traefik
+    restart: unless-stopped
+    depends_on:
+      - traefik-docker-socket-proxy
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      LINODE_TOKEN: ${LINODE_TOKEN}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${APP_DATA_DIR}/traefik:/config
+    networks:
+      - traefik-docker-socket-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      - "--log.level=DEBUG"
+      # -----
+      - "--api.dashboard=true"
+      # -----
+      - "--providers.docker.endpoint=tcp://traefik-docker-socket-proxy:2375"
+      - "--providers.docker.exposedbydefault=false"
+      # -----
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.websecure.http.tls=true"
+      - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
+      - "--entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}"
+      - "--entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}"
+      # -----
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/config/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=linode"
+      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+    labels:
+      - "traefik.enable=true"
+      # -----
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+
   transmission:
     image: haugene/transmission-openvpn
     restart: unless-stopped
