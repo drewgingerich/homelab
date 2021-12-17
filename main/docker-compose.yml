@@ -1,12 +1,13 @@
 networks:
-  traefik-docker-socket-proxy: {}
+  traefik: {}
+  transmission: {}
 
 services:
   traefik-docker-socket-proxy:
     image: tecnativa/docker-socket-proxy
     restart: unless-stopped
     networks:
-      - traefik-docker-socket-proxy
+      - traefik
     environment:
       CONTAINERS: 1
     expose:
@@ -27,7 +28,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/traefik:/config
     networks:
-      - traefik-docker-socket-proxy
+      - traefik
+      - transmission
     ports:
       - "80:80"
       - "443:443"
@@ -84,8 +86,15 @@ services:
       - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
       - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
       - TRANSMISSION_WATCH_DIR=/media/torrents/watch
-    ports:
-      - "9091:9091"
+    networks:
+      - transmission
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
 
   sonarr:
     image: linuxserver/sonarr
@@ -97,8 +106,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/sonarr:/config
       - ${MEDIA_DIR}:/media
-    ports:
-      - "8989:8989"
+    networks:
+      - transmission
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   radarr:
     image: linuxserver/radarr
@@ -110,8 +126,15 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/radarr:/config
       - ${MEDIA_DIR}:/media
-    ports:
-      - "7878:7878"
+    networks:
+      - transmission
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
 
   jackett:
     image: linuxserver/jackett
@@ -122,8 +145,15 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/jackett:/config
-    ports:
-      - "9117:9117"
+    networks:
+      - transmission
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.entrypoints=websecure"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.${DOMAIN}`)"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
 
   plex:
     image: linuxserver/plex
