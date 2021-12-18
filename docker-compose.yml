@@ -1,6 +1,8 @@
 networks:
   traefik: {}
   transmission: {}
+  pihole: {}
+  ddclient: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -56,12 +58,49 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
     labels:
       - "traefik.enable=true"
-      # -----
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+
+  pihole:
+    restart: unless-stopped
+    image: pihole/pihole
+    environment:
+      ServerIP: ${SERVER_IP}
+      DNSSEC: 'true'
+    volumes:
+      - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
+      - "${APP_DATA_DIR}/pihole/dnsmasq:/etc/dnsmasq.d"
+    networks:
+      - pihole
+    dns:
+      - "127.0.0.1"
+      - "8.8.8.8"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.entrypoints=websecure"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"
+      - "traefik.http.routers.pihole.service=api@internal"
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
+
+  ddclient:
+    restart: unless-stopped
+    build:
+      context: "./services/ddclient"
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      NAMECHEAP_DOMAIN: ${NAMECHEAP_DOMAIN}
+      NAMECHEAP_API_KEY: ${NAMECHEAP_API_KEY}
+    networks:
+      - ddclient
 
   transmission:
     image: haugene/transmission-openvpn
