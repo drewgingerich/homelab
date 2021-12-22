@@ -32,11 +32,12 @@ services:
     networks:
       - traefik
       - transmission
+      - pihole
     ports:
       - "80:80"
       - "443:443"
     command:
-      - "--log.level=DEBUG"
+      # - "--log.level=DEBUG"
       # -----
       - "--api.dashboard=true"
       # -----
@@ -68,7 +69,6 @@ services:
     restart: unless-stopped
     image: pihole/pihole
     environment:
-      ServerIP: ${SERVER_IP}
       DNSSEC: 'true'
     volumes:
       - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
@@ -77,7 +77,6 @@ services:
       - pihole
     dns:
       - "127.0.0.1"
-      - "8.8.8.8"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -86,9 +85,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.entrypoints=websecure"
       - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"
-      - "traefik.http.routers.pihole.service=api@internal"
       - "traefik.http.routers.pihole.tls=true"
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
 
   ddclient:
     restart: unless-stopped
