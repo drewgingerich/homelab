@@ -205,8 +205,6 @@ services:
     volumes:
       - ${APP_DATA_DIR}/podgrab:/config
       - ${MEDIA_DIR}/podcasts:/assets
-    ports:
-      - 8080:8080
     networks:
       - podgrab
     labels:
