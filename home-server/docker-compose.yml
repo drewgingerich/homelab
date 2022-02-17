@@ -3,6 +3,7 @@ networks:
   transmission: {}
   pihole: {}
   ddclient: {}
+  podgrab: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -33,6 +34,7 @@ services:
       - traefik
       - transmission
       - pihole
+      - podgrab
     ports:
       - "80:80"
       - "443:443"
@@ -111,10 +113,10 @@ services:
     devices:
       - /dev/net/tun
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/transmission:/config
       - ${MEDIA_DIR}/torrents:/media/torrents
     environment:
+      - TZ=${TZ}
       - LOCAL_NETWORK=192.168.0.0/24
       - PUID=${PUID}
       - GUID=${PGID}
@@ -140,10 +142,10 @@ services:
     image: linuxserver/sonarr
     restart: unless-stopped
     environment:
+      - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/sonarr:/config
       - ${MEDIA_DIR}:/media
     networks:
@@ -160,10 +162,10 @@ services:
     image: linuxserver/radarr
     restart: unless-stopped
     environment:
+      - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/radarr:/config
       - ${MEDIA_DIR}:/media
     networks:
@@ -180,10 +182,10 @@ services:
     image: linuxserver/jackett
     restart: unless-stopped
     environment:
+      - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/jackett:/config
     networks:
       - transmission
@@ -195,31 +197,51 @@ services:
       - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
       - "traefik.http.services.jackett.loadbalancer.server.port=9117"
 
+  podgrab:
+    image: akhilrex/podgrab
+    restart: unless-stopped
+    environment:
+      - CHECK_FREQUENCY=240
+    volumes:
+      - ${APP_DATA_DIR}/podgrab:/config
+      - ${MEDIA_DIR}/podcasts:/assets
+    ports:
+      - 8080:8080
+    networks:
+      - podgrab
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.podgrab.entrypoints=websecure"
+      - "traefik.http.routers.podgrab.rule=Host(`podgrab.${DOMAIN}`)"
+      - "traefik.http.routers.podgrab.tls=true"
+      - "traefik.http.routers.podgrab.tls.certresolver=letsencrypt"
+      - "traefik.http.services.podgrab.loadbalancer.server.port=8080"
+
   plex:
     image: linuxserver/plex
     restart: unless-stopped
     devices:
       - /dev/dri:/dev/dri
     environment:
+      - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
       - PLEX_CLAIM=${PLEX_CLAIM}
       - VERSION=${PLEX_VERSION}
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/plex:/config
       - ${MEDIA_DIR}/tv:/media/tv
       - ${MEDIA_DIR}/movies:/media/movies
       - ${MEDIA_DIR}/music:/media/music
+      - ${MEDIA_DIR}/podcasts:/media/podcasts
     network_mode: "host"
-
   minecraft:
     image: itzg/minecraft-server
     restart: unless-stopped
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/minecraft/kk/data:/data
     environment:
+      - TZ=${TZ}
       - EULA=TRUE
       - DIFFICULTY=normal
       - ENABLE_WHITELIST=true
@@ -228,4 +250,17 @@ services:
       - SNOOPER_ENABLED=false
       - ALLOW_FLIGHT=true
       - MEMORY=${MINECRAFT_MEMORY}
-    network_mode: 'host'
+    network_mode: "host"
+
+  valheim:
+    image: lloesche/valheim-server
+    restart: unless-stopped
+    stop_grace_period: 2m
+    environment:
+      - SERVER_NAME=${VALHEIM_SERVER_NAME}
+      - WORLD_NAME=${VALHEIM_WORLD_NAME}
+      - SERVER_PASS=${VALHEIM_SERVER_PASSWORD}
+    volumes:
+      - ${APP_DATA_DIR}/valheim/config:/config
+      - ${APP_DATA_DIR}/valheim/data:/opt/valheim
+    network_mode: "host"
