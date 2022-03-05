@@ -4,6 +4,7 @@ networks:
   pihole: {}
   ddclient: {}
   podgrab: {}
+  mealie: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -35,6 +36,7 @@ services:
       - transmission
       - pihole
       - podgrab
+      - mealie
     ports:
       - "80:80"
       - "443:443"
@@ -214,6 +216,24 @@ services:
       - "traefik.http.routers.podgrab.tls=true"
       - "traefik.http.routers.podgrab.tls.certresolver=letsencrypt"
       - "traefik.http.services.podgrab.loadbalancer.server.port=8080"
+
+  mealie:
+    image: hkotel/mealie
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/mealie:/app/data
+    networks:
+      - mealie
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mealie.entrypoints=websecure"
+      - "traefik.http.routers.mealie.rule=Host(`mealie.${DOMAIN}`)"
+      - "traefik.http.routers.mealie.tls=true"
+      - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
 
   plex:
     image: linuxserver/plex
