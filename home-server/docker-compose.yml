@@ -5,6 +5,7 @@ networks:
   ddclient: {}
   podgrab: {}
   mealie: {}
+  photoprism: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -37,6 +38,7 @@ services:
       - pihole
       - podgrab
       - mealie
+      - photoprism
     ports:
       - "80:80"
       - "443:443"
@@ -235,6 +237,48 @@ services:
       - "traefik.http.routers.mealie.tls=true"
       - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
 
+  photoprism:
+    image: "photoprism/photoprism"
+    depends_on:
+      - "photoprism_db"
+    restart: "unless-stopped"
+    devices:
+     - "/dev/dri:/dev/dri"
+    environment:
+      TZ: "${TZ}"
+      PHOTOPRISM_PUID: "${PUID}"
+      PHOTOPRISM_PGID: "${PGID}"
+      PHOTOPRISM_PUBLIC: "true"
+      PHOTOPRISM_DATABASE_SERVER: "photoprism_db"
+      PHOTOPRISM_DATABASE_NAME: "photoprism"
+      PHOTOPRISM_DATABASE_USER: "photoprism"
+      PHOTOPRISM_DATABASE_PASSWORD: "photoprism"
+    volumes:
+      - "${APP_DATA_DIR}/photoprism/storage:/photoprism/storage"
+      - "${MEDIA_DIR}/pictures:/photoprism/originals"
+    networks:
+      - photoprism
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.photoprism.entrypoints=websecure"
+      - "traefik.http.routers.photoprism.rule=Host(`photoprism.${DOMAIN}`)"
+      - "traefik.http.routers.photoprism.tls=true"
+      - "traefik.http.routers.photoprism.tls.certresolver=letsencrypt"
+      - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
+
+  photoprism_db:
+    image: "mariadb:10.6"
+    restart: "unless-stopped"
+    environment:
+      MARIADB_ROOT_PASSWORD: "photoprism"
+      MARIADB_DATABASE: "photoprism"
+      MARIADB_USER: "photoprism"
+      MARIADB_PASSWORD: "photoprism"
+    volumes:
+      - "${APP_DATA_DIR}/photoprism/mysql:/var/lib/mysql"
+    networks:
+      - photoprism
+
   plex:
     image: linuxserver/plex
     restart: unless-stopped
@@ -253,6 +297,7 @@ services:
       - ${MEDIA_DIR}/music:/media/music
       - ${MEDIA_DIR}/podcasts:/media/podcasts
     network_mode: "host"
+
   minecraft:
     image: itzg/minecraft-server
     restart: unless-stopped
