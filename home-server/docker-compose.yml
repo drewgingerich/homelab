@@ -6,6 +6,7 @@ networks:
   podgrab: {}
   mealie: {}
   photoprism: {}
+  nextcloud: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -39,6 +40,7 @@ services:
       - podgrab
       - mealie
       - photoprism
+      - nextcloud
     ports:
       - "80:80"
       - "443:443"
@@ -63,6 +65,8 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.storage=/config/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=linode"
       - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      # -----
+      - "--serversTransport.insecureSkipVerify=true"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
@@ -278,6 +282,27 @@ services:
       - "${APP_DATA_DIR}/photoprism/mysql:/var/lib/mysql"
     networks:
       - photoprism
+
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - "${APP_DATA_DIR}/nextcloud:/config"
+      - "${MEDIA_DIR}:/data"
+    networks:
+      - nextcloud
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${DOMAIN}`)"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nextcloud.loadbalancer.server.scheme=https"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=443"
 
   plex:
     image: linuxserver/plex
