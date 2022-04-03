@@ -6,6 +6,7 @@ networks:
   podgrab: {}
   mealie: {}
   photoprism: {}
+  filebrowser: {}
   nextcloud: {}
 
 services:
@@ -40,6 +41,7 @@ services:
       - podgrab
       - mealie
       - photoprism
+      - filebrowser
       - nextcloud
     ports:
       - "80:80"
@@ -282,6 +284,27 @@ services:
       - "${APP_DATA_DIR}/photoprism/mysql:/var/lib/mysql"
     networks:
       - photoprism
+
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    restart: unless-stopped
+    environment:
+      TZ: "${TZ}"
+      PUID: "${PUID}"
+      PGID: "${PGID}"
+    volumes:
+      - "${APP_DATA_DIR}/filebrowser/config:/config"
+      - "${APP_DATA_DIR}/filebrowser/database:/database"
+      - "${MEDIA_DIR}:/srv"
+    networks:
+      - "filebrowser"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.filebrowser.entrypoints=websecure"
+      - "traefik.http.routers.filebrowser.rule=Host(`filebrowser.${DOMAIN}`)"
+      - "traefik.http.routers.filebrowser.tls=true"
+      - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
+      - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
 
   nextcloud:
     image: lscr.io/linuxserver/nextcloud
