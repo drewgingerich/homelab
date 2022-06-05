@@ -114,30 +114,20 @@ services:
       - ddclient
 
   transmission:
-    image: haugene/transmission-openvpn
+    image: lscr.io/linuxserver/transmission
     restart: unless-stopped
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
     volumes:
       - ${APP_DATA_DIR}/transmission:/config
-      - ${MEDIA_DIR}/torrents:/media/torrents
+      - ${MEDIA_DIR}/torrents:/downloads
     environment:
       - TZ=${TZ}
-      - LOCAL_NETWORK=192.168.0.0/24
       - PUID=${PUID}
       - GUID=${PGID}
-      - OPENVPN_PROVIDER=${OPENVPN_PROVIDER}
-      - OPENVPN_CONFIG=${OPENVPN_CONFIG}
-      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - TRANSMISSION_HOME=/config
-      - TRANSMISSION_DOWNLOAD_DIR=/media/torrents/completed
-      - TRANSMISSION_INCOMPLETE_DIR=/media/torrents/incomplete
-      - TRANSMISSION_WATCH_DIR=/media/torrents/watch
     networks:
       - transmission
+    ports:
+      - 51413:51413
+      - 51413:51413/udp
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.transmission.entrypoints=websecure"
