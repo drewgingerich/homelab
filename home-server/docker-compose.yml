@@ -7,6 +7,7 @@ networks:
   mealie: {}
   photoprism: {}
   filebrowser: {}
+  firefly: {}
 
 services:
   traefik-docker-socket-proxy:
@@ -41,6 +42,7 @@ services:
       - mealie
       - photoprism
       - filebrowser
+      - firefly
     ports:
       - "80:80"
       - "443:443"
@@ -293,6 +295,48 @@ services:
       - "traefik.http.routers.filebrowser.tls=true"
       - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
       - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
+
+  firefly:
+    image: fireflyiii/core
+    depends_on:
+      - firefly_db
+    restart: unless-stopped
+    environment:
+      TZ: "${TZ}"
+      PUID: "${PUID}"
+      PGID: "${PGID}"
+      APP_KEY: "${FIREFLY_APP_KEY}"
+      DB_HOST: firefly_db
+      DB_PORT: 5432
+      DB_CONNECTION: pgsql
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: firefly
+      TRUSTED_PROXIES: "**"
+      MAIL_PORT: 2525
+    volumes:
+      - "${APP_DATA_DIR}/firefly/upload:/var/www/html/storage/upload"
+    networks:
+      - "firefly"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.firefly.entrypoints=websecure"
+      - "traefik.http.routers.firefly.rule=Host(`firefly.${DOMAIN}`)"
+      - "traefik.http.routers.firefly.tls=true"
+      - "traefik.http.routers.firefly.tls.certresolver=letsencrypt"
+      - "traefik.http.services.firefly.loadbalancer.server.port=8080"
+
+  firefly_db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: firefly
+      POSTGRES_USER: firefly
+      POSTGRES_PASSWORD: firefly
+    volumes:
+      - "${APP_DATA_DIR}/firefly/database:/var/lib/postgresql/data"
+    networks:
+      - "firefly"
 
   plex:
     image: linuxserver/plex
