@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+    - name: Install smartmontools
+      become: true
+      ansible.builtin.apt:
+        name: smartmontools
+        state: latest
+        update_cache: true
+
+    - name: Enable smartmontools service
+      ansible.builtin.systemd:
+        name: smartmontools
+        enabled: yes
