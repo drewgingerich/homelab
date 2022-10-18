@@ -120,7 +120,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${APP_DATA_DIR}/transmission:/config
-      - ${MEDIA_DIR}/torrents:/downloads
+      - ${MEDIA_DIR}/torrents:/media/torrents
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
