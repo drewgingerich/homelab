@@ -1,0 +1,22 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: hkotel/mealie
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/mealie:/app/data
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mealie.entrypoints=websecure"
+      - "traefik.http.routers.mealie.rule=Host(`mealie.${DOMAIN}`)"
+      - "traefik.http.routers.mealie.tls=true"
+      - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
