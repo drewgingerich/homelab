@@ -1,0 +1,24 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/sonarr:/config
+      - ${MEDIA_DIR}:/media
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"

@@ -108,6 +108,7 @@ services:
   transmission:
     image: lscr.io/linuxserver/transmission
     restart: unless-stopped
+    container_name: transmission
     volumes:
       - ${APP_DATA_DIR}/transmission:/config
       - ${MEDIA_DIR}/torrents:/media/torrents
@@ -117,6 +118,7 @@ services:
       - GUID=${PGID}
     networks:
       - transmission
+      - web_public
     ports:
       - 51413:51413
       - 51413:51413/udp
@@ -127,26 +129,6 @@ services:
       - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-
-  sonarr:
-    image: linuxserver/sonarr
-    restart: unless-stopped
-    environment:
-      - TZ=${TZ}
-      - PUID=${PUID}
-      - PGID=${PGID}
-    volumes:
-      - ${APP_DATA_DIR}/sonarr:/config
-      - ${MEDIA_DIR}:/media
-    networks:
-      - transmission
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.entrypoints=websecure"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
-      - "traefik.http.routers.sonarr.tls=true"
-      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
 
   radarr:
     image: linuxserver/radarr
