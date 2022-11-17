@@ -1,4 +1,6 @@
 networks:
+  web_public:
+    name: web_public
   traefik: {}
   transmission: {}
   pihole: {}
@@ -34,6 +36,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/traefik:/config
     networks:
+      - web_public
       - traefik
       - transmission
       - pihole
@@ -219,47 +222,6 @@ services:
       - "traefik.http.routers.mealie.rule=Host(`mealie.${DOMAIN}`)"
       - "traefik.http.routers.mealie.tls=true"
       - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
-
-  photoprism:
-    image: "photoprism/photoprism"
-    depends_on:
-      - "photoprism_db"
-    restart: "unless-stopped"
-    devices:
-      - "/dev/dri:/dev/dri"
-    environment:
-      TZ: "${TZ}"
-      PHOTOPRISM_PUID: "${PUID}"
-      PHOTOPRISM_PGID: "${PGID}"
-      PHOTOPRISM_DATABASE_SERVER: "photoprism_db"
-      PHOTOPRISM_DATABASE_NAME: "photoprism"
-      PHOTOPRISM_DATABASE_USER: "photoprism"
-      PHOTOPRISM_DATABASE_PASSWORD: "photoprism"
-    volumes:
-      - "${APP_DATA_DIR}/photoprism/storage:/photoprism/storage"
-      - "${MEDIA_DIR}/pictures:/photoprism/originals"
-    networks:
-      - photoprism
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.photoprism.entrypoints=websecure"
-      - "traefik.http.routers.photoprism.rule=Host(`photoprism.${DOMAIN}`)"
-      - "traefik.http.routers.photoprism.tls=true"
-      - "traefik.http.routers.photoprism.tls.certresolver=letsencrypt"
-      - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
-
-  photoprism_db:
-    image: "mariadb:10.6"
-    restart: "unless-stopped"
-    environment:
-      MARIADB_ROOT_PASSWORD: "photoprism"
-      MARIADB_DATABASE: "photoprism"
-      MARIADB_USER: "photoprism"
-      MARIADB_PASSWORD: "photoprism"
-    volumes:
-      - "${APP_DATA_DIR}/photoprism/mysql:/var/lib/mysql"
-    networks:
-      - photoprism
 
   filebrowser:
     image: filebrowser/filebrowser:s6
