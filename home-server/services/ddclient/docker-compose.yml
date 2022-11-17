@@ -1,0 +1,10 @@
+services:
+  server:
+    restart: unless-stopped
+    build:
+      context: "."
+    environment:
+      PUID: ${PUID}
+      PGID: ${PGID}
+      NAMECHEAP_DOMAIN: ${NAMECHEAP_DOMAIN}
+      NAMECHEAP_API_KEY: ${NAMECHEAP_API_KEY}

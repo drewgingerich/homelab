@@ -2,7 +2,6 @@ networks:
   traefik: {}
   transmission: {}
   pihole: {}
-  ddclient: {}
   podgrab: {}
   mealie: {}
   photoprism: {}
@@ -102,18 +101,6 @@ services:
       - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
       - "traefik.http.routers.pihole.middlewares=pihole-adminredirect@docker"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
-
-  ddclient:
-    restart: unless-stopped
-    build:
-      context: "./services/ddclient"
-    environment:
-      PUID: ${PUID}
-      PGID: ${PGID}
-      NAMECHEAP_DOMAIN: ${NAMECHEAP_DOMAIN}
-      NAMECHEAP_API_KEY: ${NAMECHEAP_API_KEY}
-    networks:
-      - ddclient
 
   transmission:
     image: lscr.io/linuxserver/transmission
