@@ -1,0 +1,24 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: linuxserver/jackett
+    restart: unless-stopped
+    container_name: jackett
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/jackett:/config
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.entrypoints=websecure"
+      - "traefik.http.routers.jackett.rule=Host(`jackett.${DOMAIN}`)"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
