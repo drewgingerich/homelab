@@ -139,27 +139,6 @@ services:
       - "traefik.http.routers.mealie.tls=true"
       - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
 
-  filebrowser:
-    image: filebrowser/filebrowser:s6
-    restart: unless-stopped
-    environment:
-      TZ: "${TZ}"
-      PUID: "${PUID}"
-      PGID: "${PGID}"
-    volumes:
-      - "${APP_DATA_DIR}/filebrowser/config:/config"
-      - "${APP_DATA_DIR}/filebrowser/database:/database"
-      - "${MEDIA_DIR}:/srv"
-    networks:
-      - "filebrowser"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.filebrowser.entrypoints=websecure"
-      - "traefik.http.routers.filebrowser.rule=Host(`filebrowser.${DOMAIN}`)"
-      - "traefik.http.routers.filebrowser.tls=true"
-      - "traefik.http.routers.filebrowser.tls.certresolver=letsencrypt"
-      - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
-
   firefly:
     image: fireflyiii/core
     depends_on:
