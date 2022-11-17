@@ -1,0 +1,17 @@
+services:
+  server:
+    image: ghcr.io/lloesche/valheim-server
+    stop_grace_period: 2m
+    cap_add:
+      - sys_nice
+    environment:
+      - SERVER_NAME=${VALHEIM_SERVER_NAME}
+      - WORLD_NAME=${VALHEIM_WORLD_NAME}
+      - SERVER_PASS=${VALHEIM_SERVER_PASSWORD}
+      - SERVER_PUBLIC=false
+    volumes:
+      - ${APP_DATA_DIR}/valheim/config:/config
+      - ${APP_DATA_DIR}/valheim/data:/opt/valheim
+    ports:
+      - "2456:2456/udp"
+      - "2457:2457/udp"
