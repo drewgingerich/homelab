@@ -77,32 +77,6 @@ services:
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
 
-  pihole:
-    restart: unless-stopped
-    image: pihole/pihole
-    environment:
-      DNSSEC: "true"
-    volumes:
-      - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
-      - "${APP_DATA_DIR}/pihole/dnsmasq:/etc/dnsmasq.d"
-    networks:
-      - pihole
-    dns:
-      - "127.0.0.1"
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.middlewares.pihole-adminredirect.redirectregex.regex=^https://pihole.${DOMAIN}/?$$"
-      - "traefik.http.middlewares.pihole-adminredirect.redirectregex.replacement=https://pihole.${DOMAIN}/admin"
-      - "traefik.http.routers.pihole.entrypoints=websecure"
-      - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"
-      - "traefik.http.routers.pihole.tls=true"
-      - "traefik.http.routers.pihole.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.pihole.middlewares=pihole-adminredirect@docker"
-      - "traefik.http.services.pihole.loadbalancer.server.port=80"
-
   podgrab:
     image: akhilrex/podgrab
     restart: unless-stopped
