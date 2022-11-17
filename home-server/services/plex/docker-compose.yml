@@ -1,0 +1,19 @@
+services:
+  server:
+    image: linuxserver/plex
+    restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - PLEX_CLAIM=${PLEX_CLAIM}
+      - VERSION=${PLEX_VERSION}
+    volumes:
+      - ${APP_DATA_DIR}/plex:/config
+      - ${MEDIA_DIR}/tv:/media/tv
+      - ${MEDIA_DIR}/movies:/media/movies
+      - ${MEDIA_DIR}/music:/media/music
+      - ${MEDIA_DIR}/podcasts:/media/podcasts
+    network_mode: "host"

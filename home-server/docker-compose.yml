@@ -226,7 +226,7 @@ services:
       - "photoprism_db"
     restart: "unless-stopped"
     devices:
-     - "/dev/dri:/dev/dri"
+      - "/dev/dri:/dev/dri"
     environment:
       TZ: "${TZ}"
       PHOTOPRISM_PUID: "${PUID}"
@@ -323,24 +323,3 @@ services:
       - "${APP_DATA_DIR}/firefly/database:/var/lib/postgresql/data"
     networks:
       - "firefly"
-
-  plex:
-    image: linuxserver/plex
-    restart: unless-stopped
-    devices:
-      - /dev/dri:/dev/dri
-    environment:
-      - TZ=${TZ}
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - PLEX_CLAIM=${PLEX_CLAIM}
-      - VERSION=${PLEX_VERSION}
-    volumes:
-      - ${APP_DATA_DIR}/plex:/config
-      - ${MEDIA_DIR}/tv:/media/tv
-      - ${MEDIA_DIR}/movies:/media/movies
-      - ${MEDIA_DIR}/music:/media/music
-      - ${MEDIA_DIR}/podcasts:/media/podcasts
-    ports:
-      - "32400:32400"
-    network_mode: "host"
