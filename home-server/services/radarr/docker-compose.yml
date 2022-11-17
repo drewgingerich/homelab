@@ -1,0 +1,24 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: linuxserver/radarr
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/radarr:/config
+      - ${MEDIA_DIR}:/media
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
