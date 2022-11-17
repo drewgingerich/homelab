@@ -1,0 +1,28 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: lscr.io/linuxserver/transmission
+    restart: unless-stopped
+    container_name: transmission
+    volumes:
+      - ${APP_DATA_DIR}/transmission:/config
+      - ${MEDIA_DIR}/torrents:/media/torrents
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - GUID=${PGID}
+    networks:
+      - web_public
+    ports:
+      - 51413:51413
+      - 51413:51413/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"

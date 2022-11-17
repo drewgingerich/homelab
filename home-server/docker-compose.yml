@@ -2,7 +2,6 @@ networks:
   web_public:
     name: web_public
   traefik: {}
-  transmission: {}
   pihole: {}
   podgrab: {}
   mealie: {}
@@ -38,7 +37,6 @@ services:
     networks:
       - web_public
       - traefik
-      - transmission
       - pihole
       - podgrab
       - mealie
@@ -105,31 +103,6 @@ services:
       - "traefik.http.routers.pihole.middlewares=pihole-adminredirect@docker"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
 
-  transmission:
-    image: lscr.io/linuxserver/transmission
-    restart: unless-stopped
-    container_name: transmission
-    volumes:
-      - ${APP_DATA_DIR}/transmission:/config
-      - ${MEDIA_DIR}/torrents:/media/torrents
-    environment:
-      - TZ=${TZ}
-      - PUID=${PUID}
-      - GUID=${PGID}
-    networks:
-      - transmission
-      - web_public
-    ports:
-      - 51413:51413
-      - 51413:51413/udp
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.transmission.entrypoints=websecure"
-      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
-      - "traefik.http.routers.transmission.tls=true"
-      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
-      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-
   radarr:
     image: linuxserver/radarr
     restart: unless-stopped
@@ -141,7 +114,7 @@ services:
       - ${APP_DATA_DIR}/radarr:/config
       - ${MEDIA_DIR}:/media
     networks:
-      - transmission
+      - web_public
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.entrypoints=websecure"
@@ -160,7 +133,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/jackett:/config
     networks:
-      - transmission
+      - web_public
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jackett.entrypoints=websecure"
