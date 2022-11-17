@@ -1,0 +1,22 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: akhilrex/podgrab
+    restart: unless-stopped
+    environment:
+      - CHECK_FREQUENCY=240
+    volumes:
+      - ${APP_DATA_DIR}/podgrab:/config
+      - ${MEDIA_DIR}/podcasts:/assets
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.podgrab.entrypoints=websecure"
+      - "traefik.http.routers.podgrab.rule=Host(`podgrab.${DOMAIN}`)"
+      - "traefik.http.routers.podgrab.tls=true"
+      - "traefik.http.routers.podgrab.tls.certresolver=letsencrypt"
+      - "traefik.http.services.podgrab.loadbalancer.server.port=8080"
