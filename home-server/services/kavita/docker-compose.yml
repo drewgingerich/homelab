@@ -1,0 +1,22 @@
+networks:
+  web_public:
+    name: web_public
+
+services:
+  server:
+    image: kizaing/kavita
+    restart: unless-stopped
+    volumes:
+      - ${APP_DATA_DIR}/komga:/kavita/config
+      - ${MEDIA_DIR}/comics:/comics
+      - ${MEDIA_DIR}/manga:/manga
+      - ${MEDIA_DIR}/books:/books
+    networks:
+      - web_public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kavita.entrypoints=websecure"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      - "traefik.http.routers.kavita.tls=true"
+      - "traefik.http.routers.kavita.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
