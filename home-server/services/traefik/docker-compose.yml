@@ -1,11 +1,13 @@
 networks:
-  web_public:
-    name: web_public
+  web_wan:
+    name: web_wan
+  web_lan:
+    name: web_lan
   private: {}
 
 services:
   server:
-    image: traefik
+    image: traefik:v3.0
     restart: unless-stopped
     depends_on:
       - docker-socket-proxy
@@ -17,41 +19,55 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/traefik:/config
     networks:
-      - web_public
+      - web_wan
+      - web_lan
       - private
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
+      - "8443:8443"
     command:
-      # - "--log.level=DEBUG"
-      # -----
+      - "--log.level=DEBUG"
+      # ---
       - "--api.dashboard=true"
-      # -----
+      # ---
       - "--providers.docker.endpoint=tcp://docker-socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
-      # -----
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.websecure.http.tls=true"
-      - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
-      - "--entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}"
-      - "--entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}"
-      # -----
+      # ---
       - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/config/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=linode"
       - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
-      # -----
+      # ---
       - "--serversTransport.insecureSkipVerify=true"
+      # ---
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web-secure.address=:443"
+      - "--entrypoints.web-secure.http.tls=true"
+      - "--entrypoints.web-secure.http.tls.certResolver=letsencrypt"
+      - "--entrypoints.web-secure.http.tls.domains[0].main=${LAN_DOMAIN}"
+      - "--entrypoints.web-secure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
+      # ---
+      - "--entrypoints.proxied-web.address=:8080"
+      - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
+      - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.proxied-web-secure.address=:8443"
+      - "--entrypoints.proxied-web-secure.http.tls=true"
+      - "--entrypoints.proxied-web-secure.http.tls.certResolver=letsencrypt"
+      - "--entrypoints.proxied-web-secure.http.tls.domains[0].main=${WAN_DOMAIN}"
+      - "--entrypoints.proxied-web-secure.http.tls.domains[0].sans=*.${WAN_DOMAIN}"
     labels:
+      # ---
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      # ---
+      - "traefik.http.routers.traefik-dashboard-lan.entrypoints=web-secure"
+      - "traefik.http.routers.traefik-dashboard-lan.rule=Host(`traefik.${LAN_DOMAIN}`) || Host(`traefik.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.traefik-dashboard-lan.service=api@internal"
+      - "traefik.http.routers.traefik-dashboard-lan.tls=true"
+      - "traefik.http.routers.traefik-dashboard-lan.tls.certresolver=letsencrypt"
 
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy
