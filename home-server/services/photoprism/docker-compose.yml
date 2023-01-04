@@ -1,13 +1,13 @@
 networks:
-  web_public:
-    name: web_public
+  web_lan:
+    name: web_lan
   private: {}
 
 services:
   server:
     image: "photoprism/photoprism"
     depends_on:
-      - "photoprism_db"
+      - "database"
     restart: "unless-stopped"
     devices:
       - "/dev/dri:/dev/dri"
@@ -23,15 +23,17 @@ services:
       - "${APP_DATA_DIR}/photoprism/storage:/photoprism/storage"
       - "${MEDIA_DIR}/pictures:/photoprism/originals"
     networks:
-      - web_public
+      - web_lan
       - private
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.photoprism.entrypoints=websecure"
-      - "traefik.http.routers.photoprism.rule=Host(`photoprism.${DOMAIN}`)"
-      - "traefik.http.routers.photoprism.tls=true"
-      - "traefik.http.routers.photoprism.tls.certresolver=letsencrypt"
-      - "traefik.http.services.photoprism.loadbalancer.server.port=2342"
+      # ---
+      - "traefik.http.services.photoprism-lan.loadbalancer.server.port=2342"
+      # ---
+      - "traefik.http.routers.photoprism-lan.entrypoints=web-secure"
+      - "traefik.http.routers.photoprism-lan.rule=Host(`photoprism.${LAN_DOMAIN}`) || Host(`photoprism.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.photoprism-lan.tls=true"
+      - "traefik.http.routers.photoprism-lan.tls.certresolver=letsencrypt"
 
   database:
     image: "mariadb:10.6"

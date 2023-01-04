@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  web_lan:
+    name: web_lan
 
 services:
   server:
@@ -14,11 +14,13 @@ services:
       - ${APP_DATA_DIR}/sonarr:/config
       - ${MEDIA_DIR}:/media
     networks:
-      - web_public
+      - web_lan
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.entrypoints=websecure"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"
-      - "traefik.http.routers.sonarr.tls=true"
-      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      # ---
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      # ---
+      - "traefik.http.routers.sonarr-lan.entrypoints=web-secure"
+      - "traefik.http.routers.sonarr-lan.rule=Host(`sonarr.${LAN_DOMAIN}`) || Host(`sonarr.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.sonarr-lan.tls=true"
+      - "traefik.http.routers.sonarr-lan.tls.certresolver=letsencrypt"

@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  web_lan:
+    name: web_lan
 
 services:
   server:
@@ -12,11 +12,13 @@ services:
       - ${MEDIA_DIR}/manga:/manga
       - ${MEDIA_DIR}/books:/books
     networks:
-      - web_public
+      - web_lan
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kavita.entrypoints=websecure"
-      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"
+      # ---
+      - "traefik.http.services.kavita.loadbalancer.server.port=5000"
+      # ---
+      - "traefik.http.routers.kavita.entrypoints=web-secure"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${LAN_DOMAIN}`) || Host(`kavita.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.kavita.tls=true"
       - "traefik.http.routers.kavita.tls.certresolver=letsencrypt"
-      - "traefik.http.services.kavita.loadbalancer.server.port=5000"

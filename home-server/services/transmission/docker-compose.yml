@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  web_lan:
+    name: web_lan
 
 services:
   server:
@@ -15,14 +15,16 @@ services:
       - PUID=${PUID}
       - GUID=${PGID}
     networks:
-      - web_public
+      - web_lan
     ports:
       - 51413:51413
       - 51413:51413/udp
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.transmission.entrypoints=websecure"
-      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
+      # ---
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
+      # ---
+      - "traefik.http.routers.transmission.entrypoints=web-secure"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${LAN_DOMAIN}`) || Host(`transmission.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.transmission.tls=true"
       - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
-      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
