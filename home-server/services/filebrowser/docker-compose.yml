@@ -19,7 +19,7 @@ services:
     labels:
       - "traefik.enable=true"
       #---
-      - "traefik.http.services.filebrowser-lan.loadbalancer.server.port=80"
+      - "traefik.http.services.filebrowser.loadbalancer.server.port=80"
       #---
       - "traefik.http.routers.filebrowser-lan.entrypoints=web-secure"
       - "traefik.http.routers.filebrowser-lan.rule=Host(`filebrowser.${LAN_DOMAIN}`) || Host(`filebrowser.vpn.${LAN_DOMAIN}`)"

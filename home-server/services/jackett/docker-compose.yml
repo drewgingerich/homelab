@@ -18,7 +18,7 @@ services:
     labels:
       - "traefik.enable=true"
       # ---
-      - "traefik.http.services.jackett-lan.loadbalancer.server.port=9117"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
       # ---
       - "traefik.http.routers.jackett-lan.entrypoints=web-secure"
       - "traefik.http.routers.jackett-lan.rule=Host(`jackett.${LAN_DOMAIN}`) || Host(`jackett.vpn.${LAN_DOMAIN}`)"
