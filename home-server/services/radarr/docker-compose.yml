@@ -1,6 +1,6 @@
 networks:
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -14,7 +14,7 @@ services:
       - ${APP_DATA_DIR}/radarr:/config
       - ${MEDIA_DIR}:/media
     networks:
-      - web_lan
+      - service_gateway
     labels:
       - "traefik.enable=true"
       # ---

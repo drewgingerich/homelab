@@ -1,6 +1,6 @@
 networks:
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -14,7 +14,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/jackett:/config
     networks:
-      - web_lan
+      - service_gateway
     labels:
       - "traefik.enable=true"
       # ---

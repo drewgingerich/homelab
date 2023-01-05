@@ -1,6 +1,6 @@
 networks:
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -12,7 +12,7 @@ services:
       - ${MEDIA_DIR}/manga:/manga
       - ${MEDIA_DIR}/books:/books
     networks:
-      - web_lan
+      - service_gateway
     labels:
       - "traefik.enable=true"
       # ---

@@ -1,8 +1,6 @@
 networks:
-  web_wan:
-    name: web_wan
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
   private: {}
 
 services:
@@ -19,8 +17,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/traefik:/config
     networks:
-      - web_wan
-      - web_lan
+      - service_gateway
       - private
     ports:
       - "80:80"
@@ -28,10 +25,11 @@ services:
       - "8080:8080"
       - "8443:8443"
     command:
-      - "--log.level=DEBUG"
+      # - "--log.level=DEBUG"
       # ---
       - "--api.dashboard=true"
       # ---
+      - "--providers.docker.network=service_gateway"
       - "--providers.docker.endpoint=tcp://docker-socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
       # ---

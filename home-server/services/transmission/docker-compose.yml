@@ -1,6 +1,6 @@
 networks:
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -15,7 +15,7 @@ services:
       - PUID=${PUID}
       - GUID=${PGID}
     networks:
-      - web_lan
+      - service_gateway
     ports:
       - 51413:51413
       - 51413:51413/udp

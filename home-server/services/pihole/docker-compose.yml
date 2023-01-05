@@ -1,6 +1,6 @@
 networks:
-  web_lan:
-    name: web_lan
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -12,7 +12,7 @@ services:
       - "${APP_DATA_DIR}/pihole/server:/etc/pihole"
       - "${APP_DATA_DIR}/pihole/dnsmasq:/etc/dnsmasq.d"
     networks:
-      - web_lan
+      - service_gateway
     dns:
       - "127.0.0.1"
     ports:

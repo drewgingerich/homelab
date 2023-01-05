@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -12,7 +12,7 @@ services:
       - ${APP_DATA_DIR}/podgrab:/config
       - ${MEDIA_DIR}/podcasts:/assets
     networks:
-      - web_public
+      - service_gateway
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.podgrab.entrypoints=websecure"
