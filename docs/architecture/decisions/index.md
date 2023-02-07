@@ -1,5 +1,6 @@
 # Architecture Decision Records
 
 - [1. Record architecture decisions](0001-record-architecture-decisions.md)
-- [2. Make a home server](0002-make-a-home-server.md)
-- [3. Use ZFS for the server filesystem](0003-use-zfs-for-server-filesystem.md)
+- [2. Get a server](0002-get-a-server.md)
+- [3. Build a home server from scratch](0003-build-a-home-server-from-scratch.md)
+- [4. Use ZFS for the server filesystem](0004-use-zfs-for-server-filesystem.md)
