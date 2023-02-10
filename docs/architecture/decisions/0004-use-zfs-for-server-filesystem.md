@@ -33,3 +33,7 @@ I gain access to other features of ZFS, including snapshots, compression, and en
 Using ZFS introduces additional complexity to the system that I will need to manage.
 I will need to become familiar with how ZFS works.
 I will need to perform regular maintainence, such as taking and pruning snapshots and monitoring reported errors.
+
+## References
+
+- [ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
