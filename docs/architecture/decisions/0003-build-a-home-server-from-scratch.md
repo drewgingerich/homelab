@@ -1,6 +1,6 @@
 # 3. Build a home server from scratch
 
-Date: 2023-02-04
+Date: unknown
 
 ## Status
 

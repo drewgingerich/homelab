@@ -1,6 +1,6 @@
 # 5. Use mirror vdevs to create a ZFS pool
 
-Date: 2023-02-05
+Date: unknown
 
 ## Status
 
