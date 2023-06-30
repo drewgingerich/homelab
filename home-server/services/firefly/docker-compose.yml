@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  service_gateway:
+    name: service_gateway
   private: {}
 
 services:
@@ -25,15 +25,17 @@ services:
     volumes:
       - "${APP_DATA_DIR}/firefly/upload:/var/www/html/storage/upload"
     networks:
-      - web_public
+      - service_gateway
       - private
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.firefly.entrypoints=websecure"
-      - "traefik.http.routers.firefly.rule=Host(`firefly.${DOMAIN}`)"
+      # ---
+      - "traefik.http.services.firefly.loadbalancer.server.port=8080"
+      # ---
+      - "traefik.http.routers.firefly.entrypoints=web-secure"
+      - "traefik.http.routers.firefly.rule=Host(`firefly.${LAN_DOMAIN}`) || Host(`firefly.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.firefly.tls=true"
       - "traefik.http.routers.firefly.tls.certresolver=letsencrypt"
-      - "traefik.http.services.firefly.loadbalancer.server.port=8080"
 
   database:
     image: postgres:13
