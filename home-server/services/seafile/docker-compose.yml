@@ -1,0 +1,49 @@
+networks:
+  service_gateway:
+    name: service_gateway
+  private: {}
+
+services:
+  server:
+    image: seafileltd/seafile-mc
+    restart: unless-stopped
+    depends_on:
+      - database
+      - cache
+    environment:
+      - DB_HOST=database
+      - DB_ROOT_PASSWD=db_dev
+      - TIME_ZONE=${TZ}
+      - SEAFILE_ADMIN_EMAIL=${ADMIN_EMAIL}
+      - SEAFILE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SEAFILE_SERVER_LETSENCRYPT=false
+    volumes:
+      - ${APP_DATA_DIR}/seafile/app:/shared
+    networks:
+      - service_gateway
+      - private
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.seafile.loadbalancer.server.port=80"
+      # ---
+      - "traefik.http.routers.seafile-lan.entrypoints=web-secure"
+      - "traefik.http.routers.seafile-lan.rule=Host(`seafile.${LAN_DOMAIN}`) || Host(`seafile.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.seafile-lan.tls=true"
+      - "traefik.http.routers.seafile-lan.tls.certresolver=letsencrypt"
+
+  database:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=db_dev
+      - MYSQL_LOG_CONSOLE=true
+    volumes:
+      - ${APP_DATA_DIR}/seafile/database:/var/lib/mysql
+    networks:
+      - private
+
+  cache:
+    image: memcached:1.6.18
+    entrypoint: memcached -m 256
+    networks:
+      - private
