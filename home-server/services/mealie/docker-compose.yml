@@ -1,6 +1,6 @@
 networks:
-  web_public:
-    name: web_public
+  service_gateway:
+    name: service_gateway
 
 services:
   server:
@@ -13,10 +13,13 @@ services:
     volumes:
       - ${APP_DATA_DIR}/mealie:/app/data
     networks:
-      - web_public
+      - service_gateway
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mealie.entrypoints=websecure"
-      - "traefik.http.routers.mealie.rule=Host(`mealie.${DOMAIN}`)"
-      - "traefik.http.routers.mealie.tls=true"
-      - "traefik.http.routers.mealie.tls.certresolver=letsencrypt"
+      # ---
+      - "traefik.http.services.mealie.loadbalancer.server.port=80"
+      # ---
+      - "traefik.http.routers.mealie-lan.entrypoints=web-secure"
+      - "traefik.http.routers.mealie-lan.rule=Host(`mealie.${LAN_DOMAIN}`) || Host(`mealie.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.mealie-lan.tls=true"
+      - "traefik.http.routers.mealie-lan.tls.certresolver=letsencrypt"
