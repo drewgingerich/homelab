@@ -1,6 +1,6 @@
 # 2. Get a server
 
-Date: unknown
+Date: 2019
 
 ## Status
 
@@ -20,4 +20,7 @@ I will get a server.
 
 ## Consequences
 
-I will have a place to store and acess my media, and to install self-hosted services.
+I will have a place to store and access my media, and to install self-hosted services.
+
+I will need to pay for and manage my server,
+and the data and services running on it.
