@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     depends_on:
       - database
-      - cache
+      - memcached
     environment:
       - DB_HOST=database
       - DB_ROOT_PASSWD=db_dev
@@ -42,7 +42,7 @@ services:
     networks:
       - private
 
-  cache:
+  memcached:
     image: memcached:1.6.18
     entrypoint: memcached -m 256
     networks:
