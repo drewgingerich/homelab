@@ -1,0 +1,47 @@
+networks:
+  service_gateway:
+    name: service_gateway
+  private: {}
+
+services:
+  server:
+    image: lscr.io/linuxserver/hedgedoc:latest
+    restart: unless-stopped
+    depends_on:
+      - database
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      CMD_DB_URL: "postgres://hedgedoc:hedgedoc@database:5432/hedgedoc"
+      CMD_URL_ADDPORT: "false"
+      CMD_PROTOCOL_USESSL: "false"
+      CMD_HSTS_ENABLE: "false"
+      CMD_CSP_ENABLE: "false"
+      CMD_ALLOW_ORIGIN: "*"
+    volumes:
+      - ${APP_DATA_DIR}/hedgedoc/server:/var/lib/postgresql/data
+    networks:
+      - service_gateway
+      - private
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.hedgedoc.loadbalancer.server.port=3000"
+      # ---
+      - "traefik.http.routers.hedgedoc-lan.entrypoints=web-secure"
+      - "traefik.http.routers.hedgedoc-lan.rule=Host(`hedgedoc.${LAN_DOMAIN}`) || Host(`hedgedoc.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.hedgedoc-lan.tls=true"
+      - "traefik.http.routers.hedgedoc-lan.tls.certresolver=letsencrypt"
+
+  database:
+    image: postgres:13-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hedgedoc
+      POSTGRES_USER: hedgedoc
+      POSTGRES_PASSWORD: hedgedoc
+    volumes:
+      - ${APP_DATA_DIR}/hedgedoc/database:/var/lib/postgresql/data
+    networks:
+      - private
