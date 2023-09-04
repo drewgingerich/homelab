@@ -3,8 +3,32 @@ networks:
     name: service_gateway
 
 services:
-  server:
-    image: hkotel/mealie
+  web:
+    image: hkotel/mealie:frontend-v1.0.0beta-5
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      TZ: ${TZ}
+      PUID: ${PUID}
+      PGID: ${PGID}
+      API_URL: "http://api:9000"
+    volumes:
+      - ${APP_DATA_DIR}/mealie:/app/data
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.mealie.loadbalancer.server.port=3001"
+      # ---
+      - "traefik.http.routers.mealie-lan.entrypoints=web-secure"
+      - "traefik.http.routers.mealie-lan.rule=Host(`mealie.${LAN_DOMAIN}`) || Host(`mealie.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.mealie-lan.tls=true"
+      - "traefik.http.routers.mealie-lan.tls.certresolver=letsencrypt"
+
+  api:
+    image: hkotel/mealie:api-v1.0.0beta-5
     restart: unless-stopped
     environment:
       TZ: ${TZ}
@@ -14,12 +38,3 @@ services:
       - ${APP_DATA_DIR}/mealie:/app/data
     networks:
       - service_gateway
-    labels:
-      - "traefik.enable=true"
-      # ---
-      - "traefik.http.services.mealie.loadbalancer.server.port=80"
-      # ---
-      - "traefik.http.routers.mealie-lan.entrypoints=web-secure"
-      - "traefik.http.routers.mealie-lan.rule=Host(`mealie.${LAN_DOMAIN}`) || Host(`mealie.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.mealie-lan.tls=true"
-      - "traefik.http.routers.mealie-lan.tls.certresolver=letsencrypt"
