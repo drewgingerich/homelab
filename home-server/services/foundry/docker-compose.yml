@@ -17,7 +17,7 @@ services:
       - "traefik.http.services.foundry.loadbalancer.server.port=30000"
       #---
       - "traefik.http.routers.foundry-lan.entrypoints=web-secure"
-      - "traefik.http.routers.foundry-lan.rule=Host(`foundry.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.foundry-lan.rule=Host(`foundry.${LAN_DOMAIN}`) || Host(`foundry.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.foundry-lan.tls=true"
       - "traefik.http.routers.foundry-lan.tls.certresolver=letsencrypt"
       #---
