@@ -20,7 +20,7 @@ services:
       CMD_CSP_ENABLE: "false"
       CMD_ALLOW_ORIGIN: "*"
     volumes:
-      - ${APP_DATA_DIR}/hedgedoc/server:/var/lib/postgresql/data
+      - ${APP_DATA_DIR}/hedgedoc/server:/config
     networks:
       - service_gateway
       - private
