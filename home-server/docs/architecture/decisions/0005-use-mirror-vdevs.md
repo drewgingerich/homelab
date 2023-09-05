@@ -1,4 +1,4 @@
-# 5. Use mirror vdevs to create a ZFS pool
+# 5. Use mirror vdevs
 
 Date: 2019
 
@@ -13,8 +13,8 @@ ZFS scatters data across all devices in the pool, and if a single device fails t
 
 ZFS can create a virtual device (vdev) out of one or more physical devices.
 There are several types of vdev,
-each using the underlying disks differently to provide a particular balance between storage space, speed, and redundancy.
-Some vdevs are also more flexible regarding adding and removing disks, and using different disk capacities.
+each using the underlying disks differently to provide different balances between storage space, speed, and redundancy.
+Some vdevs are more flexible around adding or removing physical disks, or using disks with different capacities.
 
 I do not need to maximize space because my media collection is not very large and is growing slowly.
 

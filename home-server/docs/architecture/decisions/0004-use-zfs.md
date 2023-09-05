@@ -1,4 +1,4 @@
-# 4. Use ZFS for the server filesystem
+# 4. Use ZFS
 
 Date: 2019
 
@@ -11,9 +11,11 @@ Accepted
 I have enough media that I need a way to store data across multiple disks.
 I also want the ability to add more disks to the storage pool in the future, in case I run out of storage.
 
-My server will be used for long-term storage, so disk failure and bitrot could become issues.
-I want a filesystem that can provide some data redundancy to help mitigate data loss form disk failure,
-and that can prevent bitrot.
+My server will be used for long-term storage, so disk failure and data degredation could become issues.
+
+Hardware RAID controllers can be used to create single logical volumes from multiple physical disks.
+
+ZFS seems cool, and my more knowledgable friend uses it.
 
 ## Decision
 
@@ -21,9 +23,10 @@ I will use ZFS as the filesystem for storing data.
 
 ## Consequences
 
-ZFS allows me to group multiple disks into a single virtual device.
+ZFS can create a single filesystem using multiple disks.
 
-ZFS protects against bitrot of data at rest.
+ZFS protects against degredation of data at rest.
+It does not protect against degredation of data in memory.
 I should use ECC RAM to help prevent in-memory bitrot and avoid undermining the protection ZFS provides.
 
 I should follow the rule of thumb and get about 1G of RAM per TB of storage in my ZFS pool.
