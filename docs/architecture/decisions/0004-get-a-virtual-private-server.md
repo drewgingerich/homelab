@@ -1,4 +1,4 @@
-# 3. Get a virtual private server
+# 4. Get a virtual private server
 
 Date: 2020
 

@@ -1,4 +1,4 @@
-# 6. Use a public Git repository
+# 3. Use a public Git repository
 
 Date: 2019
 

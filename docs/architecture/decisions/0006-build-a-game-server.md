@@ -1,4 +1,4 @@
-# 5. Build a game server
+# 6. Build a game server
 
 Date: 2023-08-10
 

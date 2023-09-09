@@ -1,4 +1,4 @@
-# 4. Get a server rack
+# 5. Get a server rack
 
 Date: 2023-04-16
 
