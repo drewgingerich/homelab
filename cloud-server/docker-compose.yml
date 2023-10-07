@@ -1,6 +1,0 @@
-services:
-  rtmp:
-    image: tiangolo/nginx-rtmp
-    restart: unless-stopped
-    ports:
-      - "1935:1935"
