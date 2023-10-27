@@ -34,6 +34,7 @@ services:
 
   database:
     image: mariadb:10.6
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=db_dev
       - MYSQL_LOG_CONSOLE=true
@@ -44,6 +45,7 @@ services:
 
   memcached:
     image: memcached:1.6.18
+    restart: unless-stopped
     entrypoint: memcached -m 256
     networks:
       - private
