@@ -3,15 +3,17 @@ services:
     image: itzg/minecraft-server
     restart: unless-stopped
     volumes:
-      - ${APP_DATA_DIR}/minecraft/kk/data:/data
+      - ${APP_DATA_DIR}/minecraft/${WORLD_NAME}/data:/data
     environment:
-      - TZ=${TZ}
-      - EULA=TRUE
-      - DIFFICULTY=normal
-      - ENABLE_WHITELIST=true
-      - WHITELIST=${MINECRAFT_ADMIN_USERNAME}
-      - OPS=${MINECRAFT_ADMIN_USERNAME}
-      - SNOOPER_ENABLED=false
-      - ALLOW_FLIGHT=true
-      - MEMORY=${MINECRAFT_MEMORY}
+      TZ: ${TZ}
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.20.1"
+      DIFFICULTY: normal
+      ENABLE_WHITELIST: "true"
+      WHITELIST: ${MINECRAFT_ADMIN_USERNAME}
+      OPS: ${MINECRAFT_ADMIN_USERNAME}
+      SNOOPER_ENABLED: "false"
+      ALLOW_FLIGHT: "true"
+      MEMORY: "16G"
     network_mode: "host"
