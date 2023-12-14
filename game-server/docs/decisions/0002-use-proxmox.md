@@ -10,7 +10,7 @@ Accepted
 
 I have had good experiences running services in containers.
 I appreciate the freedom provided by the portable, immutable, and disposable nature of containers.
-I also like that the way containers are built is self-documenting and reproducible.
+I also like the self-documenting and reproducible way that containers are built.
 I am curious about using virtual machines and something like [Packer](https://www.packer.io/) to get similar benefits at the OS layer.
 
 There appear to be a lot of distributions of Linux with support for running virtual machines.
