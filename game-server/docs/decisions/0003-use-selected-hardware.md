@@ -126,3 +126,4 @@ The extra cores on the CPU will help ensure there are enough resources to run VM
 ## References
 
 - [The gaming PC I would build if I wasn't a privileged YouTuber](https://www.youtube.com/watch?v=Ctku3kDsXFQ)
+- [PC Part Picker part list](https://pcpartpicker.com/user/Drewtooroo/builds/#view=Jqy48d)
