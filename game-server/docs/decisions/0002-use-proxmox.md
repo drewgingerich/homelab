@@ -14,7 +14,7 @@ I also like the self-documenting and reproducible way that containers are built.
 I am curious about using virtual machines and something like [Packer](https://www.packer.io/) to get similar benefits at the OS layer.
 
 There appear to be a lot of distributions of Linux with support for running virtual machines.
-Proxmox is distro focused on running virtual machines, and seems to be well-loved and have a large community.
+Proxmox is a distro focused on running virtual machines, and seems to be well-loved and have a large community.
 My friend uses Proxmox for their homelab and likes it.
 
 I find that trying something out is the best way to learn.
