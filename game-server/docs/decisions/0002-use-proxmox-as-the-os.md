@@ -1,4 +1,4 @@
-# 2. Use Proxmox as the operating system
+# 2. Use Proxmox as the OS
 
 Date: 2023-12-13
 
