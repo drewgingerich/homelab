@@ -1,4 +1,4 @@
-# 2. Use LVM to manage storage
+# 4. Use LVM to manage storage
 
 Date: 2023-12-21
 

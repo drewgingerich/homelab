@@ -1,4 +1,4 @@
-# 2. Use selected hardware
+# 3. Use selected hardware
 
 Date: 2023-12-18
 
