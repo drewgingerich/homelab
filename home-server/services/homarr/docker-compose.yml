@@ -1,0 +1,23 @@
+networks:
+  service_gateway:
+    name: service_gateway
+
+services:
+  server:
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - ${APP_DATA_DIR}/homarr/configs:/app/data/configs
+      - ${APP_DATA_DIR}/homarr/icons:/app/public/icons
+      - ${APP_DATA_DIR}/homarr/data:/data
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+      # ---
+      - "traefik.http.routers.homarr-lan.entrypoints=web-secure"
+      - "traefik.http.routers.homarr-lan.rule=Host(`homarr.${LAN_DOMAIN}`) || Host(`homarr.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.homarr-lan.tls=true"
+      - "traefik.http.routers.homarr-lan.tls.certresolver=letsencrypt"
