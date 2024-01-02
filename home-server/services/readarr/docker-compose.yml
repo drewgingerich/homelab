@@ -1,0 +1,26 @@
+networks:
+  service_gateway:
+    name: service_gateway
+
+services:
+  server:
+    image: linuxserver/readarr:develop
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${APP_DATA_DIR}/readarr:/config
+      - ${MEDIA_DIR}:/media
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
+      # ---
+      - "traefik.http.routers.readarr-lan.entrypoints=web-secure"
+      - "traefik.http.routers.readarr-lan.rule=Host(`readarr.${LAN_DOMAIN}`) || Host(`readarr.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.readarr-lan.tls=true"
+      - "traefik.http.routers.readarr-lan.tls.certresolver=letsencrypt"
