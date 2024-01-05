@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: linuxserver/radarr
+    image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
     environment:
       - TZ=${TZ}

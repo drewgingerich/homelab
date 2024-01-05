@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: linuxserver/jackett
+    image: lscr.io/linuxserver/jackett:latest
     restart: unless-stopped
     container_name: jackett
     environment:

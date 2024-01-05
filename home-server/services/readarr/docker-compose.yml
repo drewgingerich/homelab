@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: linuxserver/readarr:develop
+    image: lscr.io/linuxserver/readarr:develop
     restart: unless-stopped
     environment:
       - TZ=${TZ}
