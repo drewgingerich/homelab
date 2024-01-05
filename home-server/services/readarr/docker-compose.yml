@@ -6,6 +6,7 @@ services:
   server:
     image: lscr.io/linuxserver/readarr:develop
     restart: unless-stopped
+    container_name: readarr
     environment:
       - TZ=${TZ}
       - PUID=${PUID}

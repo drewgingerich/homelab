@@ -6,6 +6,7 @@ services:
   server:
     image: lscr.io/linuxserver/sonarr:latest
     restart: unless-stopped
+    container_name: sonarr
     environment:
       - TZ=${TZ}
       - PUID=${PUID}

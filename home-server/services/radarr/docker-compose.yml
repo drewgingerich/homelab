@@ -6,6 +6,7 @@ services:
   server:
     image: lscr.io/linuxserver/radarr:latest
     restart: unless-stopped
+    container_name: radarr
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
