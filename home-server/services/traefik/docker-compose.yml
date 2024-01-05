@@ -25,7 +25,7 @@ services:
       - "8080:8080"
       - "8443:8443"
     command:
-      # - "--log.level=DEBUG"
+      - "--log.level=ERROR"
       # ---
       - "--api.dashboard=true"
       # ---
@@ -40,23 +40,27 @@ services:
       # ---
       - "--serversTransport.insecureSkipVerify=true"
       # ---
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--traefik.http.middlewares.security-headers.headers.framedeny=true"
+      # ---
       - "--entrypoints.web-secure.address=:443"
       - "--entrypoints.web-secure.http.tls=true"
       - "--entrypoints.web-secure.http.tls.certResolver=letsencrypt"
       - "--entrypoints.web-secure.http.tls.domains[0].main=${LAN_DOMAIN}"
       - "--entrypoints.web-secure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
       # ---
-      - "--entrypoints.proxied-web.address=:8080"
-      - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
-      - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # ---
       - "--entrypoints.proxied-web-secure.address=:8443"
       - "--entrypoints.proxied-web-secure.http.tls=true"
       - "--entrypoints.proxied-web-secure.http.tls.certResolver=letsencrypt"
       - "--entrypoints.proxied-web-secure.http.tls.domains[0].main=${WAN_DOMAIN}"
       - "--entrypoints.proxied-web-secure.http.tls.domains[0].sans=*.${WAN_DOMAIN}"
+      # ---
+      - "--entrypoints.proxied-web.address=:8080"
+      - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
+      - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
     labels:
       # ---
       - "traefik.enable=true"
