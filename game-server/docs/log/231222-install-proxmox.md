@@ -10,7 +10,7 @@ Proxmox installer uses arrow keys to navigate options,
 but my keyboard didn't have any.
 Oops!
 
-I added arrow keys to the layout and flashed it.
+My keyboard uses [QMK](https://qmk.fm/), so I added arrow keys to the layout and flashed it.
 
 ## Hang while installing drivers
 
@@ -22,13 +22,15 @@ Rebooted to exit the installation process.
 
 Pressed `e` at the installation mode select screen to enter the GRUB menu.
 
-Added `nomodeset` to kernal options line and this step completed.
+Added `nomodeset` to the kernal options line:
 
 ```
 linux  /boot/linux26 ro ramdisk_size=16777216 rw quiet splash=silent nomodeset
 ```
 
-## Hang while deteting country
+The driver installation completed successfully.
+
+## Hang while detecting country
 
 The Proxmox installer boot-up process would hang while trying to detect the country.
 
