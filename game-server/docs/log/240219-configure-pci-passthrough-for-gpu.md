@@ -1,6 +1,7 @@
-# Configure PCI passthrough for the GPU
+# Configure PCIe passthrough for the GPU
 
-PCI passthrough allows a GPU (and other devices) to be used directly from within a VM.
+PCIe passthrough allows IO devices like a GPU to be used directly by a VM,
+instead of the VM interacting with it through a software virtualization layer.
 This is imporant for performance-critical tasks like gaming.
 
 ## IOMMU setup
@@ -10,7 +11,7 @@ the first thing to check is the IOMMU capabilities and configuration.
 
 [passthrough-guide]: https://web.archive.org/web/20240203023530/https://pve.proxmox.com/wiki/PCI_Passthrough
 
-By my understanding, drivers for I/O devices like GPUs expect to be able to directly access memory.
+By my understanding, drivers for IO devices like GPUs expect to be able to directly access memory.
 This direct memory access is not possible from inside a virtual machine, though, since the memory is virtualized.
 If a driver tries to directly access memory, it will likely corrupt the memory
 because it doesn't understand the mapping between the virtual and physical memory addresses.
@@ -47,10 +48,15 @@ Now running `dmesg | grep -e DMAR -e IOMMU` returned a positive result:
 AMD-Vi: AMD IOMMUv2 loaded and initialized
 ```
 
-Next I checked if IOMMU interrupt remapping is enabled.
-PCI devices send data to special memory addresses to trigger interrupts.
-These are known as [Message Signaled Interrupts](https://web.archive.org/web/20240115070533/https://en.wikipedia.org/wiki/Message_Signaled_Interrupts).
-An IOMMU without interrupt remapping support can't tell if a memory access is meant to be an interrupt or not.
+Next I checked if IOMMU interrupt remapping is available and enabled.
+PCI/e devices trigger interrupts by sending messages to special memory addresses,
+a process known as [Message Signaled Interrupts](wikipedia-msi).
+Devices passed through to a VM could be used to send arbitrary interrupt messages,
+which have the potential to open the way for a variety of exploits[^4].
+IOMMU interrupt remapping is a mechanism that allows the host to restrict which interrupts devices are allowed to send, 
+closing this attack vector.
+
+[wikipedia-msi](https://web.archive.org/web/20240115070533/https://en.wikipedia.org/wiki/Message_Signaled_Interrupts)
 
 To check, I ran `dmesg | grep 'remapping'` and got:
 
@@ -58,7 +64,7 @@ To check, I ran `dmesg | grep 'remapping'` and got:
 AMD-Vi: Interrupt remapping enabled
 ```
 
-This indicated that interrupt remapping is supported.
+This indicates that interrupt remapping is supported.
 
 Next I checked to see if IOMMU groups are supported.
 I ran `pvesh get /nodes/{nodename}/hardware/pci --pci-class-blacklist ""` and got a table of results:
@@ -96,3 +102,4 @@ echo "blacklist nvidia*" >> /etc/modprobe.d/blacklist.conf
 [^1]: [Input–output memory management unit (Wikipedia)](https://web.archive.org/web/20240201160518/https://en.wikipedia.org/wiki/Input%E2%80%93output_memory_management_unit)
 [^2]: [What is IOMMU and how it can be used?](https://web.archive.org/web/20230923133045/https://blog.3mdeb.com/2021/2021-01-13-iommu/)
 [^3]: [IOMMU protection against I/O attacks: a vulnerability and a proof of concept](https://web.archive.org/web/20230711052741/https://journal-bcs.springeropen.com/articles/)
+[^4]: [Following the White Rabbit: Software attacks against Intel (R) VT-d technology](https://web.archive.org/web/20230711052741mp_/http://www.invisiblethingslab.com/resources/2011/Software%2520Attacks%2520on%2520Intel%2520VT-d.pdf)
