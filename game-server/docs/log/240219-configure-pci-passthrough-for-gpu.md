@@ -4,10 +4,17 @@ PCIe passthrough allows IO devices like a GPU to be used directly by a VM,
 instead of the VM interacting with it through a software virtualization layer.
 This is imporant for performance-critical tasks like gaming.
 
-I'm following the [PCI Passthrough](passthrough-guide) and [PCI(e) Passthrough](passthrough-guide), guide on the Proxmox wiki
+I've found several guides for setting up PCI passthrough for a GPU:
+- [VFIO GPU How To Series (Alex Williamson)](https://vfio.blogspot.com/2015/05/vfio-gpu-how-to-series-part-1-hardware.html)
+- [PCI/GPU Passthrough on Proxmox VE 8 : Installation and configuration (Proxmox forum)](https://forum.proxmox.com/threads/pci-gpu-passthrough-on-proxmox-ve-8-installation-and-configuration.130218/)
+- [PCI passthrough via OVMF (Arch Linux wiki)](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF)
+- [PCI(e) Passthrough (Proxmox wiki)](https://web.archive.org/web/20240224170249/https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough)
 
-[proxmox-guide-1]: https://web.archive.org/web/20240203023530/https://pve.proxmox.com/wiki/PCI_Passthrough
-[proxmox-guide-2]: https://web.archive.org/web/20240224170249/https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough
+The high-level steps are:
+1. Enable and configure IOMMU
+1. Prevent host from binding drivers to the GPU
+1. Configure virtualization to pass GPU through to guest
+1. Configure guest to bind drivers to the GPU
 
 ## IOMMU setup
 
@@ -66,27 +73,27 @@ AMD-Vi: Interrupt remapping enabled
 This indicates that interrupt remapping is supported.
 
 Next I'll check to see if IOMMU groups are supported.
+IOMMU groups are how the IOMMU isolates various groups of devices from other groups[^5][^6][^7].
 
 When PCI devices share an I/O virtual address (IOVA) space,
 they can accidentally or maliciously access each other's memory.
 To avoid this, the IOMMU can assign each device a different IOVA space.
 
 PCIe devices can also communicate with other devices directly, without going through the IOMMU.
-This bypasses the isolation provided by usding separate IOVA spaces.
+This bypasses the isolation provided by using separate IOVA spaces.
 Modern PCIe hardware implement PCIe Access Control Services (ACS), which can prevent devices from talking with each other.
-This forces inter-device communication to go throught the IOMMU and regains the isolation.
+ACS can prevent cross-device communication and regain the isolation provided by separate IOVA spaces.
 
-Some devices cannot be prevented from communicating, however.
-Some must be able to talk to each other for functionality or performance.
-GPU cards generally come with an audio controller as well as the VGA,
+ACS doesn't block all cross-device communication, however.
+Some devices must be able to talk to each other for functionality or performance.
+GPU cards generally come with an audio controller as well as the graphics card,
 and these must communicate with each other to provide audio and visual over HDMI or display port, for example.
-Others are so old that ACS can't be properly set up,
+Other devices are so old that ACS can't be properly set up,
 Such as PCI devices made before ACS was part of the PCIe specification.
-When devices can't be fully isolated, they can still be isolated as minimal groups.
+When devices can't be fully isolated, ACS can still isolate them in minimal groups to provide a degree of isolation.
 
-Giving devices within a group separate IOVA spaces is pointless because they can still communicate with each other.
-The IOMMU instead provides a IOVA space for the group as a whole.
-These groups are known as IOMMU groups[^5][^6].
+The IOMMU provides a separate IOVA space for each of these groups.
+These groups are known as IOMMU groups.
 
 IOMMU groups must be passed into a VM as a whole.
 If a subset of the devices in an IOMMU group were passed into a VM,
@@ -148,9 +155,9 @@ echo "blacklist nvidia*" >> /etc/modprobe.d/blacklist.conf
 [^4]: [Following the White Rabbit: Software attacks against Intel (R) VT-d technology](https://web.archive.org/web/20230711052741mp_/http://www.invisiblethingslab.com/resources/2011/Software%2520Attacks%2520on%2520Intel%2520VT-d.pdf)
 [^5]: [IOMMU Groups – What You Need to Consider](https://web.archive.org/web/20230928084315/https://www.heiko-sieger.info/iommu-groups-what-you-need-to-consider/)
 [^6]: [IOMMU Groups, inside and out](https://web.archive.org/web/20240223082856/http://vfio.blogspot.com/2014/08/iommu-groups-inside-and-out.html)
+[^7]: [VFIO - "Virtual Function I/O" (Linux Kernel documentation)](https://www.kernel.org/doc/Documentation/vfio.txt)
 
 [PCI Express Access Control Services (ACS)](https://web.archive.org/web/2/https://pdos.csail.mit.edu/~sbw/links/ECN_access_control_061011.pdf)
-
-[VFIO - "Virtual Function I/O" (Linux Kernel documentation)](https://www.kernel.org/doc/Documentation/vfio.txt)
-[PCI passthrough via OVMF (Arch Linux wiki)](https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF)
 [PCI Express® Base Specification Revision 5.0 Version 1.0](https://web.archive.org/web/20240107173049/https://picture.iczhiku.com/resource/eetop/SYkDTqhOLhpUTnMx.pdf)
+
+https://www.linux-kvm.org/downloads/lersek/ovmf-whitepaper-c770f8c.txt
