@@ -17,8 +17,8 @@ I installed Sunshine using flatpak:
 sudo flatpak install flathub dev.lizardbyte.app.Sunshine
 ```
 
-I then ran Sunshine with `flatpak run dev.lizardbyte.app.Sunshine`.
-This presented a bunch of errors, though:
+I ran Sunshine with `flatpak run dev.lizardbyte.app.Sunshine`,
+but was presented with a bunch of errors:
 
 ```
 [2024:03:09:17:56:00]: Info: Sunshine version: 0.22.0.c63637f.dirty
@@ -53,11 +53,11 @@ Cannot load libcuda.so.1
  
 ## Installing NVIDIA drivers
 
-I was using the default NVIDIA drivers, which I guessed didn't support CUDA.
+I was using the default NVIDIA drivers, which I assumed didn't support CUDA.
 I knew I should probabaly install the proprietary NVIDIA drivers anyways,
-for best performance.
+for best performance and featureset.
 
-Ubuntu has a command for installing drivers.
+Ubuntu has a command for installing drivers: `ubuntu-drivers`.
 It can install specific drivers,
 but I decided to trust its automatic detection and ran `sudo ubuntu-drivers install`.
 
@@ -93,6 +93,7 @@ Sat Mar  9 18:08:24 2024
 ```
 
 This also indicated the proprietary drivers were working.
+The driver version (535) and CUDA version (12.2) were both higher than the minimum versions listed in the Sunshine docs.
 
 Since the errors were complaining about not being able to load CUDA,
 I also installed CUDA with `sudo apt install nvidia-cuda-toolkit`.
@@ -100,4 +101,26 @@ I also installed CUDA with `sudo apt install nvidia-cuda-toolkit`.
 ## Running Sunshine
 
 Trying to start Sunshine resulted in the same errors as before. 
+
+I remembered reading that using the GPU required a display,
+but I was trying to run it over an SSH terminal.
+I connected a display, mouse, and keyboard and tried to run Sunshine again.
+
+I saw the same CUDA errors, but the Sunshine server did start successfully.
+Presumably because of these CUDA errors,
+the logs showed that it couldn't use nvenv or vaapi for encoding and Sunshine
+fell back using to H.264 on the CPU.
+
+I was able to access the Sunshine web config at `https://localhost:47990` (after accepting a self-signed cert).
+I followed the doc link on the web page and eventually ended up at [some instructions](flatpak-install-instructions) for installing
+via flatpak that I had previously missed.
+
+[flatpak-install-instructions](https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/setup.html#install)
+
+Following these, I ran `flatpak run --command=additional-install.sh dev.lizardbyte.app.Sunshine`.
+
+The output suggested running `systemctl --user enable sunshine` to automatically start Sunshine.
+I decided to do this later, thinking running it manually will be easier for debugging the CUDA errors.
+
+I did follow the output's instructions to reboot for mouse permissions to take effect.
 
