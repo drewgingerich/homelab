@@ -31,7 +31,8 @@ error-quark, 0)
 
 I gave up on the GUI and turned to the commandline
 (and SSHed in so I could sit on the couch).
-I started by listing the storage devices.
+
+I started by listing the block storage devices.
 
 ```
 $ sudo lsblk
@@ -77,9 +78,10 @@ Information: You may need to update /etc/fstab.
 ```
 
 I confirmed by listing the partitions again.
+Also the computer didn't crash, always a good sign.
 
 ```
-sudo parted --list
+$ sudo parted --list
 Model: QEMU QEMU HARDDISK (scsi)
 Disk /dev/sda: 275GB
 Sector size (logical/physical): 512B/512B
@@ -91,4 +93,23 @@ Number  Start   End    Size   File system  Name                  Flags
  2      538MB   275GB  274GB  ext4
 ```
 
-Also the computer didn't crash, always a good sign.
+Finally I resized the root filesystem to use the new room in the partition.
+
+```
+$ sudo resize2fs /dev/sda2
+resize2fs 1.46.5 (30-Dec-2021)
+Filesystem at /dev/sda2 is mounted on /; on-line resizing required
+old_desc_blocks = 4, new_desc_blocks = 32
+The filesystem on /dev/sda2 is now 66977531 (4k) blocks long.
+```
+
+I verified by listing block storage again.
+
+```
+$ lsblk
+NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+...
+sda      8:0    0   256G  0 disk
+├─sda1   8:1    0   512M  0 part /boot/efi
+└─sda2   8:2    0 255.5G  0 part /
+...
