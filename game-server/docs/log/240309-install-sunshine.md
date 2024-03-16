@@ -104,23 +104,135 @@ Trying to start Sunshine resulted in the same errors as before.
 
 I remembered reading that using the GPU required a display,
 but I was trying to run it over an SSH terminal.
-I connected a display, mouse, and keyboard and tried to run Sunshine again.
+I connected a display, mouse, and keyboard and ran Sunshine again.
 
-I saw the same CUDA errors, but the Sunshine server did start successfully.
-Presumably because of these CUDA errors,
-the logs showed that it couldn't use nvenv or vaapi for encoding and Sunshine
-fell back using to H.264 on the CPU.
+```
+$ flatpak run dev.lizardbyte.app.Sunshine 
+[2024:03:13:18:48:46]: Info: Sunshine version: 0.22.0.c63637f.dirty
+Cannot load libcuda.so.1
+[2024:03:13:18:48:46]: Error: Couldn't load cuda: -1
+[2024:03:13:18:48:46]: Error: Failed to gain CAP_SYS_ADMIN
+Gtk-Message: 18:48:46.590: Failed to load module "canberra-gtk-module"
+Gtk-Message: 18:48:46.592: Failed to load module "canberra-gtk-module"
+[2024:03:13:18:48:46]: Info: System tray created
+[2024:03:13:18:48:46]: Error: Environment variable WAYLAND_DISPLAY has not been defined
+[2024:03:13:18:48:46]: Info: Detecting monitors
+[2024:03:13:18:48:46]: Info: Detected monitor 0: HDMI-0, connected: true
+[2024:03:13:18:48:46]: Info: Detected monitor 1: DP-0, connected: false
+[2024:03:13:18:48:46]: Info: Detected monitor 2: DP-1, connected: false
+[2024:03:13:18:48:46]: Info: Detected monitor 3: DP-2, connected: false
+[2024:03:13:18:48:46]: Info: Detected monitor 4: DP-3, connected: false
+[2024:03:13:18:48:46]: Info: Detected monitor 5: DP-4, connected: false
+[2024:03:13:18:48:46]: Info: Detected monitor 6: DP-5, connected: false
+[2024:03:13:18:48:46]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //
+[2024:03:13:18:48:46]: Info: Trying encoder [nvenc]
+[2024:03:13:18:48:46]: Info: Screencasting with X11
+Cannot load libcuda.so.1
+[2024:03:13:18:48:46]: Error: Couldn't load cuda: -1
+Cannot load libcuda.so.1
+[2024:03:13:18:48:46]: Error: Couldn't load cuda: -1
+[2024:03:13:18:48:46]: Info: Encoder [nvenc] failed
+[2024:03:13:18:48:46]: Info: Trying encoder [vaapi]
+[2024:03:13:18:48:46]: Info: Screencasting with X11
+[2024:03:13:18:48:46]: Info: SDR color coding [Rec. 601]
+[2024:03:13:18:48:46]: Info: Color depth: 8-bit
+[2024:03:13:18:48:46]: Info: Color range: [JPEG]
+libva info: VA-API version 1.18.0
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/intel-vaapi-driver/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/GL/lib/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+[2024:03:13:18:48:46]: Error: Couldn't initialize va display: unknown libva error
+[2024:03:13:18:48:46]: Info: SDR color coding [Rec. 601]
+[2024:03:13:18:48:46]: Info: Color depth: 8-bit
+[2024:03:13:18:48:46]: Info: Color range: [JPEG]
+libva info: VA-API version 1.18.0
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/intel-vaapi-driver/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/GL/lib/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+[2024:03:13:18:48:46]: Error: Couldn't initialize va display: unknown libva error
+[2024:03:13:18:48:46]: Info: SDR color coding [Rec. 601]
+[2024:03:13:18:48:46]: Info: Color depth: 8-bit
+[2024:03:13:18:48:46]: Info: Color range: [JPEG]
+libva info: VA-API version 1.18.0
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/intel-vaapi-driver/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/GL/lib/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+[2024:03:13:18:48:46]: Error: Couldn't initialize va display: unknown libva error
+[2024:03:13:18:48:46]: Info: SDR color coding [Rec. 601]
+[2024:03:13:18:48:46]: Info: Color depth: 8-bit
+[2024:03:13:18:48:46]: Info: Color range: [JPEG]
+libva info: VA-API version 1.18.0
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/intel-vaapi-driver/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/GL/lib/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+[2024:03:13:18:48:46]: Error: Couldn't initialize va display: unknown libva error
+[2024:03:13:18:48:46]: Info: Encoder [vaapi] failed
+[2024:03:13:18:48:46]: Info: Trying encoder [software]
+[2024:03:13:18:48:46]: Info: Screencasting with X11
+[2024:03:13:18:48:46]: Info: SDR color coding [Rec. 601]
+[2024:03:13:18:48:46]: Info: Color depth: 8-bit
+[2024:03:13:18:48:46]: Info: Color range: [JPEG]
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] profile High, level 4.2, 4:2:0, 8-bit
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] frame I:1     Avg QP:31.00  size:  1203
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] mb I  I16..4: 99.9%  0.0%  0.0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] 8x8 transform intra:0.0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] coded y,uvDC,uvAC intra: 0.0% 0.0% 0.0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] i16 v,h,dc,p: 97%  0%  3%  0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu:  0%  0% 75% 12%  0%  0%  0%  0% 12%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu:  0%  0% 100%  0%  0%  0%  0%  0%  0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] i8c dc,h,v,p: 100%  0%  0%  0%
+[2024:03:13:18:48:46]: Info: [libx264 @ 0x59f3d6be9700] kb/s:577.44
+[2024:03:13:18:48:46]: Info: Screencasting with X11
+[2024:03:13:18:48:46]: Info: 
+[2024:03:13:18:48:46]: Info: // Ignore any errors mentioned above, they are not relevant. //
+[2024:03:13:18:48:46]: Info: 
+[2024:03:13:18:48:46]: Info: Found H.264 encoder: libx264 [software]
+[2024:03:13:18:48:46]: Info: Configuration UI available at [https://localhost:47990]
+[2024:03:13:18:48:46]: Info: Adding avahi service Sunshine
+[2024:03:13:18:48:47]: Info: Avahi service Sunshine successfully established.
+```
 
-I was able to access the Sunshine web config at `https://localhost:47990` (after accepting a self-signed cert).
+Notably the logs showed that Sunshine wasn't able use NVENC or VA-API for encoding,
+presumably because of the CUDA errors.
+
+I was able to access the Sunshine web config at `https://localhost:47990`, though,
+after accepting a self-signed cert).
 I followed the doc link on the web page and eventually ended up at [some instructions](flatpak-install-instructions) for installing
 via flatpak that I had previously missed.
 
 [flatpak-install-instructions](https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/setup.html#install)
 
-Following these, I ran `flatpak run --command=additional-install.sh dev.lizardbyte.app.Sunshine`.
+Following these instructions, I ran `flatpak run --command=additional-install.sh dev.lizardbyte.app.Sunshine`.
 
-The output suggested running `systemctl --user enable sunshine` to automatically start Sunshine.
-I decided to do this later, thinking running it manually will be easier for debugging the CUDA errors.
+```
+$ flatpak run --command=additional-install.sh dev.lizardbyte.app.Sunshine
+Sunshine User Service has been installed.
+Use [systemctl --user enable sunshine] once to autostart Sunshine on login.
+Configuring mouse permission.
+Portal call failed: org.freedesktop.DBus.Error.ServiceUnknown
+Restart computer for mouse permission to take effect.
+```
 
-I did follow the output's instructions to reboot for mouse permissions to take effect.
+I decided to run `systemctl --user enable sunshine` later,
+to avoid extra debugging complexity while I troubleshot.
 
+I rebooted the computer as instructed.
+
+
+I decided I should check to see if Sunshine was working in any capacity.
+I installed Moonlight on my laptop and ran Sunshine again.
+My game server was not automatically discoverd,
+but I added it manually and was able to connect!
+Sunshine starts with a few apps preconfigured, including a remote desktop.
+
+To verify that I was using X11 and not Wayland:
+
+```
+$ loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type
+Type=x11
+```
