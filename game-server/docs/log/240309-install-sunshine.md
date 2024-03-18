@@ -236,3 +236,114 @@ To verify that I was using X11 and not Wayland:
 $ loginctl show-session $(loginctl | grep $(whoami) | awk '{print $1}') -p Type
 Type=x11
 ```
+
+```
+$ cat /var/lib/flatpak/app/dev.lizardbyte.sunshine/current/active/files/bin/additional-install.sh
+#!/bin/sh
+
+# User Service
+mkdir -p ~/.config/systemd/user
+cp /app/share/sunshine/systemd/user/sunshine.service $HOME/.config/systemd/user/sunshine.service
+echo Sunshine User Service has been installed.
+echo Use [systemctl --user enable sunshine] once to autostart Sunshine on login.
+
+# Udev rule
+UDEV=$(cat /app/share/sunshine/udev/rules.d/60-sunshine.rules)
+echo Configuring mouse permission.
+flatpak-spawn --host pkexec sh -c "echo '$UDEV' > /etc/udev/rules.d/60-sunshine.rules"
+echo Restart computer for mouse permission to take effect.
+```
+
+```
+$ cat $HOME/.config/systemd/user/sunshine.service
+[Unit]
+Description=Self-hosted game stream host for Moonlight
+StartLimitIntervalSec=500
+StartLimitBurst=5
+PartOf=graphical-session.target
+Wants=xdg-desktop-autostart.target
+After=xdg-desktop-autostart.target
+
+[Service]
+ExecStart=flatpak run dev.lizardbyte.sunshine
+ExecStop=flatpak kill dev.lizardbyte.sunshine
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=xdg-desktop-autostart.target
+```
+
+The udev rules file that Sunshine's additional install script should have created didn't appear to exist:
+
+```
+$ ls /etc/udev/rules.d/
+70-snap.firefox.rules  70-snap.snapd-desktop-integration.rules  70-snap.snapd.rules  70-snap.snap-store.rules
+```
+
+Uninstalled the Flathub version of Sunshine:
+```
+$ flatpak run --command=remove-additional-install.sh dev.lizardbyte.sunshine
+$ sudo flatpak uninstall dev.lizardbyte.app.Sunshine
+```
+
+Installed Sunshine flatpak from GitHub releases:
+
+```
+$ wget https://github.com/LizardByte/Sunshine/releases/download/v0.22.2/sunshine_x86_64.flatpak
+$ sudo flatpak install sunshine_x86_64.flatpak
+$ flatpak run --command=additional-install.sh dev.lizardbyte.sunshine
+Sunshine User Service has been installed.
+Use [systemctl --user enable sunshine] once to autostart Sunshine on login.
+Configuring mouse permission.
+Error creating textual authentication agent: Error opening current controlling terminal for the process (`/dev/tty'): No such device or address
+Restart computer for mouse permission to take effect
+$ systemctl --user enable sunshine
+```
+
+Rebooted.
+
+```
+$ sudo reboot now
+```
+
+```
+$ systemctl --user status sunshine
+○ sunshine.service - Self-hosted game stream host for Moonlight
+     Loaded: loaded (/home/drew/.config/systemd/user/sunshine.service; enabled; vendor preset: enabled)
+     Active: inactive (dead)
+```
+
+```
+$ systemctl --user start sunshine
+$ systemctl --user status sunshine
+● sunshine.service - Self-hosted game stream host for Moonlight
+     Loaded: loaded (/home/drew/.config/systemd/user/sunshine.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2024-03-17 00:57:12 PDT; 3s ago
+   Main PID: 1608 (bwrap)
+      Tasks: 0 (limit: 4553)
+     Memory: 2.8M
+        CPU: 10ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/sunshine.service
+             ‣ 1608 bwrap --args 40 sunshine
+```
+
+```
+$ journalctl --user -u sunshine.service
+Mar 16 15:35:38 kyoko systemd[1828]: Started Sunshine is a self-hosted game stream host for Moonlight..
+Mar 16 15:51:56 kyoko systemd[1828]: sunshine.service: Current command vanished from the unit file, execution of the command list won't be resumed.
+Mar 16 18:18:31 kyoko systemd[1828]: Stopping Self-hosted game stream host for Moonlight...
+Mar 16 18:18:31 kyoko flatpak[2797]: error: dev.lizardbyte.sunshine is not running
+Mar 16 18:18:31 kyoko systemd[1828]: sunshine.service: Control process exited, code=exited, status=1/FAILURE
+Mar 16 18:18:31 kyoko systemd[1828]: sunshine.service: Failed with result 'exit-code'.
+Mar 16 18:18:31 kyoko systemd[1828]: Stopped Self-hosted game stream host for Moonlight.
+-- Boot 63445470c65d4f65b2078a3c59e5b31d --
+Mar 17 00:57:12 kyoko systemd[1338]: Started Self-hosted game stream host for Moonlight.
+```
+
+## References 
+
+https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/guides/linux/headless_ssh.html
+https://unix.stackexchange.com/questions/503806/what-are-x-server-display-and-screen
+https://magcius.github.io/xplain/article/index.html
+https://www.reddit.com/r/NixOS/comments/12bjfam/comment/jez5d69/
