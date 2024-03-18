@@ -303,9 +303,7 @@ $ systemctl --user enable sunshine
 
 Rebooted.
 
-```
-$ sudo reboot now
-```
+Checked the status of the sunshine service.
 
 ```
 $ systemctl --user status sunshine
@@ -313,6 +311,8 @@ $ systemctl --user status sunshine
      Loaded: loaded (/home/drew/.config/systemd/user/sunshine.service; enabled; vendor preset: enabled)
      Active: inactive (dead)
 ```
+
+Made sure the sunshine service was running.
 
 ```
 $ systemctl --user start sunshine
@@ -328,6 +328,8 @@ $ systemctl --user status sunshine
              ‣ 1608 bwrap --args 40 sunshine
 ```
 
+Got sunshine service logs.
+
 ```
 $ journalctl --user -u sunshine.service
 Mar 16 15:35:38 kyoko systemd[1828]: Started Sunshine is a self-hosted game stream host for Moonlight..
@@ -340,6 +342,164 @@ Mar 16 18:18:31 kyoko systemd[1828]: Stopped Self-hosted game stream host for Mo
 -- Boot 63445470c65d4f65b2078a3c59e5b31d --
 Mar 17 00:57:12 kyoko systemd[1338]: Started Self-hosted game stream host for Moonlight.
 ```
+
+Installed sunshine deb package. 
+
+```
+wget https://github.com/LizardByte/Sunshine/releases/download/v0.22.2/sunshine-ubuntu-22.04-amd64.deb
+sudo apt install ./sunshine-ubuntu-22.04-amd64.deb
+```
+
+Configure *udev* rules for sunshine.
+
+```
+echo 'KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"' | \
+sudo tee /etc/udev/rules.d/60-sunshine.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+sudo modprobe uinput
+```
+
+Starting sunshine shows no CUDA errors.
+
+```
+$ sunshine
+[2024:03:17:21:08:09]: Info: Sunshine version: v0.22.2
+[2024:03:17:21:08:10]: Info: System tray created
+[2024:03:17:21:08:10]: Error: Failed to create session: This hardware does not support NvFBC
+[2024:03:17:21:08:10]: Info: /dev/dri/card0 -> nvidia-drm
+[2024:03:17:21:08:10]: Error: Environment variable WAYLAND_DISPLAY has not been defined
+[2024:03:17:21:08:10]: Info: Detecting monitors
+[2024:03:17:21:08:10]: Info: Detected monitor 0: HDMI-0, connected: true
+[2024:03:17:21:08:10]: Info: Detected monitor 1: DP-0, connected: false
+[2024:03:17:21:08:10]: Info: Detected monitor 2: DP-1, connected: false
+[2024:03:17:21:08:10]: Info: Detected monitor 3: DP-2, connected: false
+[2024:03:17:21:08:10]: Info: Detected monitor 4: DP-3, connected: false
+[2024:03:17:21:08:10]: Info: Detected monitor 5: DP-4, connected: false
+[2024:03:17:21:08:10]: Info: Detected monitor 6: DP-5, connected: false
+[2024:03:17:21:08:10]: Info: // Testing for available encoders, this may generate errors. You can safely ignore those errors. //
+[2024:03:17:21:08:10]: Info: Trying encoder [nvenc]
+[2024:03:17:21:08:10]: Info: Screencasting with X11
+[2024:03:17:21:08:10]: Info: SDR color coding [Rec. 601]
+[2024:03:17:21:08:10]: Info: Color depth: 8-bit
+[2024:03:17:21:08:10]: Info: Color range: [JPEG]
+[2024:03:17:21:08:10]: Info: SDR color coding [Rec. 601]
+[2024:03:17:21:08:10]: Info: Color depth: 8-bit
+[2024:03:17:21:08:10]: Info: Color range: [JPEG]
+[2024:03:17:21:08:10]: Info: SDR color coding [Rec. 601]
+[2024:03:17:21:08:10]: Info: Color depth: 8-bit
+[2024:03:17:21:08:10]: Info: Color range: [JPEG]
+[2024:03:17:21:08:10]: Warning: [av1_nvenc @ 0x60608b8dfd00] Codec not supported
+[2024:03:17:21:08:10]: Error: [av1_nvenc @ 0x60608b8dfd00] Provided device doesn't support required NVENC features
+[2024:03:17:21:08:10]: Error: Could not open codec [av1_nvenc]: Function not implemented
+[2024:03:17:21:08:10]: Info: Screencasting with X11
+[2024:03:17:21:08:10]: Info: SDR color coding [Rec. 709]
+[2024:03:17:21:08:10]: Info: Color depth: 10-bit
+[2024:03:17:21:08:10]: Info: Color range: [JPEG]
+[2024:03:17:21:08:10]: Error: cuda::cuda_t doesn't support any format other than AV_PIX_FMT_NV12
+[2024:03:17:21:08:10]: Info: 
+[2024:03:17:21:08:10]: Info: // Ignore any errors mentioned above, they are not relevant. //
+[2024:03:17:21:08:10]: Info: 
+[2024:03:17:21:08:10]: Info: Found H.264 encoder: h264_nvenc [nvenc]
+[2024:03:17:21:08:10]: Info: Found HEVC encoder: hevc_nvenc [nvenc]
+[2024:03:17:21:08:10]: Info: Open the Web UI to set your new username and password and getting started
+[2024:03:17:21:08:10]: Info: File /home/drew/.config/sunshine/sunshine_state.json doesn't exist
+[2024:03:17:21:08:10]: Info: Adding avahi service Sunshine
+[2024:03:17:21:08:10]: Info: Configuration UI available at [https://localhost:47990]
+[2024:03:17:21:08:11]: Info: Avahi service Sunshine successfully established.
+```
+
+Uninstalled sunshine and steam flatpaks.
+
+Uninstalled `nvidia-cuda-toolkit`.
+
+```
+$ sudo apt remove nvidia-cuda-toolkit
+$ sudo apt autoremove
+```
+
+Created systemd unit.
+
+```
+cat << EOF > $HOME/.config/systemd/user/sunshine.service
+[Unit]
+Description=Sunshine self-hosted game stream host for Moonlight.
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/bin/sunshine
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+Added to systemd and started.
+
+```
+$ systemctl --user enable sunshine
+$ systemctl --user start sunshine
+$ systemctl --user status sunshine
+● sunshine.service - Sunshine self-hosted game stream host for Moonlight.
+     Loaded: loaded (/home/drew/.config/systemd/user/sunshine.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2024-03-17 21:28:56 PDT; 1min 52s ago
+   Main PID: 12180 (sunshine)
+      Tasks: 16 (limit: 4553)
+     Memory: 112.3M
+        CPU: 394ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/sunshine.service
+             └─12180 /usr/bin/sunshine
+
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Color range: [JPEG]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Error: cuda::cuda_t doesn't support any format other than AV_PIX_FMT_NV12
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info:
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: // Ignore any errors mentioned above, they are not relevant. //
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info:
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Found H.264 encoder: h264_nvenc [nvenc]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Found HEVC encoder: hevc_nvenc [nvenc]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Adding avahi service Sunshine
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Configuration UI available at [https://localhost:47990]
+Mar 17 21:28:57 kyoko sunshine[12180]: [2024:03:17:21:28:57]: Info: Avahi service Sunshine successfully established.
+```
+
+Rebooted.
+
+Made sure systemd had started sunshine automatically.
+
+```
+$ systemctl --user status sunshine
+● sunshine.service - Sunshine self-hosted game stream host for Moonlight.
+     Loaded: loaded (/home/drew/.config/systemd/user/sunshine.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2024-03-17 21:28:56 PDT; 1min 52s ago
+   Main PID: 12180 (sunshine)
+      Tasks: 16 (limit: 4553)
+     Memory: 112.3M
+        CPU: 394ms
+     CGroup: /user.slice/user-1000.slice/user@1000.service/app.slice/sunshine.service
+             └─12180 /usr/bin/sunshine
+
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Color range: [JPEG]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Error: cuda::cuda_t doesn't support any format other than AV_PIX_FMT_NV12
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info:
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: // Ignore any errors mentioned above, they are not relevant. //
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info:
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Found H.264 encoder: h264_nvenc [nvenc]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Found HEVC encoder: hevc_nvenc [nvenc]
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Adding avahi service Sunshine
+Mar 17 21:28:56 kyoko sunshine[12180]: [2024:03:17:21:28:56]: Info: Configuration UI available at [https://localhost:47990]
+Mar 17 21:28:57 kyoko sunshine[12180]: [2024:03:17:21:28:57]: Info: Avahi service Sunshine successfully established.
+```
+
+Moonlight can connect to Sunshine even when server display is off.
+
+Installed steam.
+
+```
+$ wget https://cdn.akamai.steamstatic.com/client/installer/steam.deb
+$ sudo apt install ./steam.deb
+`
 
 ## References 
 
