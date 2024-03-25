@@ -534,6 +534,16 @@ Set display to 1080p.
 $ xrandr --output HDMI-0 --mode 1920x1080 
 ```
 
+Much easier to look at, but there was no sound. 
+
+Restarted Sunshine unit.
+
+```
+$ systemctl restart --user sunshine
+```
+
+Sound works.
+
 ## References 
 
 https://docs.lizardbyte.dev/projects/sunshine/en/latest/about/guides/linux/headless_ssh.html
