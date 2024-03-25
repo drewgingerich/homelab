@@ -1,0 +1,21 @@
+networks:
+  service_gateway:
+    name: service_gateway
+
+services:
+  server:
+    image: docker.io/actualbudget/actual-server:latest
+    restart: unless-stopped
+    volumes:
+      - ${APP_DATA_DIR}/actual:/config
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.actual.loadbalancer.server.port=5006"
+      # ---
+      - "traefik.http.routers.actual-lan.entrypoints=web-secure"
+      - "traefik.http.routers.actual-lan.rule=Host(`actual.${LAN_DOMAIN}`) || Host(`actual.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.actual-lan.tls=true"
+      - "traefik.http.routers.actual-lan.tls.certresolver=letsencrypt"
