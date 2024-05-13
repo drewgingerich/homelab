@@ -13,6 +13,7 @@ services:
     volumes:
       - ${APP_DATA_DIR}/plex:/config
       - ${MEDIA_DIR}/tv:/media/tv
+      - ${MEDIA_DIR}/home-video:/media/home-video
       - ${MEDIA_DIR}/movies:/media/movies
       - ${MEDIA_DIR}/music:/media/music
       - ${MEDIA_DIR}/podcasts:/media/podcasts
