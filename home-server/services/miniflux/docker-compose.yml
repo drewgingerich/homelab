@@ -1,0 +1,45 @@
+networks:
+  service_gateway:
+    name: service_gateway
+  private: {}
+
+services:
+  server:
+    image: ghcr.io/miniflux/miniflux:latest
+    restart: unless-stopped
+    container_name: miniflux
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://miniflux:miniflux@db/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=test123
+    networks:
+      - service_gateway
+      - private
+    labels:
+      - "traefik.enable=true"
+      # ---
+      - "traefik.http.services.miniflux.loadbalancer.server.port=8080"
+      # ---
+      - "traefik.http.routers.miniflux-lan.entrypoints=web-secure"
+      - "traefik.http.routers.miniflux-lan.rule=Host(`miniflux.${LAN_DOMAIN}`) || Host(`miniflux.vpn.${LAN_DOMAIN}`)"
+      - "traefik.http.routers.miniflux-lan.tls=true"
+      - "traefik.http.routers.miniflux-lan.tls.certresolver=letsencrypt"
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=miniflux
+      - POSTGRES_DB=miniflux
+    volumes:
+      - ${APP_DATA_DIR}/miniflux/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
+    networks:
+      - private
