@@ -1,0 +1,9 @@
+services:
+  server:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    environment:
+      TZ: $TZ
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *" # Run at 4 am each day
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
