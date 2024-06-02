@@ -22,7 +22,7 @@ I don't need ray tracing.
 
 A Radeon 6700 XT seems to hit the balance of power and price I'm looking for.
 
-A cowork is offering to sell me their used RTX 3070.
+A cowork is offering to sell me their used RTX 3080.
 
 ### CPU
 
@@ -105,7 +105,7 @@ Buy and use the following parts.
 
 | Part Name                                                               | Type         | Cost ($) |
 | ----------------------------------------------------------------------- | ------------ | -------- |
-| Zotac GAMING Trinity OC GeForce RTX 3070 Ti 8 GB                        | GPU          | 400.00   |
+| Zotac GAMING Trinity OC GeForce RTX 3080 10 GB                          | GPU          | 400.00   |
 | AMD Ryzen 7 7700X 4.5 GHz 8-Core                                        | CPU          | 279.98   |
 | Gigabyte B650 GAMING X AX ATX AM5                                       | Motherboard  | 159.99   |
 | G.Skill Flare X5 32 GB (2 x 16 GB) DDR5-6000 CL30                       | Memory       | 93.99    |
