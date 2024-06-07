@@ -35,7 +35,7 @@ EOF
 ```
 
 I reboot the computer.
-Automatic login doesn happen and I have to log in with a physical KVM.
+Automatic login doesn't happen and I have to log in with a physical KVM.
 
 I see that `/etc/gdm` doesn't exist and that other instructions on the web specify `/etc/dgm3`.
 I see that `/etc/gdm3/custom.conf` already exists on my system.

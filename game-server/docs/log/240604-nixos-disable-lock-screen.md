@@ -3,18 +3,56 @@
 In addition to setting up automatic login in [240604-nixos-configure-automatic-login](./240604-nixos-configure-automatic-login.md),
 I want to disable the lock screen so I never have to unlock the computer.
 I'm trying to get the console experience.
-Adding the following to my `/etc/nix/configuration.nix` made this happen:
+
+Based on internet searches, I added the following to my `/etc/nix/configuration.nix`:
 
 ```
 services.xserver.xautolock.enable = false;
 ```
 
-I also came across this option:
+Unfortunately after some inactivity a login screen requiring a password still appeared.
+
+To check if `xautolock` is running with and without this config I ran:
 
 ```
-services.xserver.displayManager.gdm.autoSuspend = false;
+$ pgrep xautolock
 ```
 
-I'm not using it right now, but I want to look at this more and understand it.
-If I can get a suspended state from inactivity but still avoid the lock screen then I think that's ideal,
-and I believe that's what I have with `xautolock` disabled and `autoSuspend` enabled.
+In both cases I got no response, indicating `xautolock` was not active.
+
+I didn't have a good understanding of how lock screens worked in Linux,
+so I did a little research.
+
+https://linux.die.net/man/1/xautolock
+https://wiki.archlinux.org/title/Session_lock#xautolock
+https://www.baeldung.com/linux/display-managers-explained
+
+I realized that my configuration had GDM enabled,
+which was the same setup I was using for the Ubuntu VM:
+
+```
+services.xserver.displayManager.gdm.enable = true;
+```
+
+This meant the lock screen behavior was probably managed by GDM.
+Indeed:
+
+```
+$ gsettings get org.gnome.desktop.screensaver lock-enabled
+true
+```
+
+To check this behavior temporarily I turned off disable the GNOME screensaver:
+
+```
+$ gsettings set org.gnome.desktop.screensaver lock-enabled false
+$ gsettings get org.gnome.desktop.screensaver lock-enabled
+false
+```
+
+
+
+https://github.com/NixOS/nixpkgs/issues/54150
+
+https://github.com/DavHau/nixos-steam-box
+
