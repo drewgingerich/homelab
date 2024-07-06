@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: kizaing/kavita
+    image: jvmilazz0/kavita:latest
     restart: unless-stopped
     volumes:
       - ${APP_DATA_DIR}/komga:/kavita/config
