@@ -16,5 +16,11 @@ with a trusted SSL certificate and on the normal HTTPS port, `443`,
 as suggested by Tailscale's [Tailscale on Proxmox host guide](https://tailscale.com/kb/1133/proxmox).
 
 ```
+NAME="$(tailscale status --json | jq '.Self.DNSName | .[:-1]' -r)"
+tailscale cert "${NAME}"
+pvenode cert set "${NAME}.crt" "${NAME}.key" --force --restart
 tailscale serve --bg https+insecure://localhost:8006
 ```
+
+Note that I used Tailscale's special `https+insecure` protocol.
+I forget if this is necessary or not.

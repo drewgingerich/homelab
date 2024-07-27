@@ -61,5 +61,9 @@ services.sunshine = {
   enabled = true;
   capSysAdmin = true;
 };
+```
 
-No more errors in the web UI.
+No more errors in the web UI!
+
+I added the server to my Moonlight client using its Tailscale IP address and was able to connect.
+

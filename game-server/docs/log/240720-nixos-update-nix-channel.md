@@ -34,6 +34,11 @@ $ sudo nix-channel --remove stable
 
 This allowed me to get the latest packages from nixpkgs.
 
+During the upgrade I was warned of a few changes to configuration names,
+and the build failed.
+I made these changes and the build succeeded.
+I should be aware that upgrading the Nix channel can introduce breaking changes.
+
 I see that a new stable channel is released every six months.
 If I want to get updates earlier, I can use the unstable channel.
 Once I get more familiar with NixOS's rollback capabilities,
