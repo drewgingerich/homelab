@@ -23,7 +23,7 @@ I physically logged into the VM and tried to use Ubuntu's Disks
 app to resize the root filesystem to use this additional space,
 but I got the following error:
 
-```
+```sh
 Error resizing partition /dev/sda2: Failed to set partition size on device
 `/dev/sda/ (Unable to satisfy all constraints on the partition.) (udisks-
 error-quark, 0)
@@ -34,7 +34,7 @@ I gave up on the GUI and turned to the commandline
 
 I started by listing the block storage devices.
 
-```
+```sh
 $ sudo lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 ...
@@ -46,7 +46,7 @@ sda      8:0    0   256G  0 disk
 
 I then listed the partitions.
 
-```
+```sh
 $ sudo parted --list
 Warning: Not all of the space available to /dev/sda appears to be used, you can
 fix the GPT to use all of the space (an extra 469762048 blocks) or continue with
@@ -70,7 +70,7 @@ I accepted.
 
 I then expanded the root filesystem partition to take up the free space.
 
-```
+```sh
 $ sudo parted /dev/sda resizepart 2 100%
 Warning: Partition /dev/sda2 is being used. Are you sure you want to continue?
 Yes/No? Yes
@@ -80,7 +80,7 @@ Information: You may need to update /etc/fstab.
 I confirmed by listing the partitions again.
 Also the computer didn't crash, always a good sign.
 
-```
+```sh
 $ sudo parted --list
 Model: QEMU QEMU HARDDISK (scsi)
 Disk /dev/sda: 275GB
@@ -95,7 +95,7 @@ Number  Start   End    Size   File system  Name                  Flags
 
 Finally I resized the root filesystem to use the new room in the partition.
 
-```
+```sh
 $ sudo resize2fs /dev/sda2
 resize2fs 1.46.5 (30-Dec-2021)
 Filesystem at /dev/sda2 is mounted on /; on-line resizing required
@@ -105,11 +105,12 @@ The filesystem on /dev/sda2 is now 66977531 (4k) blocks long.
 
 I verified by listing block storage again.
 
-```
+```sh
 $ lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 ...
 sda      8:0    0   256G  0 disk
 ├─sda1   8:1    0   512M  0 part /boot/efi
 └─sda2   8:2    0 255.5G  0 part /
-...
+```
+
