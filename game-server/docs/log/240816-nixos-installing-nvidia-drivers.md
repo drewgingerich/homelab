@@ -1,4 +1,3 @@
-https://nixos.wiki/wiki/Nvidia
 
 ```nix
 
@@ -39,7 +38,7 @@ Got error when GPU not passed in as a PCIe device:
 
 ```sh
 $ nvidia-smi
-???
+NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver. Make sure that the latest NVIDIA driver is installed and running.
 ```
 
 Figured this was because the drivers were not loading since no Nvidia GPU was detected.
@@ -60,3 +59,7 @@ Sat Jul 20 23:01:44 2024
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
 ```
+
+## References
+
+https://nixos.wiki/wiki/Nvidia
