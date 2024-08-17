@@ -39,7 +39,6 @@ Trying to connect gave me an error.
 Host returned error: Failed to initialize video capturing/encoding. Is a display connected and turned on? (Error 503)
 ```
 
-
 After a bit of time, the Sunshine service would return to an inactive state.
 
 I checked `journalctl` and saw the following logs.
@@ -66,7 +65,7 @@ $ nvidia-smi
 nvidia-smi: command not found
 ```
 
-Well, that's problem. 
+Well, that's problem.
 
 Then I realized I had commented out the [Nvidia driver settings I had added](/game-server/docs/log/240816-nixos-installing-nvidia-drivers.md) to my NixOS configuration. Doh!
 
@@ -118,5 +117,6 @@ boot.initrd.kernelModules = [ "nvidia" ];
 boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 ```
 
-This did fix the issue! With that, GPU passthrough and Sunshine was working as expected.
+This did fix the issue, Sunshine worked, and Moonlight dropped me into a GUI login screen.
 
+It looks like it broke automatic login, but I will leave that for another day.
