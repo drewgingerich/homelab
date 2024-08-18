@@ -10,7 +10,7 @@ To work with the dummy display I had to use a real display connected to the serv
 
 Checked dummy plug available resolutions.
 
-```
+```sh
 $ xrandr -q
 ...
 HDMI-0 connected primary 3840x2160+0+0 (normal left inverted right x axis y axis) 344mm x 195mm
@@ -30,7 +30,7 @@ HDMI-0 connected primary 3840x2160+0+0 (normal left inverted right x axis y axis
 
 Set display to 1080p.
 
-```
+```sh
 $ xrandr --output HDMI-0 --mode 1920x1080 
 ```
 
@@ -38,7 +38,7 @@ Much easier to look at, but there was no sound.
 
 Restarted Sunshine unit.
 
-```
+```sh
 $ systemctl restart --user sunshine
 ```
 
