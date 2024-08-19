@@ -78,8 +78,56 @@ I'm not familiar with how displays and display managers work in Linux.
 
 The next steps I could think of were:
 
-1. Look at `gdm` logs. There might be an obvious error.
+1. Plug in a real display to see if things are working.
 2. Try to see if the HDMI display is being detected and configured properly.
+3. Look at `gdm` logs. There might be an obvious error.
 
-https://discourse.nixos.org/t/boot-into-text-caused-by-services-xserver-videodrivers-nvidia/33022/2
-https://discourse.nixos.org/t/proper-way-to-configure-monitors/12341/13
+Plugging in a real display showed the homepage,
+meaning graphics was set up and automatic login was working.
+
+Connecting via Moonlight showed a text mode tty.
+The problem appeared to be with Moonlight or Sunshine, rather than graphics drivers or display.
+
+I had trouble getting Sunshine logs by systemd unit.
+
+```sh
+$ journalctl -u sunshine.service
+-- No entries --
+```
+
+I was able to get Sunshine logs by PID.
+
+```sh
+$ sudo ps -ax | grep sunshine
+   1697 ?        Ssl    3:49 /run/wrappers/bin/sunshine
+   2185 pts/0    S+     0:00 grep sunshine
+$ journalctl _PID=1697
+```
+
+I saw a ton of one error in particular.
+
+> Warning: Couldn't get drm fb for plane [0]: No such file or directory
+
+I believed `drm fb` stands for _Direct Rendering Manager framebuffer_.[^1]
+Sunshine was trying to capture a frame from the framebuffer, but it didn't exist.
+
+One thing I noticed in the GUI displays menu is that there was still a second monitor: _Unknown 15.6"_.
+I didn't know if this was related to my problem, but it seemed fishy.
+
+Looking around, I found a GitHub issue[^2] that talked about this.
+The fix there was some NixOS config.
+
+```nix
+boot.kernelParams. = [ "nvidia-drm.fbdev=1" ];
+```
+
+After a reboot, this did remove the _Unknown 15.6"_ display.
+Best of all, Sunshine and Moonlight were working again!
+Sunshine must have been trying to capture the output of that weird display.
+
+## References
+
+[^1]: https://en.wikipedia.org/wiki/Direct_Rendering_Manager
+[^2]: https://github.com/NixOS/nixpkgs/issues/302059
+
+https://www.reddit.com/r/swaywm/comments/ykk5ks/sunshine_moonlight_works_on_sway_for_remote/

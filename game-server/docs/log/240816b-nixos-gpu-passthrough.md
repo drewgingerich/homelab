@@ -108,9 +108,9 @@ steam    tty2         2024-08-16 17:11
 
 This is strange because I've configured automatic login for the `steam` user.
 
-Reading the NixOS Nvidia docs more thoroughly, I see that it has a troubleshooting section
-about [fixing booting to text mode](https://nixos.wiki/wiki/Nvidia#Booting_to_Text_Mode).
-The solution given is to add Nvidia kernel modules manually by adding some NixOs configuration.
+Reading the NixOS Nvidia docs more thoroughly,
+I saw that it has a troubleshooting section about fixing booting to text mode[^1].
+The solution given was to add Nvidia kernel modules manually by adding some NixOs configuration.
 
 ```nix
 boot.initrd.kernelModules = [ "nvidia" ];
@@ -120,3 +120,7 @@ boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
 This did fix the issue, Sunshine worked, and Moonlight dropped me into a GUI login screen.
 
 It looks like it broke automatic login, but I will leave that for another day.
+
+## Reference
+
+[^1]: https://nixos.wiki/wiki/Nvidia#Booting_to_Text_Mode
