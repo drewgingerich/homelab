@@ -2,9 +2,13 @@
 
 ## Problem
 
-I like playing games on my living room TV.
-To do this for games running on my game server,
-I need a way to connect the TV and USB inputs (e.g. controller) in the TV area to the server.
+I want to play games on my living room TV while running them on my server.
+
+## Options
+
+1. Move the game server to the TV area and connect via HDMI
+2. Run HDMI and USB cables from the server to the TV
+3. Stream from the server to a thin client connected the TV
 
 ## Solution
 
@@ -20,17 +24,13 @@ The price is comperable to an active USB cable + USB hub, it has enough USB port
 
 Spend money on the equipment.
 
-Need to drill holes in my walls to run the cables from the basement to the living room on the first floor.
+Need to drill holes in my walls to run the cables from the server to the living room.
 
 ## Context
 
-I see a few options:
-
-1. Move the game server to the TV area
-1. Run HDMI and USB cables from the server to the TV
-2. Stream from the server to a thin client connected the TV
-
-There may be more options with a smart TV, but I don't have one.
+My TV is not a smart TV, so it can't stream games from the server.
+In order to play games, I'll need a way to get the AV to the TV,
+and to connect USB devices in the living room to the server.
 
 ### Moving the server
 
@@ -38,7 +38,7 @@ No.
 
 I think console-style PCs are really cool,
 but I've already bought into a rack solution and appreciate its benefits:
-noise and heat are not an issue, and it centralizes all of my computers.
+noise and heat are not an issue, and it centralizes my computer hardware.
 
 ### Direct connection
 
@@ -51,13 +51,7 @@ Since I'm only planning on connecting input peripherals---mouse, keyboard, and g
 these don't transmit much data, I can use USB 2.0.
 20 feet is beyond the max length of passive USB 2.0 cables (15 feet),
 so I will need some way to extend the connection.
-Options include an active USB cable, fiber optics, or USB-over-ethernet. 
-
-https://www.youtube.com/watch?v=D0imrHdv88k.
-
-To support multiple USB devices I could run multiple USB cables,
-but a USB hub feels like a cleaner solution.
-The USB hub does become a single point of failure for all USB devices.
+Options include an active USB cable, fiber optics, or USB-over-ethernet[^1]. 
 
 ### Thin client
 
@@ -79,6 +73,7 @@ Streaming software introduces a few potential issues:
 - latency
 
 Streaming software is pretty great these days.
-I've sunk 200 hours into Elden Ring streaming from my server to my laptop using and I've enjoyed the experience.
+I've sunk 200 hours into Elden Ring streaming from my server to my laptop using Moonlight and Sunshine and I've enjoyed the experience.
 I have seen all of these issues, but they have been small and infrequent enough that I don't mind too much.
 
+[^1]: https://www.youtube.com/watch?v=D0imrHdv88k
