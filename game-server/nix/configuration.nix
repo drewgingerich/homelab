@@ -91,8 +91,10 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    cemu
     tailscale
     vim
+    firefox
   ];
 
   programs.steam = {
