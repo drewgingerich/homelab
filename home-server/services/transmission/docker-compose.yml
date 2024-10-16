@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: lscr.io/linuxserver/transmission
+    image: lscr.io/linuxserver/transmission:4.0.5
     restart: unless-stopped
     container_name: transmission
     volumes:
@@ -28,3 +28,5 @@ services:
       - "traefik.http.routers.transmission-lan.rule=Host(`transmission.${LAN_DOMAIN}`) || Host(`transmission.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.transmission-lan.tls=true"
       - "traefik.http.routers.transmission-lan.tls.certresolver=letsencrypt"
+      # ---
+      - "com.centurylinklabs.watchtower.enable=false"
