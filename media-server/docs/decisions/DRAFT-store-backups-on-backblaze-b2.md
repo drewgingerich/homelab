@@ -1,10 +1,30 @@
 # 16. Use Restic to create and manage cloud backups to Backblaze B2
 
-Date: 2023-09-04
+## Goals
 
-## Status
+- Cheap cloud storage (amount and ingress/egress fees)
+- Reliable cloud storage
+- Immutable
 
-Accepted
+## Options
+
+- [Poli Systems](https://polisystems.ch/en/s3)
+- [Backblaze B2](https://www.backblaze.com/cloud-storage)
+- [AWS S3 Glacier](https://aws.amazon.com/s3/storage-classes/glacier/)
+- [Wasabi](https://wasabi.com/)
+- [rsync.net](https://rsync.net/)
+
+## Decision
+
+Upload backups to Backblaze B2
+
+## Side effects
+
+I will pay for B2 storage costs.
+
+I will pay for some egress costs, as restic pulls some data down for deduplication.
+
+All the good things backups provide.
 
 ## Context
 
@@ -12,14 +32,4 @@ The issue motivating this decision, and any context that influences or constrain
 
 Other options are [duplicacy](https://duplicacy.com/) and [kopia](https://kopia.io/).
 
-## Decision
 
-Use Restic to create and manage cloud backups to Backblaze B2.
-
-## Consequences
-
-I will pay for B2 storage costs.
-
-I will pay for some egress costs, as restic pulls some data down for deduplication.
-
-All the good things backups provide.
