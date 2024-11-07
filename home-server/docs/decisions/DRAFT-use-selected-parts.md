@@ -1,19 +1,35 @@
-# 7. Use selected parts
+# Use selected hardware
 
-Date: 2023-09-04
+## Goal
 
-## Status
-
-Accepted
-
-## Context
-
-The issue motivating this decision, and any context that influences or constrains the decision.
+Have a reliable server for storing data---
+such as photos, videos, and documents---
+and running self-hosted services.
 
 ## Decision
 
-The change that we're proposing or have agreed to implement.
+Continue to use the following parts.
 
-## Consequences
+| Part Name                                      | Type         |
+| ---------------------------------------------- | ------------ |
+| EVGA GAMING GeForce GTX 1060 6GB               | GPU          |
+| Intel Core i3-6100 3.7 GHz                     | CPU          |
+| Supermicro MBD-X11SSM-F-O Micro ATX LGA1151    | Motherboard  |
+| 4 x Crucial CT16G4WFD8266 16 GB DDR4-2666 CL19 | Memory       |
+| SeaSonic FOCUS Plus 650 Gold                   | Power Supply |
+| Crucial MX500 250 GB 2.5" SSD                  | Storage      |
+| 4 x Western Digital Red 4 TB 3.5" 5400 RPM HDD | Storage      |
+| Fractal Design Node 804                        | Case         |
 
-What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
+## Side effects
+
+The CPU is not very strong, so it doesn't always perform well when running game servers
+such as for Minecraft and Valheim.
+
+## Context
+
+These are the parts my media server currently uses,
+and it's running well.
+
+Of particular note is the ECC RAM,
+which I selected the CPU and motherboard to support.
