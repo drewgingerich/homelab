@@ -1,0 +1,10 @@
+theme = "base16_terminal"
+
+[editor]
+auto-pairs = false
+
+[editor.indent-guides]
+render = true
+
+[editor.file-picker]
+hidden = false

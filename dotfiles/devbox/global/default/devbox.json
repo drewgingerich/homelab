@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.1/.schema/devbox.schema.json",
+  "packages": [
+    "awscli@latest",
+    "semgrep@latest",
+    "just@latest",
+    "zellij@latest",
+    "gh@latest",
+    "glab@latest",
+    "direnv@latest",
+    "fzf@latest",
+    "htop@latest",
+    "yq@latest",
+    "jq@latest",
+    "bat@latest",
+    "zoxide@latest",
+    "lazygit@latest",
+    "ripgrep@latest",
+    "starship@latest",
+    "eza@latest",
+    "delta@latest",
+    "cargo@latest",
+    "python313@latest",
+    "vale@latest"
+  ]
+}
