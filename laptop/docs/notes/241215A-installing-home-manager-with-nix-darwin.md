@@ -66,16 +66,19 @@ at /nix/store/6njjywmz7rwbzml9jfb3i9g63il1lc2z-source/nixos/common.nix:34:27:
 ```
 
 After some Googling, I realized that this was because I hadn't declared the user my `nix-darwin` config,
-which was necessary when running `home-manager` as a `nix-darwin` module:
+which was necessary when running `home-manager` as a `nix-darwin` module[^1][^2]:
 
 ```nix
+# In nix-darwin configuration...
+
 users.users = {
   drew = {
     home = /Users/drew;
   };
 };
-# And more nix-darwin configuration...
 ```
 
 With that, `home-manager` was up and running via `nix-darwin`.
 
+[^1]: [nix-community/home-manager issue 4026](https://github.com/nix-community/home-manager/issues/4026)
+[^2]: [nix-community/home-manager issue 6036](https://github.com/nix-community/home-manager/issues/6036#issuecomment-2533564905)
