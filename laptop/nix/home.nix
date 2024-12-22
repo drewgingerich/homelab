@@ -1,11 +1,14 @@
 { config, username, pkgs, ... }:
 {
-  home.username = "drew";
-  home.homeDirectory = /Users/drew;
+  home.username = username;
+  home.homeDirectory = /Users/${username};
   home.stateVersion = "24.05";
   home.packages = with pkgs; [
+    asdf
+    autorestic
     bat
     delta
+    devbox
     direnv
     eza
     fzf
@@ -20,6 +23,7 @@
     lazygit
     neovim
     pandoc
+    restic
     ripgrep
     starship
     tealdeer
@@ -54,6 +58,9 @@
     };
     "wezterm" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-darwin/dotfiles/wezterm";
+    };
+    "fish" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/nix-darwin/dotfiles/fish";
     };
   };
 

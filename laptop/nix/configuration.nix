@@ -1,8 +1,8 @@
 { pkgs, ... }:
 
 {
-      environment.systemPackages = [
-        pkgs.vim
+      environment.systemPackages = with pkgs; [
+        vim
       ];
 
       nix.settings.experimental-features = "nix-command flakes";
@@ -29,6 +29,12 @@
       };
 
       programs.fish.enable = true;
+      environment.shells = [
+        pkgs.fish
+      ];
+      # system.activationScripts.setFishAsShell.text = ''
+      #   chsh -s ${pkgs.fish} drew
+      # '';
 
       users.users = {
         drew = {
