@@ -40,10 +40,12 @@
     lua-language-server
     marksman
     nil
+    prettierd
     pyright
     ruby-lsp
     ruff-lsp
     starlark-rust
+    stylua
     typescript-language-server
     vscode-langservers-extracted
     vscode-js-debug
