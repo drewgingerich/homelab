@@ -39,13 +39,13 @@
     lua-language-server
     marksman
     nil
-    nodePackages.vscode-json-languageserver
     pyright
     ruby-lsp
     ruff-lsp
     starlark-rust
     typescript-language-server
     vale-ls
+    vscode-langservers-extracted
     vscode-js-debug
     vue-language-server
     yaml-language-server
