@@ -66,6 +66,9 @@
     "fish" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/fish";
     };
+    "autorestic" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/autorestic";
+    };
   };
 
   programs.home-manager.enable = true;

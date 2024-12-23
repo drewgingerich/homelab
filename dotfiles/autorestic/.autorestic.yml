@@ -1,0 +1,18 @@
+version: 2
+backends:
+  backblaze:
+    type: b2
+    path: gjiWYUXh9Y
+locations:
+  data:
+    from:
+    - ~/data
+    to:
+    - backblaze
+    options:
+      all:
+        host: laptop-2020
+      forget:
+        keep-daily: 7
+        keep-weekly: 4
+        keep-monthly: 6
