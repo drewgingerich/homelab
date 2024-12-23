@@ -12,31 +12,31 @@ such as [the module for starship](https://nix-community.github.io/home-manager/o
 ```
 
 Since I already have a collection of dotfiles, I don't want to go this direction right now.
-I can see the potential of managing interrelated config this way,
-such as adding direnv initialization to my shell config when the direnv module is enabled.
+I can see the potential of managing interrelated configuration this way,
+such as adding `direnv` initialization to my shell configuration when the direnv module is enabled.
 I will probably explore this in the future.
 
-## Option 2: `home.file` option with in-store file
+## Option 2: `home.file` option with an in-store symlink
 
 Home Manager provides the [`home.file` option](https://nix-community.github.io/home-manager/options.xhtml#opt-home.file) to copy files from the store into the target location.
 
 For example, to copy the [Starship](https://starship.rs/) config:
 
 ```nix
+  # Home Manager config...
+
   home.file = {
     ".config/starship.toml" = {
       source = ../dotfiles/starship/starship.toml;
     };
   };
-
-  # And other Home Manager config...
 ```
 
 I can use a relative path, from the perspective of the Nix file in which this is configured.
 
 A reminder that the config file must be tracked in Git for it to be picked up, since I'm using a flake.
 
-## Option 3: `home.file` option with out-of-store file
+## Option 3: `home.file` option with an out-of-store symlink
 
 A downside of linking to files in the Nix store is that updates to the file will only be available after re-running `darwin-rebuild switch`.
 
@@ -52,18 +52,24 @@ It is possible to set up a link to a file outside of the store using the `config
   # And other Home Manager config...
 ```
 
-In this case I must use an absolute path to reference the file.
+This requires an absolute path to reference the file when using a Nix flake.
 This can be made more portable by interpolating `config.home.homeDirectory`.
 
 The end result is three links: config -> store -> store -> source.
 
 The store to store link is an implementation detail I don't understand,
-but conceptionally all that's happening is a symlink is put into the store, pointing at whatever target was configured.
+but conceptually all that's happening is a symlink is put into the store,
+and this symlink points at whatever target was configured.
 
-A downside of this is that Nix is no longer managing the config source,
-so it's up to me to make sure it's there.
-In practice doesn't feel like a big deal right now since I'll be keeping the config source in
+The symlink pointing to the config is handled by Nix,
+but the config it's pointing too is no longer managed by Nix.
+This means the Nix config is impure: part of the setup no longer has Nix's guarantees of isolation and reproducibility.
+It's up to me to make sure the configuration is actually there.
+
+In practice this doesn't feel like a big deal right now since I'll be keeping the config source in
 the same repo as the nix-darwin config.
+I also appreciate the convenience of not having to run the nix-darwin rebuild as much,
+since I'm iterating pretty fast right now and the waiting adds up fast.
 
 ## Option 4: `xdg.configFile` option
 
@@ -78,6 +84,8 @@ prepended to the path.
     };
   };
 ```
+
+This fits my use case, so it looks more convenient than `home.file`.
 
 ## Further reading
 
