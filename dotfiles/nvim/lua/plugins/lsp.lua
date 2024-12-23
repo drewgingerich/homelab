@@ -15,6 +15,7 @@ return {
 			lspconfig.marksman.setup({ capabilities = capabilities })
 			lspconfig.ruff_lsp.setup({ capabilities = capabilities })
 			lspconfig.yamlls.setup({ capabilities = capabilities })
+      lspconfig.harper_ls.setup({ capabilities = capabilities })
 			lspconfig.helm_ls.setup({ capabilities = capabilities })
 			lspconfig.nil_ls.setup({ capabilities = capabilities })
 			lspconfig.gdscript.setup({
@@ -22,7 +23,7 @@ return {
 				cmd = vim.lsp.rpc.connect("127.0.0.1", "6005"),
 			})
 			lspconfig.volar.setup({ capabilities = capabilities })
-			lspconfig.vale_ls.setup({ capabilities = capabilities })
+			-- lspconfig.vale_ls.setup({ capabilities = capabilities })
 			lspconfig.starlark_rust.setup({
 				capabilities = capabilities,
 				filetypes = { "star", "bzl", "BUILD.bazel", "Tiltfile" },

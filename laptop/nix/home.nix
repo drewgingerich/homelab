@@ -16,6 +16,7 @@
     git
     gh
     glab
+    harper
     helix
     htop
     hyperfine
@@ -44,7 +45,6 @@
     ruff-lsp
     starlark-rust
     typescript-language-server
-    vale-ls
     vscode-langservers-extracted
     vscode-js-debug
     vue-language-server

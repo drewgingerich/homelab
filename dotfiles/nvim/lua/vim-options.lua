@@ -29,14 +29,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-	desc = "Turn on spellcheck in text files",
-	pattern = "markdown,text",
-	callback = function()
-    vim.opt_local.spell = true
-	end,
-})
-
 vim.keymap.set("v", "<leader>y", '"*y', { desc = "Copy selection to system clipboard" })
 vim.keymap.set("n", "<leader>p", '"*p', { desc = "Paste selection from system clipboard before cursor" })
 vim.keymap.set("n", "<leader>P", '"*P', { desc = "Paste selection from system clipboard after cursor" })
