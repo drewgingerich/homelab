@@ -9,7 +9,7 @@ return {
       method = { null_ls.methods.FORMATTING, null_ls.methods.RANGE_FORMATTING },
       filetypes = { "gd", "gdscript", "gdscript3" },
       generator = helpers.formatter_factory({
-        command = vim.fs.joinpath(vim.fn.stdpath("data"), "mason/bin/gdformat"),
+        command = "gdformat",
         args = { "$FILENAME" },
         to_temp_file = true,
         from_temp_file = true,

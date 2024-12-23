@@ -31,8 +31,9 @@
     yq
     zoxide
 
-    # Language servers for IDE
+    # LSP & DAP servers for IDE
     astro-language-server
+    gdtoolkit_4
     gopls
     helm-ls
     lua-language-server
@@ -45,6 +46,7 @@
     starlark-rust
     typescript-language-server
     vale-ls
+    vscode-js-debug
     vue-language-server
     yaml-language-server
   ];

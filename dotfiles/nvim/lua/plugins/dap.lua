@@ -58,9 +58,7 @@ return {
 			"mfussenegger/nvim-dap",
 		},
 		config = function()
-			require("dap-python").setup(
-				vim.fs.joinpath(vim.fn.stdpath("data"), "mason/packages/debugpy/venv/bin/python")
-			)
+			require("dap-python").setup()
 		end,
 	},
 	{
@@ -76,7 +74,7 @@ return {
 		},
 		config = function()
 			require("dap-vscode-js").setup({
-				debugger_cmd = { vim.fs.joinpath(vim.fn.stdpath("data"), "mason/bin/js-debug-adapter") },
+				debugger_cmd = { "js-debug" },
 				adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
 			})
 
