@@ -1,3 +1,5 @@
+# Installing nix-darwin
+
 Installed Nix with the [Determinant Nix installer](https://determinate.systems/posts/determinate-nix-installer/).
 
 Initialized a flake:
@@ -14,3 +16,6 @@ Installed and activated nix-darwin:
 nix run nix-darwin -- switch --flake ~/.config/nix-darwin
 ```
 
+## Further reading
+
+https://github.com/dustinlyons/nixos-config
