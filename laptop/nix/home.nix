@@ -4,7 +4,7 @@
   home.homeDirectory = /Users/${username};
   home.stateVersion = "24.05";
   home.packages = with pkgs; [
-    asdf
+    asdf-vm
     autorestic
     bat
     delta
