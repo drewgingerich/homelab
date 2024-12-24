@@ -71,5 +71,23 @@
     };
   };
 
+  launchd = {
+    agents = {
+      autorestic = {
+        enable = true;
+        config = {
+            Program = "${pkgs.autorestic}";
+            ProgramArguments = [ "backup" "--all" "--ci"];
+            StartCalendarInterval = [{
+              Hour = 5;
+              Minute = 0;
+            }];
+            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/org.nix-community.home.autorestic/stderr.log";
+            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/org.nix-community.home.autorestic/stdout.log";
+        };
+      };
+    };
+  };
+
   programs.home-manager.enable = true;
 }
