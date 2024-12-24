@@ -17,6 +17,7 @@
           "godot-mono"
           "inkscape"
           "krita"
+          "moonlight"
           "obs"
           "obsidian"
           "rectangle"
