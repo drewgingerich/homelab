@@ -16,6 +16,7 @@
           "firefox"
           "godot-mono"
           "inkscape"
+          "karabiner-elements"
           "krita"
           "moonlight"
           "obs"
@@ -79,11 +80,6 @@
       };
 
       system.defaults.trackpad.Clicking = true;
-
-      system.keyboard = {
-        enableKeyMapping = true;
-        remapCapsLockToEscape = true;
-      };
 
       security.pam.enableSudoTouchIdAuth = true;
 

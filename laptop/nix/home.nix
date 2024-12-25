@@ -69,6 +69,9 @@
     "autorestic" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/autorestic";
     };
+    "karabiner" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
+    };
   };
 
   launchd = {
