@@ -20,6 +20,7 @@
     helix
     htop
     hyperfine
+    imagemagick
     jq
     lazygit
     neovim
