@@ -17,6 +17,12 @@
   }: let
     username = "drew";
   in {
+    nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./game-server/nix/configuration.nix
+      ];
+    };
     darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
       system = " x86_64-darwin";
       specialArgs = {
