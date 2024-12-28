@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
       environment.systemPackages = with pkgs; [
@@ -35,12 +35,12 @@
         pkgs.fish
       ];
       # system.activationScripts.setFishAsShell.text = ''
-      #   chsh -s ${pkgs.fish} drew
+      #   chsh -s ${pkgs.fish} ${username}
       # '';
 
       users.users = {
-        drew = {
-          home = /Users/drew;
+        ${username} = {
+          home = /Users/${username};
         };
       };
 

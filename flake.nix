@@ -9,28 +9,26 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ {
-    self,
+  outputs = {
     nix-darwin,
     home-manager,
     nixpkgs,
     ...
   }: let
     username = "drew";
-    # system = " x86_64-darwin";
-    hostname = "Drews-MacBook-Pro";
-    specialArgs = inputs // {
-      inherit username hostname;
-    };
   in {
-    darwinConfigurations.${hostname} = nix-darwin.lib.darwinSystem {
+    darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
+      system = " x86_64-darwin";
+      specialArgs = {
+        username = "${username}";
+      };
       modules = [
         ./laptop/nix/configuration.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = specialArgs;
+          home-manager.extraSpecialArgs = { username = "${username}"; };
           home-manager.users.${username} = import ./laptop/nix/home.nix;
         }
       ];
