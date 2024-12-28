@@ -14,7 +14,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "unremarkable-game-server";
 
   # Enable networking.
   networking.networkmanager.enable = true;
@@ -57,7 +57,6 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -114,9 +113,6 @@
   services.tailscale.enable = true;
 
   # Nvidia drivers and setup
-  boot.initrd.kernelModules = [ "nvidia" ];
-  boot.extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-  boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.enableRedistributableFirmware = true;
   hardware.nvidia = {
@@ -129,4 +125,5 @@
   };
 
   system.stateVersion = "23.11";
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
