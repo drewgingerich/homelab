@@ -95,6 +95,7 @@
     tailscale
     vim
     firefox
+    xivlauncher
   ];
 
   programs.steam = {
