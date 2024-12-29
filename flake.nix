@@ -14,9 +14,7 @@
     home-manager,
     nixpkgs,
     ...
-  }: let
-    username = "drew";
-  in {
+  }: {
     nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
@@ -25,17 +23,15 @@
     };
     darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
       system = " x86_64-darwin";
-      specialArgs = {
-        username = "${username}";
-      };
+      specialArgs = { username = "drew"; };
       modules = [
         ./laptop/nix/configuration.nix
         home-manager.darwinModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { username = "${username}"; };
-          home-manager.users.${username} = import ./laptop/nix/home.nix;
+          home-manager.extraSpecialArgs = { username = "drew"; };
+          home-manager.users.drew = import ./home.nix;
         }
       ];
     };
