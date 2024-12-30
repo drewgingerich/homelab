@@ -2,13 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [ ./hardware-configuration.nix ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -67,22 +64,20 @@
   };
 
   users.users = {
-    drewg = {
+    ${username} = {
+      home = "/home/${username}";
       isNormalUser = true;
       description = "Drew Gingerich";
       extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [
-        firefox
-	git
-      ];
     };
     steam = {
+      home = "/home/steam";
       isNormalUser = true;
     };
   };
 
   security.sudo.extraRules = [{
-    users = [ "drewg" ];
+    users = [ "${username}" ];
     commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
   }];
 

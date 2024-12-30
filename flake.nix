@@ -17,8 +17,16 @@
   }: {
     nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = { username = "drewg"; };
       modules = [
         ./game-server/nix/configuration.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = { username = "drewg"; };
+          home-manager.users.drewg = import ./home.nix;
+        }
       ];
     };
     darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {

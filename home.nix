@@ -1,7 +1,10 @@
 { config, username, pkgs, ... }:
+let
+  homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
+in
 {
   home.username = username;
-  home.homeDirectory = /Users/${username};
+  home.homeDirectory = homeDirectory;
   home.stateVersion = "24.05";
   home.packages = with pkgs; [
     asdf-vm
