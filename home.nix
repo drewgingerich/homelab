@@ -55,6 +55,9 @@ in
     vscode-js-debug
     vue-language-server
     yaml-language-server
+
+    # C compiler for Treesitter
+    gcc
   ];
 
   xdg.configFile = {
