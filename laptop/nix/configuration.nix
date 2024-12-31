@@ -40,7 +40,7 @@
 
       users.users = {
         ${username} = {
-          home = /Users/${username};
+          home = "/Users/${username}";
         };
       };
 
