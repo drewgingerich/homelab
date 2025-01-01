@@ -86,8 +86,11 @@ in
       autorestic = {
         enable = true;
         config = {
-            Program = "${pkgs.autorestic}";
-            ProgramArguments = [ "backup" "--all" "--ci"];
+            ProgramArguments = [
+              "${pkgs.autorestic}/bin/autorestic"
+              "backup" "--all" "--ci"
+              "--restic-bin" "${pkgs.restic}/bin/restic"
+            ];
             StartCalendarInterval = [{
               Hour = 5;
               Minute = 0;

@@ -18,6 +18,7 @@
           "inkscape"
           "karabiner-elements"
           "krita"
+          "launchcontrol"
           "moonlight"
           "obs"
           "obsidian"

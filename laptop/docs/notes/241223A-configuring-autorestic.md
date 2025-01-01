@@ -42,7 +42,6 @@ locations:
       - ~/data
     to:
       - backblaze
-    cron: "0 2 * * *"
     options:
       all:
         host: my-host
@@ -58,7 +57,7 @@ to keep it out of version control.
 I linked the config to `~/.config/autorestic`:
 
 ```nix
-  # Home Manager config ...
+  # Home Manager config...
 
   xdg.configFile = {
     "autorestic" = {
@@ -83,7 +82,7 @@ This is great, but I'd also love to automatically run the backup job once a day.
 and Home Manager has a [launchd module](https://github.com/nix-community/home-manager/blob/master/modules/launchd/default.nix).
 
 ```nix
-# Home Manager config ...
+# Home Manager config...
 
 launchd = {
   agents = {
@@ -116,6 +115,110 @@ $ launchctl list | grep autorestic
 A potential issue is that log files can grow indefinitely.
 I don't think this will be an issue, as running autorestic once per day shouldn't generate much log volume.
 If necessary, I can set up something like `newsyslog` to rotate and prune the log files.
+
+Turns out that while the launchd agent was correctly created and loaded, it actually wasn't running properly.
+I noticed because running `autorestic exec -a -- snapshots` wasn't listing any new snapshots.
+
+Looking at the agent with `launchctl` I can see it has a status of `78` instead of `0` like it should.
+
+```sh
+$ launchctl list
+PID     Status  Label
+-       78      org.nix-community.home.autorestic
+```
+
+I have no idea what status `78` means.
+
+I install [LaunchControl](https://www.soma-zone.com/LaunchControl/) through `nix-darwin`'s Homebrew integration,
+and it immediately points out that I am trying to execute the directory `/nix/store/dslz0iw4pvi37bjqwx6slb7v00bsvrkf-autorestic-1.8.3` rather
+than the executable at `/nix/store/dslz0iw4pvi37bjqwx6slb7v00bsvrkf-autorestic-1.8.3/bin/autorestic`.
+I update my Nix config to correct for this:
+
+```nix
+# Home Manager config...
+
+launchd = {
+  agents = {
+    autorestic = {
+      enable = true;
+      config = {
+          Program = "${pkgs.autorestic}/bin/autorestic";
+          # Other config...
+      };
+    };
+  };
+};
+```
+
+That fixed the executable.
+
+Next I saw that it was not running the command I expected, removing `backup` argument.
+This caused a failure because `autorestic --all` is not a valid command.
+
+After some digging I learned that the first item of the `ProgramArguments` is the name of the command.
+So the string `backup` was being used as the command name instead of the first argument.
+To fix this I could prepend another item as the command name:
+
+```nix
+# Home Manager config...
+
+launchd = {
+  agents = {
+    autorestic = {
+      enable = true;
+      config = {
+          Program = "${pkgs.autorestic}/bin/autorestic";
+          ProgramArguments = [ "autorestic" "backup" "-av" ];
+          # Other config...
+      };
+    };
+  };
+};
+```
+
+Alternatively, I could not set the `Program` attribute.
+In this case, the first element of `ProgramArguments` is used as both the executable program and the command name:
+
+```nix
+# Home Manager config...
+
+launchd = {
+  agents = {
+    autorestic = {
+      enable = true;
+      config = {
+          Program =;
+          ProgramArguments = [ "${pkgs.autorestic}/bin/autorestic" "backup" "-av" ];
+          # Other config...
+      };
+    };
+  };
+};
+```
+
+I went with this second option since it seemed a bit simpler.
+
+To test that things were working, I ran to agent manually:
+
+```sh
+$ launchctl start org.nix-community.home.autorestic
+$ launchctl list | grep autorestic
+34308   0       org.nix-community.home.autorestic
+$ launchctl list | grep autorestic
+-       0       org.nix-community.home.autorestic
+```
+
+Seeing it exit with code `0` showed that it was successful.
+I also looked at the logs and restic snapshots to double check:
+
+```sh
+$ cat ~/Library/Logs/org.nix-community.home.autorestic/stdout.log
+# truncated...
+snapshot 41b62890 saved
+$ autorestic exec -av -- snapshots
+# truncated...
+41b62890  2025-01-01 01:35:00  laptop-2020              ar:location:data                       /Users/drew/data        8.577 GiB
+```
 
 ## Other reading
 
