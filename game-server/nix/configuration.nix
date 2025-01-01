@@ -63,16 +63,20 @@
     pulse.enable = true;
   };
 
+  programs.fish.enable = true;
+
   users.users = {
     ${username} = {
       home = "/home/${username}";
       isNormalUser = true;
       description = "Drew Gingerich";
       extraGroups = [ "networkmanager" "wheel" ];
+      shell = pkgs.fish;
     };
     steam = {
       home = "/home/steam";
       isNormalUser = true;
+      shell = pkgs.fish;
     };
   };
 
