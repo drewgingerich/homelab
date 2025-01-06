@@ -17,6 +17,7 @@ return {
 			lspconfig.yamlls.setup({ capabilities = capabilities })
       lspconfig.harper_ls.setup({ capabilities = capabilities })
 			lspconfig.helm_ls.setup({ capabilities = capabilities })
+      lspconfig.html.setup({ capabilities = capabilities })
 			lspconfig.nil_ls.setup({ capabilities = capabilities })
 			lspconfig.gdscript.setup({
 				name = "godot",
