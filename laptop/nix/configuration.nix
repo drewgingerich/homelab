@@ -10,11 +10,13 @@
       homebrew = {
         enable = true;
         casks = [
+          "ableton-live-suite@11"
           "blender"
           "docker"
           "discord"
           "firefox"
           "godot-mono"
+          "google-chrome"
           "inkscape"
           "karabiner-elements"
           "krita"
@@ -23,6 +25,7 @@
           "obs"
           "obsidian"
           "rectangle"
+          "signal"
           "steam"
           "tailscale"
           "vlc"
