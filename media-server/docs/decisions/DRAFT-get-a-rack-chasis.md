@@ -1,6 +1,6 @@
 # Get a rack-mounted chasis
 
-## Problem
+## Goal
 
 Now that I [have a server rack](/docs/decisions/231006-get-a-server-rack.md),
 I want a rack-mounted case for my media server.
@@ -28,14 +28,13 @@ I am not looking for:
 - http://www.istarusa.com/en/istarusa/products.php?model=D2-400L-M10SA
 - https://www.chenbro.com/en-global/products/RackmountChassis/4U_Chassis/RM42200
 
-## Solution
+## Decision
 
 Buy a Sliger CX4712 chasis
 
 ## Side effects
 
-
-## Context
+## Exploration
 
 My media server doesn't have a rack-mounted case.
 I have a server rack now, so I would prefer to house it in a rack-mounted case.
