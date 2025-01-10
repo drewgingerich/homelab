@@ -21,6 +21,7 @@
           "karabiner-elements"
           "krita"
           "launchcontrol"
+          "logitech-g-hub"
           "moonlight"
           "obs"
           "obsidian"
