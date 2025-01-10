@@ -3,7 +3,6 @@ local wezterm = require("wezterm")
 local config = {}
 
 config.color_scheme = "Navy and Ivory (terminal.sexy)"
-config.font = wezterm.font("Inconsolata")
 config.font_size = 20
 
 config.window_close_confirmation = "NeverPrompt"
