@@ -25,6 +25,7 @@
           "moonlight"
           "obs"
           "obsidian"
+          "raycast"
           "rectangle"
           "signal"
           "steam"
