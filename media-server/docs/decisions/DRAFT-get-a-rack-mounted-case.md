@@ -1,22 +1,8 @@
-# Get a rack-mounted chasis
+# Get a rack-mounted case
 
 ## Goal
 
-Now that I [have a server rack](/docs/decisions/231006-get-a-server-rack.md),
-I want a rack-mounted case for my media server.
-
-I am looking for a case that:
-
-- Fits an ATX mainboard
-- Fits an ATX power supply
-- Has at least 8 external 3.5" drive bays
-- Supports hot-swappable drives
-- Fits 120 mm fans
-- SAS?
-
-I am not looking for:
-
-- Redundant PSUs
+Get a rack-mounted case that fulfills current and next needs of my media server. 
 
 ## Options
 
@@ -32,9 +18,46 @@ I am not looking for:
 
 Buy a Sliger CX4712 chasis
 
-## Side effects
+## Effects
 
 ## Exploration
+
+Now that I [have a server rack](/docs/decisions/231006-get-a-server-rack.md),
+I want a rack-mounted case for my media server.
+
+I want a 4U case that fits an ATX mainboard and power supply so
+that I have lots of room to work in and flexibility on future components.
+I have plenty of space in the server rack, so efficient use of rack space is not a concern.
+
+I would also like the case to fit 120mm fans to minimize noise,
+since the server rack is in my office.
+
+My server currently uses 4 x 4 TB HDDs.
+I would like to have a comfortable amount of room to expand.
+While I haven't made any decisions, I am interested in:
+
+- 2 x HDD mirror for more media storage
+- 2 x SSD mirror for application and database data
+- 1 x HDD hot spare for the HDD mirrors
+- 1 x HDD for a backup pool, just in case
+
+A case with 8 to 16 3.5" drive bays seems like a comfortable size.
+
+https://www.youtube.com/watch?v=hTbKzQZk21w
+
+I am also interested in hot-swap drive bays so that
+I can manage storage devices without needing to open up the case.
+
+- Fits an ATX mainboard
+- Fits an ATX power supply
+- Has at least 8 external 3.5" drive bays
+- Supports hot-swappable drives
+- Fits 120 mm fans
+- SAS?
+
+I am not looking for:
+
+- Redundant PSUs
 
 My media server doesn't have a rack-mounted case.
 I have a server rack now, so I would prefer to house it in a rack-mounted case.

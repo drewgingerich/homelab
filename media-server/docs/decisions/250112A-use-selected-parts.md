@@ -2,9 +2,8 @@
 
 ## Goal
 
-Have a reliable server for storing data---
-such as photos, videos, and documents---
-and running self-hosted services.
+Have a reliable server for storing data such as photos, videos, and documents,
+and for running self-hosted services.
 
 ## Decision
 
@@ -26,7 +25,7 @@ Continue to use the following parts.
 The CPU is not very strong, so it doesn't always perform well when running game servers
 such as for Minecraft and Valheim.
 
-## Context
+## Investigation
 
 These are the parts my media server currently uses,
 and it's running well.
