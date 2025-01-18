@@ -28,6 +28,7 @@
           "raycast"
           "rectangle"
           "signal"
+          "splice"
           "steam"
           "tailscale"
           "vlc"
