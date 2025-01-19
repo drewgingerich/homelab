@@ -6,7 +6,7 @@ Follows up [241106 - Use ZFS to manage media storage](/media-server/docs/decisio
 
 ## Goal
 
-Select a device configuration the media storage ZFS pool.
+Select ZFS pool layout for media storage.
 
 ## Options
 
@@ -84,14 +84,6 @@ I have listed them in priority order.
 
 ### ZFS pools and vdevs
 
-```mermaid
----
-title: Node with text
----
-flowchart LR
-    id1[This is the text in the box]
-```
-
 A ZFS storage pool is a high-level abstraction over physical devices that
 allows them all to be treated as one monolithic pool of storage.
 
@@ -133,19 +125,21 @@ Out of all of these, mirrors and RAID-Z fit my use-case.
 
 ### Redundancy
 
-Redundancy is how many devices can fail before data is lost.
+Redundancy is how many devices can fail in a vdev before data is lost.
 
-ZFS only provides redundancy at the vdev level:
-data in a pool is dynamically distributed across the vdevs,
-and if a single vdev fails then all data in the pool is lost.
-The robustness of the pool is limited by the weakest vdev,
-and a rule of thumb is to create pools using only vdevs with the same redundancy.
+ZFS pools do not provide any redundancy,
+and redundancy is instead handled at the vdev level.
+The robustness of the pool is hence limited by the weakest vdev.
+A rule of thumb is to create pools using vdevs of the same redundancy.
 
-A mirror vdev with $`d` devices has a redundancy of $`d - 1`$.
-E.g. a 3-way mirror has a redundancy of two.
+A mirror vdev with $`d` devices has a redundancy of $`d - 1`$,
+e.g. a 3-way mirror has a redundancy of 2.
 
-A RAID-Z vdev with $`d` devices and $`p` parity has a redundancy of $`p`$.
-E.g. raidz2 has a redundancy of 2 regardless of the number of disks in the vdev.
+A RAID-Z vdev with $`d` devices and $`p` parity has a redundancy of $`p`$,
+e.g. raidz2 has a redundancy of 2 regardless of the number of disks in the vdev.
+
+Mirror and RAID-Z vdevs can both have excellent redundancy,
+but redundancy comes at a heavy cost of storage efficiency for mirror vdevs.
 
 ### Storage efficiency
 
@@ -157,129 +151,120 @@ so a rule of thumb is match the capacity of all devices within a vdev.
 
 A mirror vdev with $`d` devices has a storage efficiency of $`1 / d`$.
 E.g. efficiency of a 2-way mirror is 50%, and a 3-way mirror is 33%.
-While mirror vdevs can theoretically have any number of devices,
-the storage efficiency quickly lowers beyond normal usefulness.
 
 A RAID-Z vdev with $`d` devices and $`p` parity has a storage efficiency of $`d - p / d`$.
 Increasing the number of devices in the vdev (referred to as _width_) increases efficiency,
 while increasing parity lowers efficiency.
-E.g. efficiency of a 3-wide raidz1 is 66%, a 4-wide raidz2 is 50%, and an 11-wide raidz3 is 72%.
+E.g. efficiency of a 3-wide raidz1 is 66%, a 4-wide raidz2 is 50%, and a 10-wide raidz3 is 70%.
 
 RAID-Z almost always provides better storage efficiency than mirrors.
 
-### Flexibility
-
-ZFS imposes some constrains on how vdevs can be changed once created.
-It is good to think ahead a bit to make sure the vdev doesn't get locked into an undesired configuration.
-
-Mirror vdevs can have devices added or removed after creation.
-
-Mirror vdev storage capacity can be increased by replacing all devices in the vdev with larger devices.
-This means replacing 2-3 drives at a time.
-
-Storage can be increased by adding a new mirror vdev, requiring 2-3 new drives.
-
-Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool.[^1]
-
-RAID-Z vdevs can have new devices added[^2], but not removed.
-Adding a device will not re-flow existing data, so existing data will still have the original storage efficiency.
-With enough file churn, ZFS will eventually balance out the data since
-re-flow happens naturally over time due to copy-on-write.
-My workload is archival so this won't happen, though.
-In practice this is not a big deal: RAID-Z doesn't guarantee the full storage efficiency for every block anyways,[^4]
-
-To increase capacity a whole new RAID-Z vdev should be added,
-or a lot of disks need to be upgraded.
-Upgrading disks also involves a lot of lengthy resilvers,
-and may not be feasible for large RAID-Z vdevs.
-
-The parity level of a RAID-Z vdev cannot be changed after creation.
-
 ### Performance
 
-ZFS distributes operations across vdevs,
-and the performance of a pool trends towards the average performances of its vdevs.
-Creating a pool from vdevs with the same performance characteristics makes
-the performance of the pool more predictable and reliable.
-A rule of thumb is to pick one vdev type for the pool, and use the same types of devices in each vdev.[^6]
+Performance is a deep topic and highly depends on workload,
+and collecting real data is more effective than theorizing.
+Still, I'll do a bit of theorizing to get a general sense and predictions,
+looking at maximum IOPS and throughput for read and write operations.
 
-Performance is a deep topic and highly depends on workload.
-To get a sense of the space, I will look at maximum IOPS and throughput for read and write operations.
-
-I will look at extremes streaming read, concurrent read, streaming write, and concurrent write to get a feel for the space,
-and try to interpolate.
-
-Mirror write speed is limited by the slowest devices in the vdev,
-since the data needs to be written to every device.
-
-Mirror single reads perform at average speed of the disks in the vdev, since data will be read off one of the devices at random.
-Mirrors can improve concurrent read performance by spreading reads across multiple devices.
-
-RAID-Z write performance
-RAID-Z incurs some CPU load in order to calculate the parity bits.
-I'm not sure how much in practice.
-
-ZFS requires thinking about performances at two levels: performance of a pool and performance of a vdev.
+The performance of a pool trends towards the average performances of its vdevs,
+because ZFS distributes operations across the vdevs.
+Having slow vdevs will undermine the performance of fast vdevs.
+A rule of thumb is to use vdevs with similar performance,
+most easily done use identical vdev and device types.[^6]
 
 Pool IOPS is a function of the number of vdevs, because both mirrors and RAID-Z perform like the average device in the vdev.
 2-way mirror pools
 
-### Failure performance
+Since writes to a mirror must write the full data to every device,
+write performance is limited by the slowest device in the vdev.
+In other words, write IOPS and throughput are equivalent to a single disk and don't scale.
 
-When a vdev with redundancy has a device fail, it enters a degraded state.
-Different vdev types exhibit different behaviors when degraded.
+Since every device in a mirror has a full copy of the data,
+a read can be done from any device and read performance is the sum
+of the devices in the vdev.
+This is true for small files, but large files are equal to one disk, ya?
 
-A vdev will continue to function in a degraded mode after a device failure if it has enough redundancy.
-The performance of the vdev after a device failure varies depending on the type.
+RAID-Z incurs some CPU load in order to calculate the parity bits,
+but this is much faster than storage IO and is not a limiting factor for performance.
 
-Since my server is not mission-critical, I don't mind poor performance when a vdev is degraded.
+Since data is broken up and written across all devices in the vdev, 
+writes can be parallelized and write performance is the sum of all the devices.
 
-Mirror vdev devices failure don't affect performance much,
-with the exception being concurrent read performance since reads cannot be distributed across as many devices.
-
-When a device fails, RAID-Z performance is severly degraded because all devices must be read in order
-to do the parity calculations necessary to cover for the failed device.
-What happens when writing to a degraded RAIDz array?
+Reads are limited by the slowest device.
 
 ### Failure recovery
 
-A vdev with redundancy can have the failed device replaced and the new device integrated in.
-a process called a resilver.
-The resilver operation is actually the same as a scrub, so the duration will be similar.
+A vdev with redundancy can have a drive fail and continue to function.
+This gives an opportunity to replace the failed drive before data is lost.
 
-My scrubs currently take 3.5 hours, as shown by `zpool status`.
+When a faulty drive is replaced, ZFS will move data to the new device with an operation called a _resilver_.
+A resilver is actually the same a _scrub_, which is a maintenence task that goes through a pool to find and correct errors.
 
-The longer a resilver, and the more disks involved, the more likely a second failure.
+A resilver is an intensive operation for the devices in a vdev because
+all the data must be read from the remaining devices and written to the new device.
+This brings a chance for more devices to fail during the resilver.
+As the amount of data moved around during a resilver grows, the odds of a second failure grow as well.
 
-When resilvering a mirror, ZFS copies data from the healthy devices over to the new devices.
+If the vdev doesn't have enough redundancy for a second failure, then data will be lost.
+For a bad sector this means a corrupt file: since ZFS manages the filesystem as well as storage devices,
+it knows the file associated with the bad sector and that other files are okay.
+For a complete device failure, most or all files in the pool will be corrupted:
+since ZFS distributes data across all vdevs, most files will have blocks on every vdev.
 
-Recovering from a RAID-Z device failure involves reading from all remaining devices to recreate the missing data.
-This places a lot of load on the remaining disks,
-and anecdotally the odds of a second failure during a RAID-Z resilver are uncomfortably high.[^7]
+Anecdotally the odds of a second failure during a RAID-Z resilver are uncomfortably high[^7].
+Compared to mirrors, a resilver of RAID-Z vdev involves much more device activity:
+they generally have more devices and hence more capacity, and must read parity bits to recreate missing data.
 The general wisdom of the internet recommends skipping raidz1 in favor of raidz2, or even raidz3.
 
 RAID-Z width is mainly limited by
 How to choose RAID-Z width?[^4]
-The wider the array and the larger the disks,
-the longer and more intense a resilver will be.
 Choosing certain sizes can avoid storage overhead.[^6]
 Rule of thumb that RAID-Z vdev device counts should be kept to single digits or low teens.
 
-### Simplicity
+Mirror vdevs have faster and safer recovery because of their smaller size,
+though for 2-way mirror vs raidz2 this is weighed against having a lower redundancy.
 
-Mirror vdevs are pretty simple: slap two devices together and it's good to go.
-To expand capacity, add another mirror vdev to the pool or
-replace both devices with a larger one.
-In either case, only two devices are involved at a time.
+### Flexibility
 
-RAID-Z vdevs present more choices: how wide, and raidz2 or raidz3?
-To increase capacity a whole new RAID-Z vdev should be added,
-or a lot of disks need to be upgraded.
-Upgrading disks also involves a lot of lengthy resilvers,
-and may not be feasible for large RAID-Z vdevs.
+Storage needs grow over time, while storage gets cheaper over time.
+Fiscally it makes sense roughly meet current storage needs now,
+and expand storage when needed.
+I want my ZFS pool layout to be flexible about how it can grow.
 
-RAID-Z presents more axis of choice, and striping + parity is more complicated than simple copies.
-RAID-Z data disks could be powers of 2, e.g. 10 disk raidz2 for 8 data disks.
+I also want flexibility to change properties like storage efficiency and
+redundancy, in case I find a better setup as I learn more.
+ZFS and storage is a deep topic, so I wouldn't be surprised.
+
+ZFS imposes some constraints on how vdevs can be changed once created,
+with different vdev types having different constraints.
+
+Mirror vdevs can have devices added or removed after creation.
+Adding or removing devices doesn't incur any hidden cost or state.
+
+RAID-Z vdevs can have new devices added[^2], but not removed.
+Adding a device will not re-flow the data, so existing data will keep the original storage efficiency.
+With enough churn ZFS will eventually balance out the data since
+re-flow happens naturally over time due to copy-on-write[^4],
+but my workload is archival and low-churn so this won't happen effectively.
+
+The parity level of a RAID-Z vdev cannot be changed after creation.
+
+Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool[^1].
+
+One way to increase pool capacity is to add a vdev.
+Following rules of thumb from above, the vdev should be identical to existing vdevs.
+Mirror vdevs allow capacity to be increased in smaller increments since they are
+made of 2 or 3 devices, while RAID-Z vdevs usually have between 3 and 12 devices.
+
+Another way to increase pool capacity is to replace all drives in a vdev with
+new drives of higher capacity: ZFS will automatically find and make use of the new capacity.
+Each drive replaced needs a resilver, so this quickly becomes unreasonable for large RAID-Z vdevs.
+Mirror vdevs again allow capacity to be increased in small increments because they are smaller.
+
+Mirror vdevs are much more flexible than RAID-Z vdevs.
+
+## Comparison
+
 
 ## References
 
@@ -308,4 +293,6 @@ https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs
 https://arstechnica.com/gadgets/2020/05/zfs-versus-raid-eight-ironwolf-disks-two-filesystems-one-winner/
 https://arstechnica.com/gadgets/2020/02/how-fast-are-your-disks-find-out-the-open-source-way-with-fio/
 
+https://www.truenas.com/docs/references/zfsprimer/
+https://forums.freebsd.org/threads/zpool-degraded-state.64073/
 https://blocksandfiles.com/2022/06/20/resilvering/
