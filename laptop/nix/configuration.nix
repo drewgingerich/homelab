@@ -86,6 +86,8 @@
         wvous-br-corner = 1;
       };
 
+      system.defaults.controlcenter.Bluetooth = true;
+
       system.defaults.trackpad.Clicking = true;
 
       security.pam.enableSudoTouchIdAuth = true;
