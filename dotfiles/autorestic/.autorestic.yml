@@ -6,9 +6,10 @@ backends:
 locations:
   data:
     from:
-    - ~/data
+      - ~/data
+      - ~/Zotero
     to:
-    - backblaze
+      - backblaze
     options:
       all:
         host: laptop-2020
