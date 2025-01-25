@@ -7,7 +7,7 @@ services:
     image: docker.io/actualbudget/actual-server:latest
     restart: unless-stopped
     volumes:
-      - ${APP_DATA_DIR}/actual:/config
+      - ${APP_DATA_DIR}/actual:/data
     networks:
       - service_gateway
     labels:
