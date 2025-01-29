@@ -80,6 +80,11 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
     };
   };
+  home.file = {
+    ".gitconfig" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/git/.gitconfig";
+    };
+  };
 
   launchd = {
     agents = {

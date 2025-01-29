@@ -1,0 +1,22 @@
+[user]
+  name = Drew Gingerich
+  email = drew@elsewhere.space
+[pull]
+  ff = only
+[push]
+  authSetupRemote = true
+  autoSetupRemote = true
+[init]
+  defaultBranch = main
+[core]
+  pager = delta
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true
+[merge]
+  conflictstyle = diff3
+[diff]
+  colorMoved = default
+[fetch]
+	prune = true
