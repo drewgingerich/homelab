@@ -22,20 +22,17 @@ Use a pool of 2-way mirror vdevs.
 
 ## Effects
 
-Faster read throughput and IOPS than RAID-Z.
+Compared to RAID-Z:
 
-Slower write throughput than RAID-Z.
-
-Less data transfer during resilvers than RAID-Z.
-
-Less complex than RAID-Z.
-
-More flexible than RAID-Z.
-In particular, expanding storage only requires buying two new drives at a time.
-
-No CPU load from calculating parity information.
-
-50% storage efficiency, worse than RAID-Z.
+- Worse storage efficiency.
+- Higher read throughput and IOPS.
+- Somewhat lower write throughput.
+- Faster, safer resilvers.
+- Less redundancy per vdev (raidz2 or raidz3).
+- Less complex.
+- More flexible. Expanding storage only requires buying two new drives at a time.
+- Smaller up-front cost since fewer drives required per vdev.
+- No CPU load from calculating parity information.
 
 ## Assessment
 
@@ -119,13 +116,14 @@ dRAID is an evolution of RAID-Z meant for very large arrays of devices, beyond w
 Out of all of these, mirrors and RAID-Z fit my use-case.
 
 [TrueNAS: ZFS Primer](https://www.truenas.com/docs/references/zfsprimer/#zfs-self-healing-file-system)
+[^8]: [Oracle ZFS admin guide: Using Files in a ZFS Storage Pool](https://docs.oracle.com/cd/E19253-01/819-5461/gazcr/index.html)
 
-### Redundancy
+### Fault tolerance
 
-Redundancy is how many devices can fail in a vdev before data is lost.
+Fault tolerance is how many devices can fail in a vdev before data is lost.
 
-ZFS pools do not provide any redundancy,
-and redundancy is instead handled at the vdev level.
+ZFS doesn't provide fault tolerance at the pool level,
+it is instead handled at the vdev level.
 The robustness of the pool is hence limited by the weakest vdev.
 A rule of thumb is to create pools using vdevs of the same redundancy.
 
@@ -171,7 +169,7 @@ When reading data from a hard disk drive (HDD), the following process happens[^w
 6. Data is transferred from disk buffer to memory (~3 GiB/s)
 
 The process is much the same for writes,
-and for HDDs the speeds are also roughly the same.
+and for HDDs read and write operations are roughly the same speed.
 
 [Wikipedia: Cylinder-head sector](https://en.wikipedia.org/wiki/Cylinder-head-sector)
 [^wp-hdd-access-time]: [Wikipedia: Hard disk drive access time](https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Access_time)
@@ -265,9 +263,14 @@ Having slow vdevs will undermine the performance of fast vdevs.
 A rule of thumb is to use vdevs with similar performance,
 most easily done use identical vdev and device types.[^6]
 
+# Good
+[iXsystems ZFS storage pool layout white paper](https://static.ixsystems.co/uploads/2020/09/ZFS_Storage_Pool_Layout_White_Paper_2020_WEB.pdf)
 [Ars Technica: ZFS versus RAID](https://arstechnica.com/gadgets/2020/05/zfs-versus-raid-eight-ironwolf-disks-two-filesystems-one-winner/)
+
+# Not good
 [Ars Technica: How fast are your disks? Find out the open source way, with fio](https://arstechnica.com/gadgets/2020/02/how-fast-are-your-disks-find-out-the-open-source-way-with-fio/)
 [A Closer Look at ZFS, Vdevs and Performance](https://constantin.glez.de/2010/06/04/a-closer-look-zfs-vdevs-and-performance/)
+[^uz]: [ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
 
 ### Failure recovery
 
@@ -350,22 +353,20 @@ Mirror vdevs again allow capacity to be increased in small increments because th
 
 Mirror vdevs are much more flexible than RAID-Z vdevs.
 
+[^1]: [serverfault: why doesn't ZFS vdev removal work when any raidz devices are in the pool?](https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool)
+[^2]: [OpenZFS man pages: zpool-attach.8](https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html)
+
 ## Comparison
 
 ## References
 
-[^uz]: [ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
-[^1]: [serverfault: why doesn't ZFS vdev removal work when any raidz devices are in the pool?](https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool)
-[^2]: [OpenZFS man pages: zpool-attach.8](https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html)
 [^3]: [Wikipedia: parity bit](https://en.wikipedia.org/wiki/Parity_bit)
 [^4]: [ZFS RAIDZ stripe width, or: How I Learned to Stop Worrying and Love RAIDZ](https://www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz)
 [^5]: [ZFS: Read Me 1st](http://nex7.blogspot.com/2013/03/readme1st.html)
 [^6]: [OpenZFS: the final word in file systems](https://jro.io/truenas/openzfs/)
 [^7]: [Reliable RAID Configuration Calculator (R2-C2)](https://jro.io/r2c2/)
-[^8]: [Oracle ZFS admin guide: Using Files in a ZFS Storage Pool](https://docs.oracle.com/cd/E19253-01/819-5461/gazcr/index.html)
 [^10]: [Hard Drive Cost Per Gigabyte](https://www.backblaze.com/blog/hard-drive-cost-per-gigabyte/)
 [^use-mirrors-not-raidz]: [ZFS: You should use mirror vdevs, not RAID-Z.](https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
 
-[iXsystems ZFS storage pool layout white paper](https://static.ixsystems.co/uploads/2020/09/ZFS_Storage_Pool_Layout_White_Paper_2020_WEB.pdf)
 
 [I had VDEV Layouts all WRONG! ...and you probably do too!](https://www.youtube.com/watch?v=_aACgNm8UCw)
