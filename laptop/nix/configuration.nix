@@ -33,6 +33,7 @@
           "tailscale"
           "vlc"
           "wezterm"
+          "zen-browser"
           "zotero"
         ];
       };
