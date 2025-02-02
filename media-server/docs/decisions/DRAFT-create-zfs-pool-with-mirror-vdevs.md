@@ -2,7 +2,7 @@
 
 ## Relations
 
-Follows up [241106 - Use ZFS to manage media storage](/media-server/docs/decisions/241106-use-zfs-to-manage-media-storage.md)
+Follows up [241106 - Use ZFS to manage media storage](media-server/docs/decisions/241106A-use-zfs-to-manage-media-storage.md)
 
 ## Goal
 
@@ -78,7 +78,7 @@ I have listed them in priority order.
 ### ZFS pool layout basics
 
 A ZFS pool is a high-level abstraction that allows multiple
-physical devices to be treated as one monolithic pool of storage.[^uz]
+physical devices to be treated as one monolithic pool of storage.
 
 A ZFS storage pool is created out of one or more virtual devices (vdevs),
 which is a lower-level abstraction over physical devices.
@@ -98,7 +98,7 @@ ZFS also provides a few utility vdev types: spare, cache, log, and special.
 I am ignoring these for this assessment.
 
 File vdevs use a file from an existing file system as a vdev.
-They are primarily intended for testing and experimentation, and not real use.[^8]
+They are primarily intended for testing and experimentation, and not real use.
 
 Single-device vdevs store data on a single device (who'd have thought).
 Since single-device vdevs provide no redundancy ZFS is not able to correct data errors.
@@ -116,7 +116,8 @@ dRAID is an evolution of RAID-Z meant for very large arrays of devices, beyond w
 Out of all of these, mirrors and RAID-Z fit my use-case.
 
 [TrueNAS: ZFS Primer](https://www.truenas.com/docs/references/zfsprimer/#zfs-self-healing-file-system)
-[^8]: [Oracle ZFS admin guide: Using Files in a ZFS Storage Pool](https://docs.oracle.com/cd/E19253-01/819-5461/gazcr/index.html)
+[Oracle ZFS admin guide: Using Files in a ZFS Storage Pool](https://docs.oracle.com/cd/E19253-01/819-5461/gazcr/index.html)
+[Wikipedia: parity bit](https://en.wikipedia.org/wiki/Parity_bit)
 
 ### Fault tolerance
 
@@ -154,70 +155,80 @@ E.g. efficiency of a 3-wide raidz1 is 66%, a 4-wide raidz2 is 50%, and a 10-wide
 
 RAID-Z almost always provides better storage efficiency than mirrors.
 
+[OpenZFS Capacity Calculator](https://jro.io/capacity/)
+
 ### Performance
 
 Understanding storage performance starts with understanding (roughly) what happens during an IO process.
 Since I'm using hard disk drives (HDDs) for storage, I'll specifically look at how HDDs work.
 
-When reading data from a hard disk drive (HDD), the following process happens[^wp-hdd-access-time] [^wp-hdd-data-transfer-rate]:
+There are two primary steps in an IO process that determine the amount of time it takes:
 
-1. IO command is processed by the HDD onboard controller (command processing time, ~1 us)
-2. Head is moved into position (seek time, ~10 ms)
-3. HDD waits for head to settle (settle time, ~0.1 ms)
-4. HDD waits for platter to rotate into position (rotational latency, ~10 ms)
-5. Head reads data into onboard disk buffer (media rate ~100 MiB/s)
-6. Data is transferred from disk buffer to memory (~3 GiB/s)
+1. The HDD prepares to transfer data. The amount of time this takes is known as the _response time_.
+   The response time mostly comes from the mechanical movements of
+   positioning the head (seek time) and platter (rotational latency).
+   Note: response time of a single IO operation can vary by orders of magnitude based on
+   how far the mechanical parts must move, so it is the average response time that is being talked about.
+2. The HDD transfers data. The speed at which it can transfer data is known as the _throughput_.
+   It is mainly limited by the transfer speed between the platter and onboard disk buffer.
 
-The process is much the same for writes,
-and for HDDs read and write operations are roughly the same speed.
-
-[Wikipedia: Cylinder-head sector](https://en.wikipedia.org/wiki/Cylinder-head-sector)
-[^wp-hdd-access-time]: [Wikipedia: Hard disk drive access time](https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Access_time)
-[^wp-hdd-data-transfer-rate]:
+[Wikipedia: Hard disk drive access time](https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Access_time)
 [Wikipedia: Hard disk drive data transfer rate](https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics#Data_transfer_rate)
-[Wikipedia: IOPS](https://en.wikipedia.org/wiki/IOPS)
 
-To help figure out how this translates to performance under different workloads,
+For HDDs today, typical average response time appears to be 10 - 20 ms, and
+typical average throughput appears to be 100 - 300 MBs.
+While numbers seem to be widely known, I did have trouble finding a concrete source.
+A WD Red 4TB drive has a response time of ~10 ms and throughput of ~250 MBs.
+
+[WD Red Pro Product Brief](https://documents.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-red-pro-hdd/product-brief-western-digital-wd-red-pro-hdd.pdf)
+[WD Red 4TB HDD Review (WD40EFRX)](https://www.storagereview.com/review/wd-red-4tb-hdd-review-wd40efrx)
+
+For HDDs, read and write operations have a similar response time and throughput,
+and to simplify things I'll assume they are the same going forward.
+
+To get a sense of how throughput and IOPS affect performance under different workloads,
 take two thought experiments.
 
 First, consider reading an infinite amount of contiguous data.
-The head only needs to be positioned once, so steps 1-4 only occur once and become negligible.
-The transfer rate from disk buffer to memory is faster than the media rate, so it's not the bottleneck.
-The dominant limitation is the media rate.
-This situation represents the maximum data transfer rate, and the value is known as the _throughput_.
+Since the preparation step only need to happen once, the response time is a negligible factor.
+The dominant limitation is the throughput.
 High throughput is good for sequential IO workloads, such as reading large files.
 
 Second, consider reading files with zero size as fast as possible.
-Since no data is being transferred, steps 5 and 6 are out of the equation
-The dominant limitation is how long steps 1-4 take, collectively known as the _response time_ or _latency_.
+Since no data is being transferred, the throughput is out of the equation.
+The dominant limitation is the response time.
 Taking the reciprocal yields _IOPS_ (IO operations per second).
 High IOPS is good for random IO workloads, such as databases.
 
+[Wikipedia: Cylinder-head sector](https://en.wikipedia.org/wiki/Cylinder-head-sector)
+[Wikipedia: IOPS](https://en.wikipedia.org/wiki/IOPS)
 [Getting the hang of IOPS](https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=33141cc6-ef99-4dbb-b6dc-05e57706355b&CommunityKey=63b01f30-d5eb-43c7-9232-72362b508207&tab=librarydocuments)
 
 My use-case is to store and consume media like pictures, books, and videos,
 so the primary workload is sequential IO.
 
-When getting into ZFS vdevs with multiple disks (or RAID in general),
+When getting into ZFS vdevs with multiple disks,
+performance gets more complicated.
 read and write performances separate.
+Multiple devices also bring up saturated vs unsaturated workloads.
 
 When writing to a mirror, the operation completes when the data has been
 written to every drive in the mirror.
 Write throughput is equal to the throughput of the slowest device.
 Write IOPS is equal to the IOPS of the slowest device.
-In other words, write IOPS and throughput are equivalent to a single disk and don't scale.
+In other words, write IOPS and throughput are equivalent to a single slowest disk and don't scale.
 
-When reading from a mirror, ZFS can distribute operations between the devices.
+When reading from a mirror, ZFS distributes operations between the devices.
 For a single read, throughput is equal to the throughput of the assigned device.
 For concurrent reads the throughput can be up to the sum of the throughputs of all the devices.
 Read IOPS is equal to the sum of the IOPS of the devices.
 
-When writing to a RAIDZ vdev, the data is striped across every device.
+When writing to a RAID-Z vdev, the data is striped across every device.
 Since each device only needs to write a fraction of the data,
 write throughput is equal to the sum of the throughputs of the data disks.
 Write IOPS is equal to the slowest device.
 
-When reading from a RAIDZ vdev, data must be read from every device.
+When reading from a RAID-Z vdev, data must be read from every device.
 For the same reason as writes, read throughput is equal to the
 sum of the throughputs of the data disks.
 Read IOPS is equal to the slowest device.
@@ -225,16 +236,16 @@ Read IOPS is equal to the slowest device.
 RAID-Z incurs some CPU load in order to calculate the parity bits,
 but this is much faster than storage IO and is not a factor for throughput or IOPS.
 
-To summarize, assuming all devices are identical:
+To summarize, assuming all devices in the vdevs are identical:
 
 | Vdev type     | Write throughput | Write IOPS | Read throughput | Read IOPS |
 | ------------- | ---------------- | ---------- | --------------- | --------- |
-| Single        | $T_w$            | $I_w$      | $T_r$           | $I_r$     |
-| 2-way Mirror  | $T_w$            | $I_w$      | $2 * T_r$       | $2 * T_r$ |
+| single        | $T_w$            | $I_w$      | $T_r$           | $I_r$     |
+| 2-way mirror  | $T_w$            | $I_w$      | $2 * T_r$       | $2 * T_r$ |
 | 4-wide raidz2 | $4 * T_w$        | $T_w$      | $4 * T_r$       | $T_r$     |
 
-A ZFS pool stripes data across all of its vdevs.
-In this way it behaves similar to RAIDZ, but without penalties from parity bits.
+A ZFS pool stripes data across all of its vdevs,
+and behaves similar to RAID- Z without penalties from parity bits.
 Write throughput is equal to the sum of the throughputs of the vdevs,
 and write IOPS is equal to the slowest vdev.
 Read throughput is equal to the sum of the throughputs of the vdevs.
@@ -248,29 +259,24 @@ mirrors are competitive or better when considering the whole pool.
 
 For a pool with 6 devices:
 
-| Vdev type     | Write throughput | Write IOPS | Read throughput | Read IOPS |
-| ------------- | ---------------- | ---------- | --------------- | --------- |
-| Single        | $6 * T_w$        | $I_w$      | $6 * T_r$       | $I_r$     |
-| 2-way Mirror  | $3 * (T_w)$      | $I_w$      | $3 * (2 * T_r)$ | $2 * T_r$ |
-| 4-wide raidz2 | $1 * (4 * T_w)$  | $T_w$      | $1 * (4 * T_r)$ | $T_r$     |
+| Pool layout       | Write throughput | Write IOPS | Read throughput | Read IOPS |
+| ----------------- | ---------------- | ---------- | --------------- | --------- |
+| 6 x single        | $6 * T_w$        | $I_w$      | $6 * T_r$       | $I_r$     |
+| 3 x 2-way mirror  | $3 * (T_w)$      | $I_w$      | $3 * (2 * T_r)$ | $2 * T_r$ |
+| 1 x 4-wide raidz2 | $1 * (4 * T_w)$  | $T_w$      | $1 * (4 * T_r)$ | $T_r$     |
 
-The 2-way mirror pool has 3/4 time the write throughput of the 4-wide raidz2 pool,
-but 3/2 times the read throughput and 2 times the read IOPS.
+The 2-way mirror pool has 3/4 the write throughput of the 4-wide raidz2 pool,
+but 3/2 the read throughput and twice the read IOPS.
 
-The performance of a pool trends towards the average performances of its vdevs,
-because ZFS distributes operations across the vdevs.
-Having slow vdevs will undermine the performance of fast vdevs.
-A rule of thumb is to use vdevs with similar performance,
-most easily done use identical vdev and device types.[^6]
-
-# Good
 [iXsystems ZFS storage pool layout white paper](https://static.ixsystems.co/uploads/2020/09/ZFS_Storage_Pool_Layout_White_Paper_2020_WEB.pdf)
 [Ars Technica: ZFS versus RAID](https://arstechnica.com/gadgets/2020/05/zfs-versus-raid-eight-ironwolf-disks-two-filesystems-one-winner/)
+[OpenZFS: the final word in file systems](https://jro.io/truenas/openzfs/)
 
-# Not good
+#### Not good
+
 [Ars Technica: How fast are your disks? Find out the open source way, with fio](https://arstechnica.com/gadgets/2020/02/how-fast-are-your-disks-find-out-the-open-source-way-with-fio/)
 [A Closer Look at ZFS, Vdevs and Performance](https://constantin.glez.de/2010/06/04/a-closer-look-zfs-vdevs-and-performance/)
-[^uz]: [ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
+[ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
 
 ### Failure recovery
 
@@ -291,14 +297,14 @@ it knows the file associated with the bad sector and that other files are okay.
 For a complete device failure, most or all files in the pool will be corrupted:
 since ZFS distributes data across all vdevs, most files will have blocks on every vdev.
 
-Anecdotally the odds of a second failure during a RAID-Z resilver are uncomfortably high[^7].
+Anecdotally the odds of a second failure during a RAID-Z resilver are uncomfortably high.
 Compared to mirrors, a resilver of RAID-Z vdev involves much more device activity:
 they generally have more devices and hence more capacity, and must read parity bits to recreate missing data.
 The general wisdom of the internet recommends skipping raidz1 in favor of raidz2, or even raidz3.
 
 RAID-Z width is mainly limited by
-How to choose RAID-Z width?[^4]
-Choosing certain sizes can avoid storage overhead.[^6]
+How to choose RAID-Z width?
+Choosing certain sizes can avoid storage overhead.
 Rule of thumb that RAID-Z vdev device counts should be kept to single digits or low teens.
 
 Mirror vdevs have faster and safer recovery because of their smaller size,
@@ -316,7 +322,7 @@ though for 2-way mirror vs raidz2 this is weighed against having a lower redunda
 
 ### Flexibility
 
-Storage needs grow over time, while storage gets cheaper over time[^10].
+Storage needs grow over time, while storage gets cheaper over time].
 Fiscally it makes sense roughly meet current storage needs now,
 and expand storage when needed.
 I want my ZFS pool layout to be flexible about how it can grow.
@@ -331,15 +337,15 @@ with different vdev types having different constraints.
 Mirror vdevs can have devices added or removed after creation.
 Adding or removing devices doesn't incur any hidden cost or state.
 
-RAID-Z vdevs can have new devices added[^2], but not removed.
+RAID-Z vdevs can have new devices added, but not removed.
 Adding a device will not re-flow the data, so existing data will keep the original storage efficiency.
 With enough churn ZFS will eventually balance out the data since
-re-flow happens naturally over time due to copy-on-write[^4],
+re-flow happens naturally over time due to copy-on-write,
 but my workload is archival and low-churn so this won't happen effectively.
 
 The parity level of a RAID-Z vdev cannot be changed after creation.
 
-Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool[^1].
+Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool.
 
 One way to increase pool capacity is to add a vdev.
 Following rules of thumb from above, the vdev should be identical to existing vdevs.
@@ -353,20 +359,20 @@ Mirror vdevs again allow capacity to be increased in small increments because th
 
 Mirror vdevs are much more flexible than RAID-Z vdevs.
 
-[^1]: [serverfault: why doesn't ZFS vdev removal work when any raidz devices are in the pool?](https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool)
-[^2]: [OpenZFS man pages: zpool-attach.8](https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html)
+[Hard Drive Cost Per Gigabyte](https://www.backblaze.com/blog/hard-drive-cost-per-gigabyte/)
+[ZFS RAIDZ stripe width, or: How I Learned to Stop Worrying and Love RAIDZ](https://www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz)
+
+[serverfault: why doesn't ZFS vdev removal work when any raidz devices are in the pool?](https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool)
+[OpenZFS man pages: zpool-attach.8](https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html)
 
 ## Comparison
 
-## References
+## Further Reading
 
-[^3]: [Wikipedia: parity bit](https://en.wikipedia.org/wiki/Parity_bit)
-[^4]: [ZFS RAIDZ stripe width, or: How I Learned to Stop Worrying and Love RAIDZ](https://www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz)
-[^5]: [ZFS: Read Me 1st](http://nex7.blogspot.com/2013/03/readme1st.html)
-[^6]: [OpenZFS: the final word in file systems](https://jro.io/truenas/openzfs/)
-[^7]: [Reliable RAID Configuration Calculator (R2-C2)](https://jro.io/r2c2/)
-[^10]: [Hard Drive Cost Per Gigabyte](https://www.backblaze.com/blog/hard-drive-cost-per-gigabyte/)
-[^use-mirrors-not-raidz]: [ZFS: You should use mirror vdevs, not RAID-Z.](https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
+[Reliable RAID Configuration Calculator (R2-C2)](https://jro.io/r2c2/)
 
+[ZFS: Read Me 1st](http://nex7.blogspot.com/2013/03/readme1st.html)
+[ZFS: You should use mirror vdevs, not RAID-Z.](https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
 
 [I had VDEV Layouts all WRONG! ...and you probably do too!](https://www.youtube.com/watch?v=_aACgNm8UCw)
+[Switched On Tech Design: ZFS](https://sotechdesign.com.au/zfs/)
