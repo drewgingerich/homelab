@@ -22,8 +22,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
-      - "8443:8443"
+      # - "8080:8080"
+      # - "8443:8443"
     command:
       - "--log.level=ERROR"
       # ---
@@ -52,15 +52,15 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       # ---
-      - "--entrypoints.proxied-web-secure.address=:8443"
-      - "--entrypoints.proxied-web-secure.http.tls=true"
-      - "--entrypoints.proxied-web-secure.http.tls.certResolver=letsencrypt"
-      - "--entrypoints.proxied-web-secure.http.tls.domains[0].main=${WAN_DOMAIN}"
-      - "--entrypoints.proxied-web-secure.http.tls.domains[0].sans=*.${WAN_DOMAIN}"
+      # - "--entrypoints.proxied-web-secure.address=:8443"
+      # - "--entrypoints.proxied-web-secure.http.tls=true"
+      # - "--entrypoints.proxied-web-secure.http.tls.certResolver=letsencrypt"
+      # - "--entrypoints.proxied-web-secure.http.tls.domains[0].main=${WAN_DOMAIN}"
+      # - "--entrypoints.proxied-web-secure.http.tls.domains[0].sans=*.${WAN_DOMAIN}"
       # ---
-      - "--entrypoints.proxied-web.address=:8080"
-      - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
-      - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.proxied-web.address=:8080"
+      # - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
+      # - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
     labels:
       # ---
       - "traefik.enable=true"
