@@ -47,5 +47,19 @@ This rack has an adjustable depth, so I'll be able to change it to adapt to my n
 
 I can make shelving out of 2x4s and plywood to make use of space not occupied by rack-mounted gear.
 
-I will likely spend more money on rack-mounted equipment when compared to functionaly equivalent non-rack-mounted equipment,
-as there tends to be a premium for the rack compatability.
+I will likely spend more money on rack-mounted equipment when compared to functionally equivalent non-rack-mounted equipment,
+as there tends to be a premium for the rack compatibility.
+
+## Retrospective
+
+I've enjoyed the space efficiency of the server rack.
+The unoccupied space doubles as shelving, too.
+
+Rack-mounted cases feel easier to work in just due to the orientation,
+so I'm glad I can use them now.
+
+Rack-mounted cases and other gear is indeed more expensive.
+
+If I were to do it again, I'd build my own using 2x4s[^1].
+
+[^1]: https://www.reddit.com/r/homelab/comments/cqkqtj/diy_4post_server_rack_with_howto/
