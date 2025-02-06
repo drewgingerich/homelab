@@ -84,3 +84,6 @@ config:
 ```
 
 I feel ready to move the computer to its new case.
+
+After moving the computer to the new case,
+`zpool status` shows that the pool has been imported successfully.
