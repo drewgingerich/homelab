@@ -19,6 +19,7 @@ in
     git
     gh
     glab
+    gnupg
     harper
     helix
     htop
