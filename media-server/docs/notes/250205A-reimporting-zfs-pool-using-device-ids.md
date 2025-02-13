@@ -1,4 +1,4 @@
-# Moving to a new case
+# Re-importing ZFS pool using device IDs
 
 As decided in [media server ADR 240112A](media-server/docs/decisions/240112A-get-a-rack-mounted-case.md),
 I got a new rack-mounted case for my media server.
