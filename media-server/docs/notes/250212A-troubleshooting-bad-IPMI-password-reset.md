@@ -1,4 +1,4 @@
-# IPMI password troubles
+# Troubleshooting bad IPMI password reset
 
 I tried changing the password of the IPMI admin user,
 and now I can't log in.
