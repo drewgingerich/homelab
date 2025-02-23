@@ -1,2 +1,0 @@
-set -x CFLAGS "-I/usr/local/opt/openssl@3/include -I/usr/local/opt/zlib/include -I/usr/local/opt/sqlite/include"
-set -x LDFLAGS "-L/usr/local/opt/openssl@3/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/sqlite/lib"
