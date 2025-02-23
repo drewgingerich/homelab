@@ -17,6 +17,7 @@ in
     fzf
     ffmpeg
     git
+    git-lfs
     gh
     glab
     gnupg
