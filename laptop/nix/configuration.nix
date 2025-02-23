@@ -18,6 +18,7 @@
           "godot-mono"
           "google-chrome"
           "inkscape"
+          "itch"
           "karabiner-elements"
           "krita"
           "launchcontrol"
