@@ -108,6 +108,11 @@
     capSysAdmin = true;
   };
 
+  services.plex = {
+    enable = true;
+    openFirewall = true;
+  };
+
   services.openssh.enable = true;
 
   services.tailscale.enable = true;
