@@ -25,6 +25,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { username = "drewg"; };
+          home-manager.backupFileExtension = ".hm.bak";
           home-manager.users.drewg = import ./home.nix;
         }
       ];
@@ -39,6 +40,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { username = "drew"; };
+          home-manager.backupFileExtension = ".hm.bak";
           home-manager.users.drew = import ./home.nix;
         }
       ];
