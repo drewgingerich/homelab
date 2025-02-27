@@ -29,6 +29,7 @@
           "raycast"
           "rectangle"
           "signal"
+          "sony-ps-remote-play"
           "splice"
           "steam"
           "tailscale"
