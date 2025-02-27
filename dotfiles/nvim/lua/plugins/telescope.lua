@@ -9,6 +9,7 @@ return {
 			vim.keymap.set("n", "<leader>fg", telescope.live_grep, { desc = "Search in files" })
 			vim.keymap.set("n", "<leader>fb", telescope.buffers, { desc = "Find buffer" })
 			vim.keymap.set("n", "<leader>fh", telescope.help_tags, { desc = "Find vim help" })
+			vim.keymap.set("n", "<leader>fm", telescope.marks, { desc = "Find marks" })
 		end,
 	},
 	{
