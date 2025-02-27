@@ -31,6 +31,7 @@ services:
       - "traefik.http.routers.miniflux-lan.tls.certresolver=letsencrypt"
   db:
     image: postgres:15
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=miniflux
       - POSTGRES_PASSWORD=miniflux
