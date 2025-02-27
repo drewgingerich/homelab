@@ -90,9 +90,10 @@
 
   environment.systemPackages = with pkgs; [
     cemu
+    firefox
+    google-chrome
     tailscale
     vim
-    firefox
     xivlauncher
   ];
 
