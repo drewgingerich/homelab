@@ -2,25 +2,26 @@
 
 ## Problem
 
-I get uneasy when I don't know the state of my system.
-This can happen due to drift from e.g. package and OS upgrades,
-cruft from dirty package uninstallations,
-or me simply forgetting how I configured that one thing 4 years ago.
+I want to control the state of my operating system and programs,
+so I can be confident about what's running and how it's configured, and
+be able to recreate the system if necessary.
 
-I want a way to bring the system to a well-known state.
-I want this to derive from a version-controlled artifact
-so that if my system dies I can reproduce it.
+The state of my user data is out of scope here: it's handled separately by backups.
 
-- No drift
-- Reproducible
-- Declarative
-- Version-controlled
+This breaks down into a couple of goals:
+
+1. Define system state completely and explicitly
+2. Reproduce system state in a robust fashion
+3. Prevent system state drift
+
+All of these qualities together add up to system that is always in the state I expect,
+and can be recreated with confidence if necessary.
 
 ## Options
 
-- Ansible
-- Packer
-- Atomic Linux distro
+- Traditional package manager
+- Provisioning tool
+- Atomic Linux
 - NixOS
 
 ## Solution
@@ -34,75 +35,80 @@ which also involves learning the Nix language and Nix packaging ecosystem.
 
 ## Exploration
 
-### Provisioning tools
+### Traditional package manager
 
-The top contenders I know of are:
+Standard package managers such as [APT](<https://en.wikipedia.org/wiki/APT_(software)>) and [DNF](<https://en.wikipedia.org/wiki/DNF_(software)>)
+can install desired packages to bring a system to a desired state.
+There are a few downsides to traditional package managers, though.
 
-- [Ansible](https://www.ansible.com/)
-- [CloudInit](https://cloud-init.io/)
-- [Packer](https://developer.hashicorp.com/packer)
+First is that they are non-deterministic. While they will install the requested package, the version and sub-dependency versions
+may change depending on installation order and time.
 
-These tools work in different ways, but the end result is similar:
-they bring the system to a desired state.
+Most package managers do not fully manage state, for example, and can leave cruft behind after upgrades and uninstalls.
+This means that while provisioning tools are effective at getting the system working, compliance with the target state is only superficial:
+the system state to only brought to match the pieces of state explicitly specified in the target state.
+Exact versions of sub-dependencies or extra cruft files are permitted, for example.
+This means some state remains unmanaged.
 
-All three use configuration files that can be version controlled.
-Ansible's configuration is declarative, while CloudInit and Packer use Bash (similar to a Dockerfile).
+### Provisioning tool
 
-### Immutable Linux distributions
+Provisioning tools bring a system to a specified state.
 
-[Atomic Linux](https://github.com/Malix-Labs/Awesome-Atomic) (FKA Immutable Linux) are 
+[Ansible](https://www.ansible.com/) seems to be the most popular provisioning tool today.
+
+Provisioning tools use other tools such as package managers to reach the target system state.
+This means they inherit the downsides of these underlying tools, and don't satisfy what I'm looking for.
+
+### Atomic Linux
+
+[Atomic Linux](https://github.com/Malix-Labs/Awesome-Atomic) (FKA Immutable Linux) are
 Linux distributions with a read-only core OS and atomic updates.
 Together, these mean the core OS is always in a well-defined state, cannot drift,
 and is clearly separated from user configuration.
 
-The technology and implementation of immutability and atomicity varies by distribution.
+The technology and implementation behind immutability and atomicity varies by distribution.
+[Universal Blue](<https://en.wikipedia.org/wiki/DNF_(software)>) seems to be the most popular series of Atomic distros right now,
+and provides system state with images using [rpm-ostree](https://github.com/coreos/rpm-ostree).
 
-[rpm-ostree](https://github.com/coreos/rpm-ostree) seems to be the most popular right now.
-https://universal-blue.org/
-https://www.reddit.com/r/linuxmasterrace/comments/19dvi74/looking_at_you_nixos/
-
-Immutable distros usually provide some way to customize core OS configuration,
-such as filesystem overlays.
-
-Immutable Linux is often paired with things like [Flatpak](https://flatpak.org/)
-and [distrobox](https://distrobox.it/) for user apps and configuration.
-
-Two popular immutable distributions are [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/)
-and [openSUSE MicroOS](https://microos.opensuse.org/).
+Atomic Linux distros generally provide some way to customize the core OS,
+such as Containerfiles for creating custom OS images, or filesystem overlays.
 
 https://www.ypsidanger.com/building-your-own-fedora-silverblue-image/
 
-There are also immutable distributions catering specifically to gaming,
+Atomic Linux is often paired with things like [Flatpak](https://flatpak.org/)
+and [distrobox](https://distrobox.it/) for isolated user apps and configuration.
+
+There are immutable distributions catering specifically to gaming,
 such as [Bazzite](https://bazzite.gg/) and [ChimeraOS](https://chimeraos.org/),
 
-The main downside of immutable Linux appears to be that core OS configuration can be
-clunky and limited (e.g. the desktop manager can't be changed).
-I don't think this is inherent to the general approach, though.
-Updates generally require a full system reboot, which can make tinkering slow.
+The main downside of Atomic Linux appears to be that core OS configuration can be
+clunky, limited (e.g. the desktop manager can't be changed), and relies on tradition package managers.
+This means that while Atomic Linux presents great management, reproducibility, and drift resistance of OS state
+once it's frozen, getting there still involves the pitfalls of traditional package managers.
+It feels like a really excellent band-aid.
 
-While immutable Linux provides fixed, known-good snapshots of the core OS,
-the creation and customization of these snapshots still rely on non-deterministic package
-managers like [APT](https://en.wikipedia.org/wiki/APT_(software)).
-In practice it seems this works totally fine, but it naggles at me that we need immutable Linux
-to compensate for the shortcomings of these package managers.
-
-https://www.reddit.com/r/linuxmasterrace/comments/19dvi74/comment/kje2edw/
+- [Understanding Immutable Linux OS: Benefits, Architecture, and Challenges](https://kairos.io/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/)
+- ["Immutable" → reprovisionable, anti-hysteresis](https://blog.verbum.org/2020/08/22/immutable-%e2%86%92-reprovisionable-anti-hysteresis/)
+- [Awesome Atomic](https://github.com/Malix-Labs/awesome_atomic)
+- https://www.reddit.com/r/linuxmasterrace/comments/19dvi74/looking_at_you_nixos/
+- https://www.reddit.com/r/linuxmasterrace/comments/19dvi74/comment/kje2edw/
 
 ### NixOS
 
 [NixOS](https://nixos.org/)
 
-I am a big fan of configuration as code
-I can treat my system configuration as disposable, since it can be recreated from the NixOS configuration.
+NixOS provides excellent management, reproducibility, and drift resistence of OS state
+because it's built on top of the Nix package manager,
+which provides isolated, read-only, reproducible package installations.
 
-### Jovian NixOS
+Because NixOS provides these qualities from the ground up,
+instead of only when freezing a known-good state,
+it is much more friendly to tinkering.
+E.g. when installing a package, I don't have to worry about generating cruft,
+dependency conflicts, or non-deterministic sub-dependencies.
+Custom changes are also first-class citizens: I don't have to overlay them over a base OS image
+or use tools like Flatpak to isolate them.
 
 [Jovian NixOS](https://github.com/Jovian-Experiments/Jovian-NixOS) is a NixOS configuration tailored to gaming.
-
 This is a cool project, but I also like to set things up myself so I understand them.
-
-## References
-
-- [Understanding Immutable Linux OS: Benefits, Architecture, and Challenges](https://kairos.io/blog/2023/03/22/understanding-immutable-linux-os-benefits-architecture-and-challenges/)
-- [Awesome Atomic](https://github.com/Malix-Labs/awesome_atomic)
-- https://github.com/Jovian-Experiments/Jovian-NixOS
+Because of this, I'm mostly interested in Jovian NixOS as a reference for my own configuration.
