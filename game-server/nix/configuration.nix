@@ -113,6 +113,13 @@
     openFirewall = true;
   };
 
+  services.wivrn = {
+    enable = true;
+    openFirewall = true;
+    defaultRuntime = true;
+    autoStart = true;
+  };
+
   services.openssh.enable = true;
 
   services.tailscale.enable = true;
