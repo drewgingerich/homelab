@@ -89,6 +89,7 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    monado-vulkan-layers
     cemu
     firefox
     google-chrome
@@ -101,6 +102,16 @@
     enable = true;
     remotePlay.openFirewall = true;
   };
+
+  services.wivrn = {
+    enable = true;
+    openFirewall = true;
+    defaultRuntime = true;
+    autoStart = true;
+  };
+  hardware.graphics.extraPackages = [
+    pkgs.monado-vulkan-layers
+  ];
 
   services.sunshine = {
     enable = true;
