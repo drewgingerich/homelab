@@ -15,7 +15,12 @@ services:
     healthcheck:
       disable: false
     volumes:
-      - ${MEDIA_DIR}/pictures:/usr/src/app/upload
+      - ${MEDIA_DIR}/pictures:/usr/src/app/upload/library
+      - ${APP_DATA_DIR}/immich/upload:/usr/src/app/upload/upload
+      - ${APP_DATA_DIR}/immich/thumbs:/usr/src/app/upload/thumbs
+      - ${APP_DATA_DIR}/immich/encoded-video:/usr/src/app/upload/encoded-video
+      - ${APP_DATA_DIR}/immich/profile:/usr/src/app/upload/profile
+      - ${APP_DATA_DIR}/immich/backups:/usr/src/app/upload/backups
     environment:
       TZ: ${TZ}
       DB_USERNAME: ${DB_USERNAME}
