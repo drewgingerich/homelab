@@ -48,7 +48,8 @@
   # Display manager
   services.xserver.displayManager.gdm.enable = true;
   services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "steam";
+  services.displayManager.autoLogin.user = "dreamy";
+
   # Disable the GNOME3/GDM auto-suspend feature that cannot be disabled in GUI!
   # If no user is logged in, the machine will power down after 20 minutes.
   # https://discourse.nixos.org/t/stop-pc-from-sleep/5757/2
@@ -79,11 +80,13 @@
       description = "Drew Gingerich";
       extraGroups = [ "networkmanager" "wheel" ];
       shell = pkgs.fish;
+      initialPassword = "${username}";
     };
-    steam = {
-      home = "/home/steam";
+    dreamy = {
+      home = "/home/dreamy";
       isNormalUser = true;
       shell = pkgs.fish;
+      initialPassword = "";
     };
   };
 
