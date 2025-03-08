@@ -89,10 +89,11 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    monado-vulkan-layers
     cemu
     firefox
     google-chrome
+    lshw
+    monado-vulkan-layers
     tailscale
     vim
     xivlauncher
@@ -129,6 +130,7 @@
   services.tailscale.enable = true;
 
   # Nvidia drivers and setup
+  boot.kernelParams = [ "module_blacklist=amdgpu" ];
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.enableRedistributableFirmware = true;
   hardware.nvidia = {
