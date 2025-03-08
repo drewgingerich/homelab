@@ -69,3 +69,9 @@ installer$ sudo dd if=/dev/zero of=/dev/nvme0n1 status=progress
 
 I rebooted the computer and the NixOS installer worked.
 
+I later learned that I could have installed NixOS straight from my flake using:
+
+```sh
+nixos-install --flake https://github.com/drewgingerich/homelab#unremarkable-game-server
+```
+
