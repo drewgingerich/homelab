@@ -93,7 +93,7 @@
 
       system.defaults.trackpad.Clicking = true;
 
-      security.pam.enableSudoTouchIdAuth = true;
+      security.pam.services.sudo_local.touchIdAuth = true;
 
       system.stateVersion = 5;
       nixpkgs.hostPlatform = "x86_64-darwin";
