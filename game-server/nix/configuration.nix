@@ -5,7 +5,11 @@
 { config, pkgs, username, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./modules/nvidia.nix
+    ./modules/wivern.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -103,7 +107,6 @@
     firefox
     google-chrome
     lshw
-    monado-vulkan-layers
     tailscale
     vim
     xivlauncher
@@ -113,16 +116,6 @@
     enable = true;
     remotePlay.openFirewall = true;
   };
-
-  services.wivrn = {
-    enable = true;
-    openFirewall = true;
-    defaultRuntime = true;
-    autoStart = true;
-  };
-  hardware.graphics.extraPackages = [
-    pkgs.monado-vulkan-layers
-  ];
 
   services.sunshine = {
     enable = true;
@@ -138,19 +131,6 @@
   services.openssh.enable = true;
 
   services.tailscale.enable = true;
-
-  # Nvidia drivers and setup
-  boot.kernelParams = [ "module_blacklist=amdgpu" ];
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.enableRedistributableFirmware = true;
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.production;
-  };
 
   system.stateVersion = "23.11";
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
