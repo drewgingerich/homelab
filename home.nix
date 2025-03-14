@@ -9,6 +9,7 @@ in
 
   imports = [
     ./nix/user/programs/autorestic
+    ./nix/user/programs/fish
   ];
 
   home.packages = with pkgs; [
@@ -74,9 +75,6 @@ in
     };
     "wezterm" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/wezterm";
-    };
-    "fish" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/fish";
     };
     "karabiner" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
