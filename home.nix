@@ -6,9 +6,13 @@ in
   home.username = username;
   home.homeDirectory = homeDirectory;
   home.stateVersion = "24.05";
+
+  imports = [
+    ./nix/user/programs/autorestic
+  ];
+
   home.packages = with pkgs; [
     asdf-vm
-    autorestic
     bat
     delta
     devbox
@@ -30,7 +34,6 @@ in
     lazygit
     neovim
     pandoc
-    restic
     ripgrep
     starship
     tealdeer
@@ -75,9 +78,6 @@ in
     "fish" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/fish";
     };
-    "autorestic" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/autorestic";
-    };
     "karabiner" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
     };
@@ -85,27 +85,6 @@ in
   home.file = {
     ".gitconfig" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/git/.gitconfig";
-    };
-  };
-
-  launchd = {
-    agents = {
-      autorestic = {
-        enable = true;
-        config = {
-            ProgramArguments = [
-              "${pkgs.autorestic}/bin/autorestic"
-              "backup" "--all" "--ci"
-              "--restic-bin" "${pkgs.restic}/bin/restic"
-            ];
-            StartCalendarInterval = [{
-              Hour = 5;
-              Minute = 0;
-            }];
-            StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/org.nix-community.home.autorestic/stderr.log";
-            StandardOutPath = "${config.home.homeDirectory}/Library/Logs/org.nix-community.home.autorestic/stdout.log";
-        };
-      };
     };
   };
 
