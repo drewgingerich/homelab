@@ -10,21 +10,17 @@ in
   imports = [
     ./nix/user/programs/autorestic
     ./nix/user/programs/fish
+    ./nix/user/programs/git
   ];
 
   home.packages = with pkgs; [
     asdf-vm
     bat
-    delta
     devbox
     direnv
     eza
     fzf
     ffmpeg
-    git
-    git-lfs
-    gh
-    glab
     gnupg
     harper
     helix
@@ -32,7 +28,6 @@ in
     hyperfine
     imagemagick
     jq
-    lazygit
     neovim
     pandoc
     ripgrep
@@ -78,11 +73,6 @@ in
     };
     "karabiner" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
-    };
-  };
-  home.file = {
-    ".gitconfig" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/git/.gitconfig";
     };
   };
 
