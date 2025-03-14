@@ -11,6 +11,7 @@ in
     ./nix/user/programs/autorestic
     ./nix/user/programs/fish
     ./nix/user/programs/git
+    ./nix/user/programs/karabiner
     ./nix/user/programs/nvim
   ];
 
@@ -43,9 +44,6 @@ in
     };
     "wezterm" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/wezterm";
-    };
-    "karabiner" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
     };
   };
 
