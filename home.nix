@@ -14,7 +14,7 @@ in
     ./nix/user/programs/karabiner
     ./nix/user/programs/nvim
     ./nix/user/programs/starship
-
+    ./nix/user/programs/wezterm
   ];
 
   home.packages = with pkgs; [
@@ -38,12 +38,6 @@ in
     yq
     zoxide
   ];
-
-  xdg.configFile = {
-    "wezterm" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/wezterm";
-    };
-  };
 
   programs.home-manager.enable = true;
 }
