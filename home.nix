@@ -13,6 +13,8 @@ in
     ./nix/user/programs/git
     ./nix/user/programs/karabiner
     ./nix/user/programs/nvim
+    ./nix/user/programs/starship
+
   ];
 
   home.packages = with pkgs; [
@@ -31,7 +33,6 @@ in
     jq
     pandoc
     ripgrep
-    starship
     tealdeer
     wget
     yq
@@ -39,9 +40,6 @@ in
   ];
 
   xdg.configFile = {
-    "starship.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/starship/starship.toml";
-    };
     "wezterm" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/wezterm";
     };
