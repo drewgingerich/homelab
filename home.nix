@@ -8,13 +8,13 @@ in
   home.stateVersion = "24.05";
 
   imports = [
-    ./nix/user/programs/autorestic
-    ./nix/user/programs/fish
-    ./nix/user/programs/git
-    ./nix/user/programs/karabiner
-    ./nix/user/programs/nvim
-    ./nix/user/programs/starship
-    ./nix/user/programs/wezterm
+    ./nix/user/programs/autorestic.nix
+    ./nix/user/programs/fish.nix
+    ./nix/user/programs/git.nix
+    ./nix/user/programs/karabiner.nix
+    ./nix/user/programs/nvim.nix
+    ./nix/user/programs/starship.nix
+    ./nix/user/programs/wezterm.nix
   ];
 
   home.packages = with pkgs; [
