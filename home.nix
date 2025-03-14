@@ -11,6 +11,7 @@ in
     ./nix/user/programs/autorestic
     ./nix/user/programs/fish
     ./nix/user/programs/git
+    ./nix/user/programs/nvim
   ];
 
   home.packages = with pkgs; [
@@ -22,13 +23,11 @@ in
     fzf
     ffmpeg
     gnupg
-    harper
     helix
     htop
     hyperfine
     imagemagick
     jq
-    neovim
     pandoc
     ripgrep
     starship
@@ -36,37 +35,11 @@ in
     wget
     yq
     zoxide
-
-    # LSP & DAP servers for IDE
-    astro-language-server
-    gdtoolkit_4
-    gopls
-    helm-ls
-    lua-language-server
-    marksman
-    nil
-    prettierd
-    pyright
-    ruby-lsp
-    ruff-lsp
-    starlark-rust
-    stylua
-    typescript-language-server
-    vscode-langservers-extracted
-    vscode-js-debug
-    vue-language-server
-    yaml-language-server
-
-    # C compiler for Treesitter
-    gcc
   ];
 
   xdg.configFile = {
     "starship.toml" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/starship/starship.toml";
-    };
-    "nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/nvim";
     };
     "wezterm" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/wezterm";
