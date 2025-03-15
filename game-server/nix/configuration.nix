@@ -1,14 +1,11 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, username, ... }:
-
+{ pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ./modules/nvidia.nix
-    ./modules/wivern.nix
+    ./modules/wivrn.nix
+    ./users/drewg.nix
+    ./users/dreamy.nix
   ];
 
   # Bootloader.
@@ -51,8 +48,6 @@
 
   # Display manager
   services.xserver.displayManager.gdm.enable = true;
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "dreamy";
 
   # Disable the GNOME3/GDM auto-suspend feature that cannot be disabled in GUI!
   # If no user is logged in, the machine will power down after 20 minutes.
@@ -77,39 +72,13 @@
 
   programs.fish.enable = true;
 
-  users.users = {
-    ${username} = {
-      home = "/home/${username}";
-      isNormalUser = true;
-      description = "Drew Gingerich";
-      extraGroups = [ "networkmanager" "wheel" ];
-      shell = pkgs.fish;
-      initialPassword = "${username}";
-    };
-    dreamy = {
-      home = "/home/dreamy";
-      isNormalUser = true;
-      shell = pkgs.fish;
-      initialPassword = "";
-    };
-  };
-
-  security.sudo.extraRules = [{
-    users = [ "${username}" ];
-    commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
-  }];
-
-
-  nixpkgs.config.allowUnfree = true;
-
   environment.systemPackages = with pkgs; [
-    cemu
     firefox
+    git
     google-chrome
     lshw
     tailscale
     vim
-    xivlauncher
   ];
 
   programs.steam = {
@@ -132,6 +101,10 @@
 
   services.tailscale.enable = true;
 
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+  home-manager.backupFileExtension = ".hm.bak";
   system.stateVersion = "23.11";
+  nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
