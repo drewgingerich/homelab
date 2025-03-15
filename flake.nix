@@ -31,18 +31,10 @@
       ];
     };
     darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
-      system = " x86_64-darwin";
-      specialArgs = { username = "drew"; };
+      system = "x86_64-darwin";
       modules = [
-        ./laptop/nix/configuration.nix
         home-manager.darwinModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { username = "drew"; };
-          home-manager.backupFileExtension = ".hm.bak";
-          home-manager.users.drew = import ./home.nix;
-        }
+        ./laptop/nix/configuration.nix
       ];
     };
   };
