@@ -17,8 +17,6 @@
   home-manager.users.drewg = {
     programs.home-manager.enable = true;
     home.stateVersion = "24.05";
-    home.username = "drewg";
-    home.homeDirectory = "/home/drewg";
     home.packages = with pkgs; [
       bat
       eza

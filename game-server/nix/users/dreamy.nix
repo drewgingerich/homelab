@@ -13,8 +13,6 @@
   home-manager.users.dreamy = {
     programs.home-manager.enable = true;
     home.stateVersion = "24.05";
-    home.username = "dreamy";
-    home.homeDirectory = "/home/dreamy";
     home.packages = with pkgs; [
       bat
       cemu
