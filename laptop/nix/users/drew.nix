@@ -7,8 +7,6 @@
   home-manager.users.drew = {
     programs.home-manager.enable = true;
     home.stateVersion = "24.05";
-    home.username = "drew";
-    home.homeDirectory = "/Users/drew";
     home.packages = with pkgs; [
       bat
       eza
