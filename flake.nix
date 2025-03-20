@@ -29,5 +29,11 @@
         ./laptop/nix/configuration.nix
       ];
     };
+    homeConfigurations = {
+      work = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs { system = "x86_64-darwin"; };
+        modules = [ ./work-laptop/nix/users/dgingerich.nix ];
+      };
+    };
   };
 }
