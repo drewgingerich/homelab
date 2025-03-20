@@ -1,5 +1,7 @@
 # https://asdf-vm.com/guide/getting-started.html
-if command -v asdf
+
+if command -v asdf 2>&1 > /dev/null
+
   # ASDF configuration code
   if test -z $ASDF_DATA_DIR
       set _asdf_shims "$HOME/.asdf/shims"
@@ -13,4 +15,5 @@ if command -v asdf
       set -gx --prepend PATH $_asdf_shims
   end
   set --erase _asdf_shims
+
 end
