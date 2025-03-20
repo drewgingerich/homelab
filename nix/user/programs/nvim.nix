@@ -22,6 +22,7 @@
     ruff-lsp
     starlark-rust
     stylua
+    taplo
     typescript-language-server
     vscode-langservers-extracted
     vscode-js-debug

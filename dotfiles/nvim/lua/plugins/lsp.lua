@@ -30,6 +30,7 @@ return {
 				capabilities = capabilities,
 				filetypes = { "star", "bzl", "BUILD.bazel", "Tiltfile" },
 			})
+      lspconfig.taplo.setup({ capabilities = capabilities })
 
 			vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
