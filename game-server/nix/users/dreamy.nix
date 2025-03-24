@@ -1,18 +1,29 @@
 { pkgs, ... }:
+let
+  username = "dreamy";
+in
 {
-  users.users.dreamy = {
-    home = "/home/dreamy";
+  users.users.${username} = {
+    home = "/home/${username}";
     isNormalUser = true;
     shell = pkgs.fish;
     initialPassword = "";
   };
 
   services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "dreamy";
+  services.displayManager.autoLogin.user = username;
 
-  home-manager.users.dreamy = {
-    programs.home-manager.enable = true;
-    home.stateVersion = "24.05";
+  home-manager.users.${username} = {
+    custom = {
+      fish.enable = true;
+      git.enable = true;
+      nvim.enable = true;
+      starship.enable = true;
+      wezterm.enable = true;
+      # steam.enable = true;
+      # wivrn.enable = true;
+    };
+
     home.packages = with pkgs; [
       bat
       cemu
@@ -34,12 +45,7 @@
       zoxide
     ];
 
-    imports = [
-      ../../../nix/user/programs/fish.nix
-      ../../../nix/user/programs/git.nix
-      ../../../nix/user/programs/nvim.nix
-      ../../../nix/user/programs/starship.nix
-      ../../../nix/user/programs/wezterm.nix
-    ];
+    programs.home-manager.enable = true;
+    home.stateVersion = "24.05";
   };
 }

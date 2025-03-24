@@ -1,22 +1,31 @@
 { pkgs, ... }:
+let
+  username = "drewg";
+in
 {
-  users.users.drewg = {
-    home = "/home/drewg";
+  users.users.${username} = {
+    home = "/home/${username}";
     isNormalUser = true;
     description = "Drew Gingerich";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
-    initialPassword = "drewg";
+    initialPassword = username;
   };
 
   security.sudo.extraRules = [{
-    users = [ "drewg" ];
+    users = [ username ];
     commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
   }];
 
-  home-manager.users.drewg = {
-    programs.home-manager.enable = true;
-    home.stateVersion = "24.05";
+  home-manager.users.${username} = {
+    custom = {
+      fish.enable = true;
+      git.enable = true;
+      nvim.enable = true;
+      starship.enable = true;
+      wezterm.enable = true;
+    };
+
     home.packages = with pkgs; [
       bat
       eza
@@ -35,13 +44,8 @@
       yq
       zoxide
     ];
-    imports = [
-      ../../../nix/user/programs/autorestic.nix
-      ../../../nix/user/programs/fish.nix
-      ../../../nix/user/programs/git.nix
-      ../../../nix/user/programs/nvim.nix
-      ../../../nix/user/programs/starship.nix
-      ../../../nix/user/programs/wezterm.nix
-    ];
+
+    programs.home-manager.enable = true;
+    home.stateVersion = "24.05";
   };
 }

@@ -1,11 +1,9 @@
 { pkgs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
-    ./modules/nvidia.nix
-    ./modules/wivrn.nix
-    ./users/drewg.nix
-    ./users/dreamy.nix
+    ../../modules/system
+    ./hardware
+    ./users
   ];
 
   # Bootloader.
@@ -69,8 +67,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
-  programs.fish.enable = true;
 
   environment.systemPackages = with pkgs; [
     firefox

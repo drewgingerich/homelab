@@ -1,5 +1,4 @@
 { config, ... }:
-
 {
   nixpkgs.config.allowUnfree = true;
   boot.kernelParams = [ "module_blacklist=amdgpu" ];
