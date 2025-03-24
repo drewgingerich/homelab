@@ -283,11 +283,6 @@ while standalone Home Manager installs can use the home module directly.
   home.username = username;
   home.homeDirectory = "/Users/${username}";
 
-  home.packages = with pkgs; [
-    direnv
-    htop
-  ];
-
   imports = [
     ../modules/home/fish.nix
   ];
@@ -297,10 +292,11 @@ while standalone Home Manager installs can use the home module directly.
 }
 ```nix
 # nixos/configuration.nix (NixOS)
-{ ... }:
+{ pkgs, ... }:
 {
   users.users.drew = {
     home = "/home/drew";
+    defaultShell = pkgs.fish;
   };
 
   imports = [
@@ -321,7 +317,7 @@ while standalone Home Manager installs can use the home module directly.
   programs.fish.enable = true;
 
   home-manager.sharedModules = [{
-    options.custom-home.fish.enable = lib.mkEnableOption "Enable fish shell for this user";
+    options.custom-home.fish.enable = lib.mkEnableOption "Configure fish shell for this user";
     config = lib.mkIf config.custom-home.fish.enable {
       imports = [ ../../home/fish.nix];
     };
@@ -339,8 +335,3 @@ while standalone Home Manager installs can use the home module directly.
 })
 ```
 
-This 
-
-https://www.reddit.com/r/NixOS/comments/10c3s93/homemanager_nixos_module_or_best_practice_for/
-https://github.com/mcdonc/.nixconfig/blob/master/videos/peruserperhost2/script.rst
-https://codeberg.org/Gipphe/dotfiles
