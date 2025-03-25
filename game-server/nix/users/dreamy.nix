@@ -10,9 +10,6 @@ in
     initialPassword = "";
   };
 
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = username;
-
   home-manager.users.${username} = {
     custom = {
       fish.enable = true;
@@ -21,6 +18,7 @@ in
       starship.enable = true;
       wezterm.enable = true;
       steam.enable = true;
+      gnome.noOverview = true;
       # wivrn.enable = true;
     };
 
