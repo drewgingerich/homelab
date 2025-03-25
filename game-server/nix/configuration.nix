@@ -77,11 +77,6 @@
     vim
   ];
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-  };
-
   services.sunshine = {
     enable = true;
     openFirewall = true;

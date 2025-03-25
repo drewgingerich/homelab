@@ -20,7 +20,7 @@ in
       nvim.enable = true;
       starship.enable = true;
       wezterm.enable = true;
-      # steam.enable = true;
+      steam.enable = true;
       # wivrn.enable = true;
     };
 
