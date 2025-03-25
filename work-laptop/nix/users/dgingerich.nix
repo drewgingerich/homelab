@@ -11,9 +11,7 @@ in
   ];
 
   custom = {
-    autorestic.enable = true;
     fish.enable = true;
-    git.enable = true;
     karabiner.enable = true;
     nvim.enable = true;
     starship.enable = true;
@@ -22,6 +20,7 @@ in
 
   home.packages = with pkgs; [
     asdf-vm
+    awscli2
     bat
     eza
     devbox
@@ -39,6 +38,14 @@ in
     wget
     yq
     zoxide
+    # Temporary while working on git module
+    delta
+    git
+    git-lfs
+    gh
+    glab
+    lazygit
+
   ];
 
   programs.home-manager.enable = true;
