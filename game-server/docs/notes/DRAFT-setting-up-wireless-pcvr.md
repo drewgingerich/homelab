@@ -13,7 +13,7 @@ but it can only connect to Windows PCs.
 
 https://www.meta.com/help/quest/articles/headsets-and-accessories/oculus-link/connect-with-air-link/
 
-There are several open-source alternatives that can connect to a Linux PC:
+I found two open-source alternatives that can connect to a Linux PC wirelessly:
 
 1. [ALVR](https://github.com/alvr-org/ALVR), based on [OpenVR](https://en.wikipedia.org/wiki/OpenVR)
 2. [WiVRn](https://github.com/WiVRn/WiVRn), based on [OpenXR](https://en.wikipedia.org/wiki/OpenXR)
@@ -72,7 +72,6 @@ Mar 10 20:36:38 unremarkable-game-server wivrn-server[5266]: Address already in 
 So yes, but it exited.
 I check if it's running under the auto-login user `dreamy`:
 
-
 ```sh
 $ sudo systemctl --user --machine=dreamy@ status wivrn
 ● wivrn.service - WiVRn XR runtime service
@@ -88,9 +87,10 @@ $ sudo systemctl --user --machine=dreamy@ status wivrn
 ```
 
 That is the behavior I want, but I'd like to better understand why.
-
 It appears to be because the WiVRn module configures the service using the `systemd.user` option,
 which runs it as a user service for all users.
+The auto-login user generally runs it first and claims the port,
+but there is the potential for conflict.
 
 https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/video/wivrn.nix#L180
 https://discourse.nixos.org/t/what-is-the-difference-between-systemd-services-and-systemd-user-services/25222/6
@@ -98,7 +98,68 @@ https://discourse.nixos.org/t/what-is-the-difference-between-systemd-services-an
 If I need to make sure it only runs for a single user in the future, I think I can set `autoStart` to `false`
 and create a user service for the `dreamy` user using Home Manager.
 
-I the graphical session for `dreamy` I run `wivrn-dashboard` to open up a connection wizard.
-I follow the instructions, including installing WiVRn on my Quest 3 from the Meta store,
-and successfully establish a connection.
+In a graphical session for `dreamy`, I open the WiVRn server application. 
+I select the wizard tab and follow the instructions,
+including installing WiVRn on my Quest 3 from the Meta store.
+I successfully establish a connection between my headset and PC.
+
+The next thing to do is try to actually run something.
+
+I first check the headset and see that it's still connected to the PC.
+I open Beat Saber through Steam on the PC, running using Proton's hotfix channel.
+Beat Saber opens on the TV and pops up a warning saying `OpenXR Runtime was not found.`
+
+In Steam, I set Beat Saber's launch options to `PRESSURE_VESSEL_FILESYSTEMS_RW=$XDG_RUNTIME_DIR/wivrn/comp_ipc %command%`.
+
+https://wiki.nixos.org/wiki/VR#WiVRn
+
+I still got the same warning.
+To get some more information I added `PROTON_LOG=1` to the launch options as well.
+This generated a log file at `~/steam-620980.log`.
+The logs were long and I only found the expected errors
+about failing to load an OpenXR runtime, with no additional information.
+
+I check the WiVRn service status with `systemctl --user status wivrn`.
+It is active and running.
+
+I check the logs with `journalctl --user --follow --unit wivrn.service`
+and don't see anything obvious.
+
+While looking at this, I noticed that the WiVRn service had crashed and couldn't restart
+because it had started on my other user instead and was hogging the port.
+
+In [250328A-using-a-systemd-unit-file-from-a-nixos-package.md](/game-server/docs/notes/250328A-using-a-systemd-unit-file-from-a-nixos-package.md)
+I take a little detour and set up a systemd unit for WiVRn with Home Manager.
+
+https://www.reddit.com/r/linux_gaming/comments/ve23bv/psa_you_can_run_proton_manually/
+
+---
+
+I am trying to get [WlxOverlay-S](https://github.com/galister/wlx-overlay-s) to work.
+I am seeing the watch and keyboard UI, but not the desktop.
+
+The WlxOverlay-S [known issues docs](https://github.com/galister/wlx-overlay-s?tab=readme-ov-file#known-issues)
+brings up a phantom monitor as a possible issue.
+
+I list the monitors:
+
+```sh
+$ xrandr -q
+Screen 0: minimum 16 x 16, current 1920 x 1080, maximum 32767 x 32767
+HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 1600mm x 900mm
+```
+
+The `HDMI-1` monitor is expected, but `Screen 0` is not.
+
+After poking around the internet a bit, I learned that `Screen 0` is actually expected.
+A screen is an abstraction over one or more monitors,
+and the `Screen 0` resolution matching the `HDMI-1` resolution suggests things are working fine.
+
+https://askubuntu.com/questions/981609/select-screen-0-with-xrandr
+
+## Other reading
+
+https://wiki.archlinux.org/title/Xrandr#Disabling_phantom_monitor
+https://github.com/NixOS/nixpkgs/issues/321603#issuecomment-2188410213
+https://www.reddit.com/r/linux4noobs/comments/dx5dze/xrandr_shows_two_displays_when_i_only_use_one/
 
