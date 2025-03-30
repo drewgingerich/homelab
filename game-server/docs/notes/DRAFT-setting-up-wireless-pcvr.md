@@ -98,7 +98,7 @@ https://discourse.nixos.org/t/what-is-the-difference-between-systemd-services-an
 If I need to make sure it only runs for a single user in the future, I think I can set `autoStart` to `false`
 and create a user service for the `dreamy` user using Home Manager.
 
-In a graphical session for `dreamy`, I open the WiVRn server application. 
+In a graphical session for `dreamy`, I open the WiVRn server application.
 I select the wizard tab and follow the instructions,
 including installing WiVRn on my Quest 3 from the Meta store.
 I successfully establish a connection between my headset and PC.
@@ -115,6 +115,9 @@ https://wiki.nixos.org/wiki/VR#WiVRn
 
 I still got the same warning.
 To get some more information I added `PROTON_LOG=1` to the launch options as well.
+
+https://github.com/ValveSoftware/Proton/blob/proton_9.0/README.md#runtime-config-options
+
 This generated a log file at `~/steam-620980.log`.
 The logs were long and I only found the expected errors
 about failing to load an OpenXR runtime, with no additional information.
@@ -125,13 +128,90 @@ It is active and running.
 I check the logs with `journalctl --user --follow --unit wivrn.service`
 and don't see anything obvious.
 
+So, not much to go on.
+
 While looking at this, I noticed that the WiVRn service had crashed and couldn't restart
 because it had started on my other user instead and was hogging the port.
-
 In [250328A-using-a-systemd-unit-file-from-a-nixos-package.md](/game-server/docs/notes/250328A-using-a-systemd-unit-file-from-a-nixos-package.md)
 I take a little detour and set up a systemd unit for WiVRn with Home Manager.
 
+On the NixOS wiki VR page I do see that [OpenComposite](https://gitlab.com/znixian/OpenOVR) is required
+when running games in Proton.
+
+https://wiki.nixos.org/wiki/VR#OpenComposite
+
+As described in the OpenXR specs, the OpenXR runtime is discovered by looking for a JSON file in a few well-known places.
+The WiVRn NixOS module places a file at one of these, `/etc/xdg/openxr/1/active_runtime.json`,
+so WiVRn should be discovered as an OpenXR runtime.
+Notably this appears to be the lowest priority location,
+so if I run into trouble it could be because something else has put a file at a higher priority location.
+
+https://registry.khronos.org/OpenXR/specs/1.0/loader.html#runtime-discovery
+
+For native OpenXR games and applications, this should be enough.
+
+Not all games support OpenXR, though, and this is where OpenComposite comes in:
+OpenComposite is an OpenVR runtime that simply translates and forwards calls to an OpenXR runtime.
+Games that need an OpenVR runtime think they are using an OpenVR runtime,
+even if the real work is done by an OpenXR runtime.
+
+The internet says that games run with Proton require a working OpenVR runtime, even when using OpenXR,
+though I have trouble finding out why this actually is.
+This means that OpenComposite is necessary for all VR games run in Proton.
+
+OpenVR has a runtime discover process similar to OpenXR:
+it looks for the file `$XDG_CONFIG_DIR/openvr/openvrpaths.vrpath`,
+a JSON file containing the path to the OpenVR runtime library, log output path, and other values.
+
+To use OpenComposite, this file must be updated to point at the OpenComposite DLL.
+
+Altogether in the user's Home Manager config it looks like this:
+
+```nix
+home.packages = [ pkgs.opencomposite ];
+xdg.configFile."openvr/openvrpaths.vrpath".text = ''
+  {
+    "config": [ "${config.xdg.dataHome}/Steam/config" ],
+    "external_drivers": null,
+    "jsonid": "vrpathreg",
+    "log": [ "${config.xdg.dataHome}/Steam/logs" ],
+    "runtime": [ "${pkgs.opencomposite}/lib/opencomposite" ],
+    "version": 1
+  }
+'';
+```
+
+https://forum.dcs.world/topic/314178-opencomposite-and-differents-dlls-why/
+
+Unfortunately Beat Saber still complains about not finding an OpenXR runtime.
+
+I try running a different game, Republique VR, with Proton logging enabled.
+I come across these error:
+`984.829:0020:0128:err:steam:initialize_vr_data Could not load libopenvr_api.so.`
+`warn:  OpenXR: Unable to get required Vulkan instance extensions size`
+`warn:  OpenXR: Unable to get required Vulkan Device extensions size`
+
+---
+
+https://github.com/nix-community/nixpkgs-xr
+
+---
+
 https://www.reddit.com/r/linux_gaming/comments/ve23bv/psa_you_can_run_proton_manually/
+
+---
+
+Somewhere I saw that this could help when using an Nvidia GPU.
+I am unable to find this recommendation again,
+so I'm leaving this commented out for now.
+
+```nix
+{ pkgs, ... }:
+{
+  environment.systemPackages = [ pkgs.monado-vulkan-layers ];
+  hardware.graphics.extraPackages = [ pkgs.monado-vulkan-layers ];
+}
+```
 
 ---
 
@@ -162,4 +242,3 @@ https://askubuntu.com/questions/981609/select-screen-0-with-xrandr
 https://wiki.archlinux.org/title/Xrandr#Disabling_phantom_monitor
 https://github.com/NixOS/nixpkgs/issues/321603#issuecomment-2188410213
 https://www.reddit.com/r/linux4noobs/comments/dx5dze/xrandr_shows_two_displays_when_i_only_use_one/
-
