@@ -186,59 +186,72 @@ https://forum.dcs.world/topic/314178-opencomposite-and-differents-dlls-why/
 Unfortunately Beat Saber still complains about not finding an OpenXR runtime.
 
 I try running a different game, Republique VR, with Proton logging enabled.
-I come across these error:
-`984.829:0020:0128:err:steam:initialize_vr_data Could not load libopenvr_api.so.`
-`warn:  OpenXR: Unable to get required Vulkan instance extensions size`
-`warn:  OpenXR: Unable to get required Vulkan Device extensions size`
+I come across these errors:
 
----
+```
+984.829:0020:0128:err:steam:initialize_vr_data Could not load libopenvr_api.so.
+```
+```
+warn:  OpenXR: Unable to get required Vulkan instance extensions size
+```
+```
+warn:  OpenXR: Unable to get required Vulkan Device extensions size
+```
 
-https://github.com/nix-community/nixpkgs-xr
+Looking around the internet, it seems like non of these are it.
 
----
+Next I tried adding `WINEDEBUG=all` to the launch options to get more logs, but this caused games to crash.
+There was a clear error in the Proton log file, but I don't remember what it was.
 
-https://www.reddit.com/r/linux_gaming/comments/ve23bv/psa_you_can_run_proton_manually/
+https://gitlab.winehq.org/wine/wine/-/wikis/Wine-Developer's-Guide/Debugging-Wine
 
----
-
-Somewhere I saw that this could help when using an Nvidia GPU.
-I am unable to find this recommendation again,
-so I'm leaving this commented out for now.
+I came across the `nixpkgs-xr` project and tried adding that to my NixOS config.
 
 ```nix
-{ pkgs, ... }:
 {
-  environment.systemPackages = [ pkgs.monado-vulkan-layers ];
-  hardware.graphics.extraPackages = [ pkgs.monado-vulkan-layers ];
+  description = "System configs";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
+  };
+
+  outputs = {
+    nix-darwin,
+    home-manager,
+    nixpkgs,
+    nixpkgs-xr,
+    ...
+  }: {
+    nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        nixpkgs-xr.nixosModules.nixpkgs-xr
+        home-manager.nixosModules.home-manager
+        ./game-server/nix/configuration.nix
+      ];
+    };
+  };
 }
 ```
 
----
+https://github.com/nix-community/nixpkgs-xr
 
-I am trying to get [WlxOverlay-S](https://github.com/galister/wlx-overlay-s) to work.
-I am seeing the watch and keyboard UI, but not the desktop.
+This also didn't work.
 
-The WlxOverlay-S [known issues docs](https://github.com/galister/wlx-overlay-s?tab=readme-ov-file#known-issues)
-brings up a phantom monitor as a possible issue.
-
-I list the monitors:
+Reaching the end of the road, I upgraded my `flake.lock` file.
 
 ```sh
-$ xrandr -q
-Screen 0: minimum 16 x 16, current 1920 x 1080, maximum 32767 x 32767
-HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 1600mm x 900mm
+$ nix flake update
 ```
 
-The `HDMI-1` monitor is expected, but `Screen 0` is not.
+And what do you know, things started working.
+I guess a reminder to update things first,
+because maybe the latest versions already work.
 
-After poking around the internet a bit, I learned that `Screen 0` is actually expected.
-A screen is an abstraction over one or more monitors,
-and the `Screen 0` resolution matching the `HDMI-1` resolution suggests things are working fine.
+After things started working I tried removing the `nixpkgs-xr` module, and things continued to work.
 
-https://askubuntu.com/questions/981609/select-screen-0-with-xrandr
-
-## Other reading
-
-https://wiki.archlinux.org/title/Xrandr#Disabling_phantom_monitor
-https://github.com/NixOS/nixpkgs/issues/321603#issuecomment-2188410213
-https://www.reddit.com/r/linux4noobs/comments/dx5dze/xrandr_shows_two_displays_when_i_only_use_one/
