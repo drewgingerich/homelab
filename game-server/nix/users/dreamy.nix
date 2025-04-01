@@ -14,12 +14,12 @@ in
     custom = {
       fish.enable = true;
       git.enable = true;
-      nvim.enable = true;
-      starship.enable = true;
-      wezterm.enable = true;
-      steam.enable = true;
       gnome.noOverview = true;
-      # wivrn.enable = true;
+      nvim.enable = true;
+      pcvr.enable = true;
+      starship.enable = true;
+      steam.enable = true;
+      wezterm.enable = true;
     };
 
     home.packages = with pkgs; [
