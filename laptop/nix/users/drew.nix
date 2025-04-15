@@ -1,10 +1,16 @@
 { pkgs, ... }:
+let
+  username = "drew";
+in
 {
   users.users.drew = {
     home = "/Users/drew";
+  users.users.${username}= {
+    home = "/Users/${username}";
   };
 
   home-manager.users.drew = {
+  home-manager.users.${username}= {
     imports = [
       ../../../modules/home
     ];
