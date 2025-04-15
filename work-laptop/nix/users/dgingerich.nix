@@ -12,6 +12,10 @@ in
 
   custom = {
     fish.enable = true;
+    git = {
+      enable = true;
+      userEmail = "dgingerich@ithaka.org";
+    };
     karabiner.enable = true;
     nvim.enable = true;
     starship.enable = true;
@@ -38,14 +42,6 @@ in
     wget
     yq
     zoxide
-    # Temporary while working on git module
-    delta
-    git
-    git-lfs
-    gh
-    glab
-    lazygit
-
   ];
 
   programs.home-manager.enable = true;
