@@ -11,6 +11,7 @@ in
   ];
 
   custom = {
+    cliTools.enable = true;
     fish.enable = true;
     git = {
       enable = true;
@@ -25,23 +26,7 @@ in
   home.packages = with pkgs; [
     asdf-vm
     awscli2
-    bat
-    eza
     devbox
-    direnv
-    fzf
-    ffmpeg
-    gnupg
-    htop
-    hyperfine
-    imagemagick
-    jq
-    pandoc
-    ripgrep
-    tealdeer
-    wget
-    yq
-    zoxide
   ];
 
   programs.home-manager.enable = true;

@@ -12,6 +12,7 @@ in
 
   home-manager.users.${username} = {
     custom = {
+      cliTools.enable = true;
       fish.enable = true;
       git.enable = true;
       gnome.noOverview = true;
@@ -23,24 +24,8 @@ in
     };
 
     home.packages = with pkgs; [
-      bat
       cemu
-      eza
-      direnv
-      ffmpeg
-      fzf
-      gnupg
-      htop
-      hyperfine
-      imagemagick
-      jq
-      pandoc
-      ripgrep
-      tealdeer
-      wget
       xivlauncher
-      yq
-      zoxide
     ];
 
     programs.home-manager.enable = true;
