@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware
-    ./gnome.nix
+    ./kde.nix
     ./steam.nix
     ./pcvr.nix
   ];
