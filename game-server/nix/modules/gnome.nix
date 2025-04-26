@@ -7,8 +7,11 @@
 
   services.xserver.desktopManager.gnome.enable = true;
   services.xserver.displayManager.gdm.enable = true;
+
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "dreamy";
+
+  services.xserver.displayManager.gdm.autoSuspend = false;
 
   # Disable the GNOME3/GDM auto-suspend feature that cannot be disabled in GUI!
   # If no user is logged in, the machine will power down after 20 minutes.
@@ -21,25 +24,18 @@
   home-manager.sharedModules = [(
     { config, lib, pkgs, ... }:
     {
-      options.custom.gnome.noOverview = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = "Start in desktop view instead of overview";
-      };
-
-      config = lib.mkMerge [
-        (lib.mkIf config.custom.gnome.noOverview {
-          home.packages = [ pkgs.gnomeExtensions.no-overview ];
-          dconf.settings = {
-            "org/gnome/shell" = {
-              enabled-extensions = [
-                 "no-overview@fthx"
-              ];
-            };
-          };
-        })
+      home.packages = with pkgs; [
+        gnomeExtensions.no-overview
+        gnomeExtensions.notification-timeout
       ];
-
+      dconf.settings = {
+        "org/gnome/shell" = {
+          enabled-extensions = [
+            "no-overview@fthx"
+            "notification-timeout@chlumskyvaclav.gmail.com"
+          ];
+        };
+      };
     }
   )];
 }

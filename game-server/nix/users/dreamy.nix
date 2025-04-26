@@ -15,7 +15,6 @@ in
       cliTools.enable = true;
       fish.enable = true;
       git.enable = true;
-      gnome.noOverview = true;
       nvim.enable = true;
       pcvr.enable = true;
       starship.enable = true;
