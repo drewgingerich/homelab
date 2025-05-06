@@ -22,7 +22,7 @@
       prettierd
       pyright
       ruby-lsp
-      ruff-lsp
+      ruff
       starlark-rust
       stylua
       taplo
