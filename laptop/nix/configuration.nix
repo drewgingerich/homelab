@@ -5,6 +5,8 @@
     ./users/drew.nix
   ];
 
+  system.primaryUser = "drew";
+
   environment.systemPackages = with pkgs; [
     vim
   ];
@@ -28,6 +30,7 @@
       "moonlight"
       "obs"
       "obsidian"
+      "qutebrowser"
       "raycast"
       "rectangle"
       "signal"
