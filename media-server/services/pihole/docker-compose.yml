@@ -19,16 +19,10 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
     labels:
-      # ---
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
-      # ---
+      - "traefik.http.routers.pihole-lan.entrypoints=web-secure"
+      - "traefik.http.routers.pihole-lan.rule=Host(`pihole.${DOMAIN}`)"
       - "traefik.http.middlewares.pihole-admin-redirect.replacepathregex.regex=^/?$$"
       - "traefik.http.middlewares.pihole-admin-redirect.replacepathregex.replacement=/admin"
-      #---
-      - "traefik.http.routers.pihole-lan.entrypoints=web-secure"
-      - "traefik.http.routers.pihole-lan.rule=Host(`pihole.${LAN_DOMAIN}`) || Host(`pihole.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.pihole-lan.tls=true"
-      - "traefik.http.routers.pihole-lan.tls.certresolver=letsencrypt"
       - "traefik.http.routers.pihole-lan.middlewares=pihole-admin-redirect@docker"

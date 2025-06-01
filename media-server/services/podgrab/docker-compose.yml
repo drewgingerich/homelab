@@ -15,8 +15,6 @@ services:
       - service_gateway
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.podgrab.loadbalancer.server.port=8080"
       - "traefik.http.routers.podgrab.entrypoints=websecure"
       - "traefik.http.routers.podgrab.rule=Host(`podgrab.${DOMAIN}`)"
-      - "traefik.http.routers.podgrab.tls=true"
-      - "traefik.http.routers.podgrab.tls.certresolver=letsencrypt"
-      - "traefik.http.services.podgrab.loadbalancer.server.port=8080"

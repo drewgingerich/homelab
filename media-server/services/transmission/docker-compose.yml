@@ -21,12 +21,7 @@ services:
       - 51413:51413/udp
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.transmission.loadbalancer.server.port=9091"
-      # ---
-      - "traefik.http.routers.transmission-lan.entrypoints=web-secure"
-      - "traefik.http.routers.transmission-lan.rule=Host(`transmission.${LAN_DOMAIN}`) || Host(`transmission.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.transmission-lan.tls=true"
-      - "traefik.http.routers.transmission-lan.tls.certresolver=letsencrypt"
-      # ---
+      - "traefik.http.routers.transmission.entrypoints=web-secure"
+      - "traefik.http.routers.transmission.rule=Host(`transmission.${DOMAIN}`)"
       - "com.centurylinklabs.watchtower.enable=false"

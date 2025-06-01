@@ -18,10 +18,6 @@ services:
       - service_gateway
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      # ---
-      - "traefik.http.routers.sonarr-lan.entrypoints=web-secure"
-      - "traefik.http.routers.sonarr-lan.rule=Host(`sonarr.${LAN_DOMAIN}`) || Host(`sonarr.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.sonarr-lan.tls=true"
-      - "traefik.http.routers.sonarr-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sonarr.entrypoints=web-secure"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)"

@@ -17,10 +17,6 @@ services:
       - service_gateway
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
-      # ---
-      - "traefik.http.routers.prowlarr-lan.entrypoints=web-secure"
-      - "traefik.http.routers.prowlarr-lan.rule=Host(`prowlarr.${LAN_DOMAIN}`) || Host(`prowlarr.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.prowlarr-lan.tls=true"
-      - "traefik.http.routers.prowlarr-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.prowlarr.entrypoints=web-secure"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"

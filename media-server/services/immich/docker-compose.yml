@@ -31,13 +31,9 @@ services:
       - private
     labels:
       - "traefik.enable=true"
-      # ---
-      - "traefik.http.services.${COMPOSE_PROJECT_NAME}.loadbalancer.server.port=2283"
-      # ---
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-lan.entrypoints=web-secure"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-lan.rule=Host(`${COMPOSE_PROJECT_NAME}.${LAN_DOMAIN}`) || Host(`${COMPOSE_PROJECT_NAME}.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-lan.tls=true"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.services.immich.loadbalancer.server.port=2283"
+      - "traefik.http.routers.immich.entrypoints=web-secure"
+      - "traefik.http.routers.immich.rule=Host(`immich.${DOMAIN}`)"
 
   # immich-machine-learning:
   #   image: ghcr.io/immich-app/immich-machine-learning:release

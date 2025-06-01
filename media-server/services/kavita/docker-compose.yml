@@ -15,10 +15,6 @@ services:
       - service_gateway
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.kavita.loadbalancer.server.port=5000"
-      # ---
-      - "traefik.http.routers.kavita-lan.entrypoints=web-secure"
-      - "traefik.http.routers.kavita-lan.rule=Host(`kavita.${LAN_DOMAIN}`) || Host(`kavita.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.kavita-lan.tls=true"
-      - "traefik.http.routers.kavita-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kavita.entrypoints=web-secure"
+      - "traefik.http.routers.kavita.rule=Host(`kavita.${DOMAIN}`)"

@@ -22,13 +22,9 @@ services:
       - private
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.miniflux.loadbalancer.server.port=8080"
-      # ---
       - "traefik.http.routers.miniflux-lan.entrypoints=web-secure"
-      - "traefik.http.routers.miniflux-lan.rule=Host(`miniflux.${LAN_DOMAIN}`) || Host(`miniflux.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.miniflux-lan.tls=true"
-      - "traefik.http.routers.miniflux-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.miniflux-lan.rule=Host(`miniflux.${DOMAIN}`)"
   db:
     image: postgres:15
     restart: unless-stopped

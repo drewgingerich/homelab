@@ -12,7 +12,8 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      LINODE_TOKEN: ${LINODE_TOKEN}
+      PORKBUN_API_KEY: ${PORKBUN_API_KEY}
+      PORKBUN_SECRET_API_KEY: ${PORKBUN_SECRET_API_KEY}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${APP_DATA_DIR}/traefik:/config
@@ -33,10 +34,10 @@ services:
       - "--providers.docker.endpoint=tcp://docker-socket-proxy:2375"
       - "--providers.docker.exposedbydefault=false"
       # ---
-      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/config/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=linode"
-      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.porkbun-le.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.porkbun-le.acme.storage=/config/porkbun.acme.json"
+      - "--certificatesresolvers.porkbun-le.acme.dnschallenge.provider=porkbun"
+      - "--certificatesresolvers.porkbun-le.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
       # ---
       - "--serversTransport.insecureSkipVerify=true"
       # ---
@@ -44,9 +45,9 @@ services:
       # ---
       - "--entrypoints.web-secure.address=:443"
       - "--entrypoints.web-secure.http.tls=true"
-      - "--entrypoints.web-secure.http.tls.certResolver=letsencrypt"
-      - "--entrypoints.web-secure.http.tls.domains[0].main=${LAN_DOMAIN}"
-      - "--entrypoints.web-secure.http.tls.domains[0].sans=*.${LAN_DOMAIN}"
+      - "--entrypoints.web-secure.http.tls.certResolver=porkbun-le"
+      - "--entrypoints.web-secure.http.tls.domains[0].main=${DOMAIN}"
+      - "--entrypoints.web-secure.http.tls.domains[0].sans=*.${DOMAIN}"
       # ---
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web.http.redirections.entrypoint.to=web-secure"
@@ -62,14 +63,10 @@ services:
       # - "--entrypoints.proxied-web.http.redirections.entrypoint.to=proxied-web-secure"
       # - "--entrypoints.proxied-web.http.redirections.entrypoint.scheme=https"
     labels:
-      # ---
       - "traefik.enable=true"
-      # ---
-      - "traefik.http.routers.traefik-dashboard-lan.entrypoints=web-secure"
-      - "traefik.http.routers.traefik-dashboard-lan.rule=Host(`traefik.${LAN_DOMAIN}`) || Host(`traefik.vpn.${LAN_DOMAIN}`)"
       - "traefik.http.routers.traefik-dashboard-lan.service=api@internal"
-      - "traefik.http.routers.traefik-dashboard-lan.tls=true"
-      - "traefik.http.routers.traefik-dashboard-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik-dashboard-lan.entrypoints=web-secure"
+      - "traefik.http.routers.traefik-dashboard-lan.rule=Host(`traefik.${DOMAIN}`)"
 
   docker-socket-proxy:
     image: tecnativa/docker-socket-proxy

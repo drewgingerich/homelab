@@ -26,13 +26,9 @@ services:
       - private
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.hedgedoc.loadbalancer.server.port=3000"
-      # ---
       - "traefik.http.routers.hedgedoc-lan.entrypoints=web-secure"
       - "traefik.http.routers.hedgedoc-lan.rule=Host(`hedgedoc.${LAN_DOMAIN}`) || Host(`hedgedoc.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.hedgedoc-lan.tls=true"
-      - "traefik.http.routers.hedgedoc-lan.tls.certresolver=letsencrypt"
 
   database:
     image: postgres:13-alpine

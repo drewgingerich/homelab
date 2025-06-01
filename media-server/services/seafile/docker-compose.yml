@@ -24,13 +24,9 @@ services:
       - private
     labels:
       - "traefik.enable=true"
-      # ---
       - "traefik.http.services.seafile.loadbalancer.server.port=80"
-      # ---
-      - "traefik.http.routers.seafile-lan.entrypoints=web-secure"
-      - "traefik.http.routers.seafile-lan.rule=Host(`seafile.${LAN_DOMAIN}`) || Host(`seafile.vpn.${LAN_DOMAIN}`)"
-      - "traefik.http.routers.seafile-lan.tls=true"
-      - "traefik.http.routers.seafile-lan.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.seafile.entrypoints=web-secure"
+      - "traefik.http.routers.seafile.rule=Host(`seafile.${DOMAIN}`)"
 
   database:
     image: mariadb:10.6
