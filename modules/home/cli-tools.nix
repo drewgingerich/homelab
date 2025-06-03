@@ -8,8 +8,11 @@
       btop
       eza
       direnv
-      fzf
+      dust
+      fd
       ffmpeg
+      fselect
+      fzf
       gnupg
       hyperfine
       imagemagick
@@ -18,6 +21,8 @@
       ripgrep
       tealdeer
       wget
+      xh
+      yazi
       yq
       zoxide
     ];
