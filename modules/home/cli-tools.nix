@@ -13,6 +13,7 @@
       ffmpeg
       fselect
       fzf
+      gcc
       gnupg
       hyperfine
       imagemagick
