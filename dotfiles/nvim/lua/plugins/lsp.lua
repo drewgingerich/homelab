@@ -33,10 +33,10 @@ return {
 			})
       lspconfig.taplo.setup({ capabilities = capabilities })
 
-			vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
+			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic" })
-			vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
+			vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
 
 			local telescope = require("telescope.builtin")
 
