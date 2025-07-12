@@ -6,6 +6,7 @@
     home.packages = with pkgs; [
       bat
       btop
+      cue
       eza
       direnv
       dust
