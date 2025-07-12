@@ -41,6 +41,7 @@
       "vlc"
       "wezterm"
       "zen-browser"
+      "zoom"
       "zotero"
     ];
   };
