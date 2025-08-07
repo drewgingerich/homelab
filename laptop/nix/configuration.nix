@@ -18,6 +18,7 @@
       "blender"
       "docker"
       "discord"
+      "freecad"
       "firefox"
       "godot-mono"
       "google-chrome"
