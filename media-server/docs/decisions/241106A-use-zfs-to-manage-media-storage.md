@@ -22,7 +22,7 @@ I don't have to do anything right now, since I'm already using ZFS!
 
 I get ZFS features such as snapshots and tunable datasets.
 
-I should use ECC RAM to complement ZFS's storage data integrity capabilities
+I should continue to use ECC RAM to complement ZFS's data integrity features.
 
 I should also follow the rule of thumb and get about 1G of RAM per TB of storage in my ZFS pool.
 
@@ -54,18 +54,18 @@ and is something I want to keep an eye on but not use right now.
 
 An alternative to a holistic storage solution is to manage different layers of the storage stack with more specialized softwares.
 This is how it has been done historically.
-I common stack I've seen is `mdadm` for software RAID to store data across multiple devices,
+A common stack I've seen is `mdadm` for software RAID to store data across multiple devices,
 `lvm` to create partitions,
 and `xfs` to provide a filesystem.
 I like the philosphy of using the specific tools for specific job,
 but my (limited) understanding is that solutions like ZFS can leverage their holistic nature to
 provide cool features that would otherwise be difficult to implement.
-It also feels simpler to use just one thing to manage storage, and I that's important to me.
+It also feels simpler to use just one thing to manage storage, and simplicity is important to me.
 
 Hardware RAID controllers present an alternative to software RAID solutions like `mdadm`.
 They allow systems without quality software RAID solutions (like Windows, historically) to use RAID.
-They can also faster because they use dedicated hardware tailored to the task.
-As a downside, they seem to often be prorpietary blackboxes that are difficult to troubleshoot and recover from when they fail.
+They can also be faster because they use dedicated hardware tailored to the task.
+As a downside, they seem to often be proprietary black-boxes that are difficult to troubleshoot and recover from when they fail.
 They're also an extra thing to buy!
 
 ## References
