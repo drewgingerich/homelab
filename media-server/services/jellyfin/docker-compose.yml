@@ -1,0 +1,12 @@
+services:
+  server:
+    image: jellyfin/jellyfin
+    restart: unless-stopped
+    container_name: jellyfin
+    volumes:
+      - ${APP_DATA_DIR}/jellyfin/config:/config
+      - ${APP_DATA_DIR}/jellyfin/cache:/cache
+      - ${MEDIA_DIR}/tv:/media/tv
+      - ${MEDIA_DIR}/home-video:/media/home-video
+      - ${MEDIA_DIR}/movies:/media/movies
+    network_mode: "host"
