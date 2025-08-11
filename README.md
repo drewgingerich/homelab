@@ -1,5 +1,11 @@
-This repository contains everything I use to set up, run, and maintain my home server. While I currently rely on ad hoc shell commands for many things, my goal is to capture everything as version-controlled configuration executable by tools like Ansible and Docker.
+This repository contains everything I use to set up, run, and maintain my computers.
 
-I use my home server primarily to store and serve media, such as movies, photos, and books. I also use it to occasionally host servers for games including Minecraft and Valheim. There are a few other miscellaneous services running as well.
+I have historically relied on ad hoc configuration,
+but I've become interested in tools the provide declarative, deterministic, version-controlled configuration,
+and in particular [Nix](https://nixos.org/).
 
-I am using Architecture Decision Records (ADRs) to document important decisions about the hardware and software I'm using for my home server. Check out the [ADR index](./docs/architecture/decisions) to see these records.
+I use decision records to capture the context and outcomes of critcal decisions,
+and notes to capture more mundane day-to-day work.
+Writing helps me organize my thoughts, provides a reference for future me,
+and hopefully helps anyone trying to understand what's in this repo.
+
