@@ -2,35 +2,33 @@
 
 Follows up [241106A - Use ZFS to manage media storage](media-server/docs/decisions/241106A-use-zfs-to-manage-media-storage.md)
 
-## Goal
+## Challenge
 
 Select a ZFS pool layout for storing media.
 
+## Assessment summary
+
+A pool consisting of mirror or RAID-Z vdevs is most suitable for media storage on a home server.
+
+Compared to a pool of RAID-Z vdevs, a pool of mirror vdevs provides:
+
+1. More flexibility for modifying the vdev and the pool
+2. Storage capacity to be increased in smaller increments, benefiting from storage costs lowering over time
+3. Better read performance and comparable write performance, at the level of the pool
+4. Worse, but still comparable, fault tolerance
+5. Faster and less hazardous failure recovery
+6. Worse storage efficiency
+
 ## Decision
 
-Use 2-way mirror vdevs to create a ZFS pool for media.
+Use a pool of 2-way mirror vdevs for media storage.
 
 ## Side effects
 
-Simple, flexible, and forgiving pool layout.
+I don't have to change my existing pool layout :)
 
-Redundancy, enabling ZFS's automatic data correction.
-Less redundancy per vdev than Raidz2 or Raidz3,
-but potentially more redundancy across the pool.
-
-High read throughput and IOPS across pool, but somewhat slower write throughput
-(compared to an equivalent single storage device).
-
-Poor storage efficiency, at 50%.
-Leads to spending more on storage.
-
-Smaller vdevs allow storage to be increased in smaller increments,
-taking advantage of the decreasing cost of storage over time,
-and providing a smoother expense flow.
-
-Smaller vdevs yield faster, safer resilvers as less data must be rewritten per vdev.
-
-Avoids CPU load from calculating parity bits.
+After reaching a few mirror vdevs (probably 3+),
+I should add a [hot spare](https://docs.oracle.com/cd/E19253-01/819-5461/gcvcw/index.html).
 
 ## Assessment
 
@@ -282,14 +280,13 @@ The odds of a second failure during a resilver are higher for RAID-Z vdevs than 
 
 ### Flexibility
 
-
 Storage needs grow over time.
 I take more pictures, but more TV and mustic, accumulate more data,
 and my existing storage fills up.
 
 On the other hand, storage gets cheaper over time.
 Technology improves, and what was once an expensive, cutting edge 4TB device
-is now relatively small and cheap. 
+is now relatively small and cheap.
 
 It is nice to be able to ride cheapening storage costs by
 incrememtally adding storage as needed.
@@ -330,9 +327,8 @@ new drives of higher capacity, like the Ship of Theseus.
 ZFS is smart enough to will automatically find and make use of the new capacity once the capacity of all drives has been increased.
 ZFS needs to resilver the vdev after each replaced drive,
 which updating a RAID-Z vdev quickly becomes unreasonable as width increases.
-The smaller size of mirror vdevs, on the other hand, means updating the is feasible, 
+The smaller size of mirror vdevs, on the other hand, means updating the is feasible,
 and also again means capacity can be upgraded in smaller increments.
-
 
 [^hard-drive-cost-per-gigabyte]: https//www.backblaze.com/blog/hard-drive-cost-per-gigabyte/
 
@@ -341,13 +337,6 @@ and also again means capacity can be upgraded in smaller increments.
 [^serverfault-why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool]: https//serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool
 
 [^openzfs-man-pages-zpool-attach-8]: https//openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html
-
-## Comparison
-
-
-
-Mirror vdevs win the flexibility contest hands down,
-and the cost savings of the incremental improvement they unlock offsets their poor storage efficiency to some degree.
 
 ## Further Reading
 
