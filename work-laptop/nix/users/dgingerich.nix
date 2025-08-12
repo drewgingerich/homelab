@@ -6,6 +6,11 @@ in
   home.username = username;
   home.homeDirectory = "/Users/${username}";
 
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = (_: true);
+  };
+
   imports = [
     ../../../modules/home
   ];
@@ -26,6 +31,7 @@ in
   home.packages = with pkgs; [
     asdf-vm
     awscli2
+    claude-code
     devbox
   ];
 
