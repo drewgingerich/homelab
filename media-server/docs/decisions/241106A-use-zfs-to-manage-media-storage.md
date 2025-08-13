@@ -39,6 +39,8 @@ and it's been working well for me.
 ZFS is a holistic storage solution, providing filesystems as well as physical device management.
 This approach gives ZFS a lot of power and flexibility.
 
+[ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
+
 In particular, ZFS allows me to store data across multiple devices with redundancy,
 automatically repairs data errors by keeping checksums,
 and provides quality of life features such as snapshots.
@@ -68,7 +70,5 @@ They can also be faster because they use dedicated hardware tailored to the task
 As a downside, they seem to often be proprietary black-boxes that are difficult to troubleshoot and recover from when they fail.
 They're also an extra thing to buy!
 
-## References
-
-- [ZFS 101—Understanding ZFS storage and performance](https://arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/)
+[ZFS versus RAID: Eight Ironwolf disks, two filesystems, one winner ](https://arstechnica.com/gadgets/2020/05/zfs-versus-raid-eight-ironwolf-disks-two-filesystems-one-winner/)
 

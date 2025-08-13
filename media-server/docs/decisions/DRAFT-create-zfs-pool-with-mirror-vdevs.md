@@ -32,42 +32,32 @@ I should add a [hot spare](https://docs.oracle.com/cd/E19253-01/819-5461/gcvcw/i
 
 ## Assessment
 
-ZFS filesystems are built on top of virtual storage pools called zpools.
+### What are vdevs?
 
-ZFS zpools are not directly composed from physical devices, like in conventional RAID,
-but rather out of another abstraction: virtual devices (vdevs).
+A ZFS filesystem is built on top of a virtual storage pool (zpool),
+which in turn is composed of virtual devices (vdevs).
+Vdevs are an abstraction over the underlying storage devices,
+and provide features similar to conventional RAID.
 
-Vdevs present a consistent interface over varies underlying storage mediums,
-and ZFS currently provides five types of vdev for storage:
-file, single-device, mirror, [RAID-Z](raidz_docs), and [dRAID](draid_docs).
+ZFS currenty provides five types of vdevs for storage:
 
-[raidz_docs]: https://openzfs.github.io/openzfs-docs/Basic%20Concepts/RAID-Z.html
-[draid_docs]: https://openzfs.github.io/openzfs-docs/Basic%20Concepts/dRAID%20Howto.html
+- File: use a file from an existing filesystem (mainly for testing)
+- Single-device: use one drive, without redundancy
+- Mirror: store an identicle copy of data on each multiple drives (~ RAID 1)
+- RAID-Z: stripe data across multiple drives, along with parity bits (~ RAID 5/6)
+- dRAID: advanced version of RAID-Z for very large arrays (60+ devices)
 
-File vdevs present a file from an existing file system as a device,
-intended for testing and experimentation.
-[^oracle-zfs-admin-guide-using-files-in-a-zfs-storage-pool]
+ZFS also provides a few utility vdev types (spare, cache, log, and special), but they are not relevant here.
 
-Single-device vdevs store data on a single device, providing no redundancy.
+[OpenZFS Basic Concepts](https://openzfs.github.io/openzfs-docs/Basic%20Concepts/index.html)
 
-A mirror vdev provides redundancy by storing a copy of data on each device in the vdev.
-E.g., a 3-way mirror vdev consists of three devices each with one copy of the data.
+[TrueNAS ZFS Primer](https://www.truenas.com/docs/references/zfsprimer/)
 
-A RAID-Z vdev provides redundancy by striping data across the devices within the vdev along with [parity bits](https://en.wikipedia.org/wiki/Parity_bit).
-RAID-Z can use single, double, or triple parity, referred to as raidz1, raidz2, and raidz3, respectively.
-
-dRAID is an evolution of RAID-Z meant for very large arrays of devices (at least 60[^openzfs-understanding-zfs-vdev-types]).
-
-I think that only mirror and RAID-Z vdevs are a good fit for my expected storage array size of 4 to 16 drives,
-so I'll focus on just them from here on.
-
-Side note: ZFS also provides a few utility vdev types (spare, cache, log, and special),
-but I don't believe they're relevant here.
+[OpenZFS: the final word in file systems](https://jro.io/truenas/openzfs/)
 
 ### Error correction
 
 Mirror and RAID-Z vdevs both provide the data redundancy needed to enable ZFS's automatic error correction.
-[^truenas-zfs-primer-zfs-self-healing-file-system]
 
 ### Fault tolerance
 
@@ -114,9 +104,11 @@ so a rule of thumb is to match the capacity of all devices within a vdev.
 I want good storage efficiency, of course,
 but since I'm only making a small storage server it's also not my top priority.
 
-#### Related
-
-Shout out to the [OpenZFS Capacity Calculator](https://jro.io/capacity/).
+> [!note]
+> There are tools for calculating the store efficiency of various pool layouts, check 'em out!
+>
+> - [OpenZFS Capacity Calculator](https://jro.io/capacity/)
+> - [TrueNAS ZFS Capacity Calculator](https://www.truenas.com/docs/references/zfscapacitycalculator/)
 
 ### Performance
 
@@ -128,19 +120,23 @@ so the primary workload will be reading large files.
 Understanding storage performance starts with understanding (roughly) what happens during an IO process.
 Since I'm using hard disk drives (HDDs) for storage, I'll specifically look at how HDDs work.
 
-There are two primary steps in an IO process that determine the amount of time it takes[^wikipedia-hard-disk-drive-performance-characteristics]:
+Two steps determine the amount of time an IO operation takes:
 
-1. The HDD prepares to transfer data. The amount of time this takes is known as the _response time_.
-   The response time mostly comes from the mechanical movements of
-   positioning the head (seek time) and platter (rotational latency).
-   Note that the response time of a single IO operation can vary by orders of magnitude based on
-   how far the mechanical parts must move, so it is the average response time that is discussed.
-2. The HDD transfers data. The speed at which it can transfer data is known as the _throughput_.
-   It is mainly limited by the transfer speed between the platter and onboard disk buffer.
+1. The HDD prepares to transfer data. The amount of time this takes is known as the _response time_,
+   and mostly a result of mechanically positioning the head (_seek time_) and platter (_rotational latency_).
+   The response time of a single IO operation can vary by orders of magnitude based on
+   how far the mechanical parts must move, so people generally talk about the average response time.
+2. The HDD transfers data. The speed at which it can transfer data is known as the _throughput_,
+   It is mostly limited by the data transfer speed between the platter and onboard disk buffer.
+
+[Wikipedia: Hard disk drive performance characteristics]: https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics
 
 For HDDs today, typical average response time appears to be 10 - 20 ms, and
 typical average throughput appears to be 100 - 300 MBs.
-A WD Red 4TB drive, for example, has a response time of ~10 ms and throughput of ~250 MBs.[^wd-red-pro-product-brief][^wd-red-4tb-hdd-review-(wd40efrx)]
+A WD Red 4TB drive, for example, has a response time of ~10 ms and throughput of ~250 MBs.
+
+[WD Red Pro Product Brief]: https://documents.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-red-pro-hdd/product-brief-western-digital-wd-red-pro-hdd.pdf
+[WD Red 4tb HDD Review (WD40EFRX)]: https://www.storagereview.com/review/wd-red-4tb-hdd-review-wd40efrx
 
 Sequential IO workloads, e.g. reading large files, are bottle-necked by throughput,
 To see why, consider reading an infinite amount of contiguous data:
@@ -153,11 +149,13 @@ since no data is being transferred, throughput is not a factor
 and the speed at which files can be read only depends on how fast the HDD can prepare to read the data.
 Because it's awkward to talk about a value that's inversely proportional to speed,
 people instead talk about the reciprocal of response time,
-[_IOPS_](https//en.wikipedia.org/wiki/IOPS) (IO operations per second).[^getting-the-hang-of-iops].
+_IOPS_ (IO operations per second).
 
-So far, I haven't talked about differences in read and write operations.
-HDDs read and write with similar response times and throughputs,
-but things get more complicated for arrays of disks like mirror and RAID-Z vdevs.
+[Getting The Hang Of IOPS](https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=e6fb4a1b-fa13-4956-b763-8134185c0c0a&CommunityKey=63b01f30-d5eb-43c7-9232-72362b508207&tab=librarydocuments)
+
+I've so far haven't considered performance differences between read and write operations.
+While the read and write operations of an HDD have similar response times and throughputs,
+things get more complicated for arrays of HDDs like mirror and RAID-Z vdevs.
 
 When writing to a mirror, the operation completes when the data has been written to every disk in the mirror.
 Write throughput and IOPS are equal to the throughput and IOPS of the slowest device, and don't scale with array size.
@@ -191,8 +189,7 @@ To summarize, assuming all devices in the vdevs are identical:
 | 2-way mirror  | $T_w$            | $I_w$      | $2 * T_r$       | $2 * T_r$ |
 | 4-wide raidz2 | $4 * T_w$        | $T_w$      | $4 * T_r$       | $T_r$     |
 
-So raidz2 performs better in everything except read IOPS.
-
+So raidz2 vdevs outperform mirror vdevs in everything except read IOPS.
 Yes, BUT, the performance conversation doesn't end with vdevs!
 
 A ZFS pool distributes data across all of its vdevs.
@@ -200,12 +197,10 @@ Similar to RAID-Z, this means read and write throughput is equal to the sum of t
 while read and write IOPS are equal to the slowest vdev.
 
 > [!note]
-> ZFS doesn't stripe data like RAID-Z, it just distributes blocks of data.
-> Where ZFS places data is not deterministic because ZFS takes into account vdev usage and capacity,
-> and tries to keep the operations and usage well distributed.
+> At the pool level, ZFS doesn't stripe data like RAID-Z, but rather distributes blocks of data across vdevs.
+> ZFS takes into account vdev usage and capacity, and tries to keep operations and usage well distributed.
 
-For each RAID-Z vdev, there could be 2-6 times more mirror vdevs,
-depending on RAIDZ width and parity.
+For each RAID-Z vdev, there could be 2-6 times more mirror vdevs, depending on RAIDZ width and parity.
 While a single RAID-Z vdev outperforms a single mirror vdev,
 the picture is different when considering pool performance for a fixed number of devices.
 E.g. for a pool with 6 devices:
@@ -220,17 +215,13 @@ When looking at a pool holistically,
 mirror vdevs are actually better for read-heavy workloads
 and are not too far behind for writes.
 
-#### References
+[iXsystems ZFS Storage Pool Layout White Paper](https://static.ixsystems.co/uploads/2020/09/ZFS_Storage_Pool_Layout_White_Paper_2020_WEB.pdf)
 
-[^ixsystems-zfs-storage-pool-layout-white-paper]
-[^ars-technica-zfs-versus-raid]
-[^openzfs-the-final-word-in-file-systems]
-
-Not as good:
-
-[^ars-technica-how-fast-are-your-disks?-find-out-the-open-source-way,-with-fio]
-[^a-closer-look-at-zfs,-vdevs-and-performance]
-[^zfs-101—understanding-zfs-storage-and-performance]
+> ![note]
+> While theory is great, at the end of the day actually measuring the performance
+> of different pool layouts for a workload is the best way to ensure the optimal layout.
+> I don't care enough to do this, though, my server has been running fine.
+> For folks who do want to be thorough, [fio](https://fio.readthedocs.io/en/latest/fio_doc.html) seems like a good tool.
 
 ### Failure recovery
 
@@ -253,6 +244,14 @@ This intensity raises the chance of another device failing during the resilver.
 If the vdev doesn't have enough redundancy to handle a second failure, then data will be lost.
 
 > [!note]
+> There is a lot of discussion around how much redundancy is needed to be safe during a resilver.
+
+[Why RAID 5 stops working in 2009](https://www.zdnet.com/article/why-raid-5-stops-working-in-2009/)
+[Why RAID-5 Stops Working in 2009 - Not Necessarily](https://www.high-rely.com/2012/08/13/why-raid-5-stops-working-in-2009-not/)
+[Reddit: Statistics on real-world Unrecoverable Read Error rate numbers](https://www.reddit.com/r/zfs/comments/3gpkm9/statistics_on_realworld_unrecoverable_read_error/)
+[TrueNAS Forums: Assessing the Potential for Data Loss](https://www.truenas.com/community/resources/assessing-the-potential-for-data-loss.227/)
+
+> [!note]
 > Unlike conventional RAID, the file-aware nature of ZFS means it can contain an error
 > to just the associated file, and continue to successfuly read other files.
 > Of course, a catastrophic device failure can still make the whole device unreadable.
@@ -261,28 +260,21 @@ The more data that must be read during a resilver,
 the higher the odds of a second failure.
 As a rule of thumb, smaller vdevs have more reliable resilvers.
 
-The odds of a second failure during a resilver are higher for RAID-Z vdevs than for mirrors:
+The odds of a second failure during a resilver are higher for RAID-Z vdevs than for mirrors
+because RAID-Z vdevs are generally much larger than mirrors must additional read and write parity bits during a resilver.
 
-- RAID-Z vdevs are generally much larger than mirrors.
-- RAID-Z vdevs musta dditional read parity bits during a resilver.
+[Disk failures in the real world: What does an MTTF of 1,000,000 hours mean to you?](https://www.usenix.org/legacy/events/fast07/tech/schroeder/schroeder.pdf)
+[Failure Trends in a Large Disk Drive Population](https://static.googleusercontent.com/media/research.google.com/en//archive/disk_failures.pdf)
 
-#### References
-
-[^reddit-statistics-on-real-world-unrecoverable-read-error-rate-numbers-]
-[^truenas-forums-assessing-the-potential-for-data-loss]
-[^netapp-weighs-in-on-disks]
-[^why-raid-5-stops-working-in-2009]
-[^triple-parity-raid-and-beyond]
-[^freebsd-forums-zpool-degraded-state]
-[^blocks-&-files-resilvering]
-[^disk-failures-in-the-real-world-what-does-an-mttf-of-1,000,000-hours-mean-to-you]
-[^failure-trends-in-a-large-disk-drive-population]
+[Reliable RAID Configuration Calculator (R2-C2)](https://jro.io/r2c2/)
 
 ### Flexibility
 
 Storage needs grow over time.
 I take more pictures, but more TV and mustic, accumulate more data,
 and my existing storage fills up.
+
+[Hard Drive Cost Per Gigabyte]: https://www.backblaze.com/blog/hard-drive-cost-per-gigabyte/
 
 On the other hand, storage gets cheaper over time.
 Technology improves, and what was once an expensive, cutting edge 4TB device
@@ -330,70 +322,15 @@ which updating a RAID-Z vdev quickly becomes unreasonable as width increases.
 The smaller size of mirror vdevs, on the other hand, means updating the is feasible,
 and also again means capacity can be upgraded in smaller increments.
 
-[^hard-drive-cost-per-gigabyte]: https//www.backblaze.com/blog/hard-drive-cost-per-gigabyte/
 
-[^zfs-raidz-stripe-width-or-how-i-learned-to-stop-worrying-and-love-raidz]: https//www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz
+[^zfs-raidz-stripe-width-or-how-i-learned-to-stop-worrying-and-love-raidz]: https://www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz
 
-[^serverfault-why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool]: https//serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool
+[^serverfault-why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool]: https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool
 
-[^openzfs-man-pages-zpool-attach-8]: https//openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html
+[^openzfs-man-pages-zpool-attach-8]: https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html
 
 ## Further Reading
 
-[reliable-raid-configuration-calculator-(r2-c2)](https//jro.io/r2c2/)
-
 [zfs-read-me-1st](http//nex7.blogspot.com/2013/03/readme1st.html)
-[zfs-you-should-use-mirror-vdevs-not-raid-z](https//jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
+[zfs-you-should-use-mirror-vdevs-not-raid-z](https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
 
-[i-had-vdev-layouts-all-wrong-and-you-probably-do-too](https://www.youtube.com/watch?v=_aACgNm8UCw)
-[switched-on-tech-design-zfs](https//sotechdesign.com.au/zfs/)
-
----
-
-[^openzfs-understanding-zfs-vdev-types]: https://klarasystems.com/articles/openzfs-understanding-zfs-vdev-types/
-
-[^openzfs-capacity-calculator]: https://jro.io/capacity/
-
-[^truenas-zfs-primer-zfs-self-healing-file-system]: https://www.truenas.com/docs/references/zfsprimer/#zfs-self-healing-file-system
-
-[^oracle-zfs-admin-guide-using-files-in-a-zfs-storage-pool]: https://docs.oracle.com/cd/E19253-01/819-5461/gazcr/index.html
-
-[^choosing-the-right-zfs-pool-layout]: https://klarasystems.com/articles/choosing-the-right-zfs-pool-layout/
-
-[^reddit-statistics-on-real-world-unrecoverable-read-error-rate-numbers-]: https//www.reddit.com/r/zfs/comments/3gpkm9/statistics_on_realworld_unrecoverable_read_error/
-
-[^truenas-forums-assessing-the-potential-for-data-loss]: https//www.truenas.com/community/resources/assessing-the-potential-for-data-loss.227/
-
-[^netapp-weighs-in-on-disks]: https//storagemojo.com/2007/02/26/netapp-weighs-in-on-disks/
-
-[^why-raid-5-stops-working-in-2009]: https//www.zdnet.com/article/why-raid-5-stops-working-in-2009/
-
-[^triple-parity-raid-and-beyond]: https//queue.acm.org/detail.cfm?id=1670144
-
-[^freebsd-forums-zpool-degraded-state]: https//forums.freebsd.org/threads/zpool-degraded-state.64073/
-
-[^blocks-&-files-resilvering]: https//blocksandfiles.com/2022/06/20/resilvering/
-
-[^disk-failures-in-the-real-world-what-does-an-mttf-of-1,000,000-hours-mean-to-you]: https//www.usenix.org/legacy/events/fast07/tech/schroeder/schroeder.pdf
-
-[^failure-trends-in-a-large-disk-drive-population]: https//static.googleusercontent.com/media/research.google.com/en//archive/disk_failures.pdf
-
-[^ixsystems-zfs-storage-pool-layout-white-paper]: https//static.ixsystems.co/uploads/2020/09/ZFS_Storage_Pool_Layout_White_Paper_2020_WEB.pdf
-
-[^ars-technica-zfs-versus-raid]: https//arstechnica.com/gadgets/2020/05/zfs-versus-raid-eight-ironwolf-disks-two-filesystems-one-winner/
-
-[^openzfs-the-final-word-in-file-systems]: https//jro.io/truenas/openzfs/
-
-[^getting-the-hang-of-iops]: https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=e6fb4a1b-fa13-4956-b763-8134185c0c0a&CommunityKey=63b01f30-d5eb-43c7-9232-72362b508207&tab=librarydocuments
-
-[^ars-technica-how-fast-are-your-disks?-find-out-the-open-source-way,-with-fio]: https//arstechnica.com/gadgets/2020/02/how-fast-are-your-disks-find-out-the-open-source-way-with-fio/
-
-[^a-closer-look-at-zfs,-vdevs-and-performance]: https//constantin.glez.de/2010/06/04/a-closer-look-zfs-vdevs-and-performance/
-
-[^zfs-101—understanding-zfs-storage-and-performance]: https//arstechnica.com/information-technology/2020/05/zfs-101-understanding-zfs-storage-and-performance/
-
-[^wd-red-pro-product-brief]: https//documents.westerndigital.com/content/dam/doc-library/en_us/assets/public/western-digital/product/internal-drives/wd-red-pro-hdd/product-brief-western-digital-wd-red-pro-hdd.pdf
-
-[^wd-red-4tb-hdd-review-(wd40efrx)]: https//www.storagereview.com/review/wd-red-4tb-hdd-review-wd40efrx
-
-[^wikipedia-hard-disk-drive-performance-characteristics]: https://en.wikipedia.org/wiki/Hard_disk_drive_performance_characteristics
