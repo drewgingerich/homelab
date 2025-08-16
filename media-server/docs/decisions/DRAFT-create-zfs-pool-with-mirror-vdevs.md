@@ -8,16 +8,17 @@ Select a ZFS pool layout for storing media.
 
 ## Assessment summary
 
-A pool consisting of mirror or RAID-Z vdevs is most suitable for media storage on a home server.
+Mirror or RAID-Z vdevs are most suitable for media storage on a home server.
+2-way mirrors and raidz2 are good matches in particular.
 
-Compared to a pool of RAID-Z vdevs, a pool of mirror vdevs provides:
+Compared to a pool of raidz2 vdevs, a pool of 2-way mirror vdevs provides:
 
-1. More flexibility for modifying the vdev and the pool
-2. Storage capacity to be increased in smaller increments, benefiting from storage costs lowering over time
-3. Better read performance and comparable write performance, at the level of the pool
-4. Worse, but still comparable, fault tolerance
-5. Faster and less hazardous failure recovery
-6. Worse storage efficiency
+- More flexibility for modifying vdevs and the pool
+- Storage capacity can be increased in smaller increments, benefiting from storage costs lowering over time
+- Better read performance and comparable write performance across the pool
+- Worse fault tolerance
+- Faster and less hazardous failure recovery
+- Worse storage efficiency
 
 ## Decision
 
@@ -30,9 +31,10 @@ I don't have to change my existing pool layout :)
 After reaching a few mirror vdevs (probably 3+),
 I should add a [hot spare](https://docs.oracle.com/cd/E19253-01/819-5461/gcvcw/index.html).
 
-## Assessment
+Reminder that _RAID is not a backup_!
+I will need to have a backup strategy in any case.
 
-### What are vdevs?
+## Assessment
 
 A ZFS filesystem is built on top of a virtual storage pool (zpool),
 which in turn is composed of virtual devices (vdevs).
@@ -187,7 +189,7 @@ To summarize, assuming all devices in the vdevs are identical:
 | ------------- | ---------------- | ---------- | --------------- | --------- |
 | single        | $T_w$            | $I_w$      | $T_r$           | $I_r$     |
 | 2-way mirror  | $T_w$            | $I_w$      | $2 * T_r$       | $2 * T_r$ |
-| 4-wide raidz2 | $4 * T_w$        | $T_w$      | $4 * T_r$       | $T_r$     |
+| 6-wide raidz2 | $4 * T_w$        | $T_w$      | $4 * T_r$       | $T_r$     |
 
 So raidz2 vdevs outperform mirror vdevs in everything except read IOPS.
 Yes, BUT, the performance conversation doesn't end with vdevs!
@@ -209,7 +211,7 @@ E.g. for a pool with 6 devices:
 | ----------------- | ---------------- | ---------- | --------------- | --------- |
 | 6 x single        | $6 * T_w$        | $I_w$      | $6 * T_r$       | $I_r$     |
 | 3 x 2-way mirror  | $3 * (T_w)$      | $I_w$      | $3 * (2 * T_r)$ | $2 * T_r$ |
-| 1 x 4-wide raidz2 | $1 * (4 * T_w)$  | $T_w$      | $1 * (4 * T_r)$ | $T_r$     |
+| 1 x 6-wide raidz2 | $1 * (4 * T_w)$  | $T_w$      | $1 * (4 * T_r)$ | $T_r$     |
 
 When looking at a pool holistically,
 mirror vdevs are actually better for read-heavy workloads
@@ -297,6 +299,8 @@ because it is not rewritten to use the new device.
 Storage efficiency will instead trend towards the new limit over time as existing data is updated.
 For archival workloads, data will not often be update so the new limit will be reached slowly or never.
 
+[ZFS: Read Me 1st](https://nex7.blogspot.com/2013/03/readme1st.html)
+
 Devices cannot be removed from a RAID-Z vdev.
 Since data is sriped across all devices in the vdev,
 removing a device would necessitate re-writting all of the data in the vdev.
@@ -307,30 +311,22 @@ because parity should be raised as devices are added to maintain reasonable reli
 
 Pool capacity can also be modified by adding or removing vdevs.
 
-Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool,[^serverfault-why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool]
+Having a RAID-Z vdev in a pool prevents any vdev from being removed from the pool,
 while vdevs can be removed from a pool of all mirrors.
+
+[Serverfault: Why doesn't ZFS vdev removal work when any raidz devices are in the pool?](https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool)
 
 Following rules of thumb from above, any vdev to the pool should ideally be identical to the existing vdevs.
 Since mirror vdevs are generally smaller (generally 2-3 devices) than RAID-Z vdevs (generally 3-12 devices),
 a pool of mirror vdevs can be increased in smaller increaments.
 
 Another way to increase pool capacity is to replace all drives in a vdev with
-new drives of higher capacity, like the Ship of Theseus.
+new drives of higher capacity, Ship of Theseus style.
 ZFS is smart enough to will automatically find and make use of the new capacity once the capacity of all drives has been increased.
 ZFS needs to resilver the vdev after each replaced drive,
 which updating a RAID-Z vdev quickly becomes unreasonable as width increases.
 The smaller size of mirror vdevs, on the other hand, means updating the is feasible,
 and also again means capacity can be upgraded in smaller increments.
 
-
-[^zfs-raidz-stripe-width-or-how-i-learned-to-stop-worrying-and-love-raidz]: https://www.delphix.com/blog/zfs-raidz-stripe-width-or-how-i-learned-stop-worrying-and-love-raidz
-
-[^serverfault-why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool]: https://serverfault.com/questions/1142074/why-doesnt-zfs-vdev-removal-work-when-any-raidz-devices-are-in-the-pool
-
-[^openzfs-man-pages-zpool-attach-8]: https://openzfs.github.io/openzfs-docs/man/master/8/zpool-attach.8.html
-
-## Further Reading
-
-[zfs-read-me-1st](http//nex7.blogspot.com/2013/03/readme1st.html)
-[zfs-you-should-use-mirror-vdevs-not-raid-z](https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
+[ZFS: You should use mirror vdevs, not RAIDZ.](https://web.archive.org/web/20250729015305/https://jrs-s.net/2015/02/06/zfs-you-should-use-mirror-vdevs-not-raidz/)
 
