@@ -23,6 +23,7 @@
       pyright
       ruby-lsp
       ruff
+      rust-analyzer
       starlark-rust
       stylua
       taplo

@@ -5,33 +5,35 @@ return {
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 			local lspconfig = require("lspconfig")
-			lspconfig.cssls.setup({ capabilities = capabilities })
-			lspconfig.gleam.setup({ capabilities = capabilities })
-			lspconfig.lua_ls.setup({ capabilities = capabilities })
-			lspconfig.ts_ls.setup({ capabilities = capabilities })
-			lspconfig.jsonls.setup({ capabilities = capabilities })
-			lspconfig.gopls.setup({ capabilities = capabilities })
-			lspconfig.pyright.setup({ capabilities = capabilities })
+
 			lspconfig.astro.setup({ capabilities = capabilities })
-			lspconfig.ruby_lsp.setup({ capabilities = capabilities })
-			lspconfig.marksman.setup({ capabilities = capabilities })
-			lspconfig.ruff.setup({ capabilities = capabilities })
-			lspconfig.yamlls.setup({ capabilities = capabilities })
-      lspconfig.harper_ls.setup({ capabilities = capabilities })
-			lspconfig.helm_ls.setup({ capabilities = capabilities })
-      lspconfig.html.setup({ capabilities = capabilities })
-			lspconfig.nil_ls.setup({ capabilities = capabilities })
+			lspconfig.cssls.setup({ capabilities = capabilities })
 			lspconfig.gdscript.setup({
 				name = "godot",
 				cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
 			})
-			lspconfig.volar.setup({ capabilities = capabilities })
-			-- lspconfig.vale_ls.setup({ capabilities = capabilities })
+			lspconfig.gopls.setup({ capabilities = capabilities })
+			lspconfig.gleam.setup({ capabilities = capabilities })
+			lspconfig.harper_ls.setup({ capabilities = capabilities })
+			lspconfig.helm_ls.setup({ capabilities = capabilities })
+			lspconfig.html.setup({ capabilities = capabilities })
+			lspconfig.jsonls.setup({ capabilities = capabilities })
+			lspconfig.lua_ls.setup({ capabilities = capabilities })
+			lspconfig.marksman.setup({ capabilities = capabilities })
+			lspconfig.nil_ls.setup({ capabilities = capabilities })
+			lspconfig.pyright.setup({ capabilities = capabilities })
+			lspconfig.ruby_lsp.setup({ capabilities = capabilities })
+			lspconfig.ruff.setup({ capabilities = capabilities })
+			lspconfig.rust_analyzer.setup({ capabilities = capabilities })
 			lspconfig.starlark_rust.setup({
 				capabilities = capabilities,
 				filetypes = { "star", "bzl", "BUILD.bazel", "Tiltfile" },
 			})
-      lspconfig.taplo.setup({ capabilities = capabilities })
+			lspconfig.taplo.setup({ capabilities = capabilities })
+			lspconfig.ts_ls.setup({ capabilities = capabilities })
+			-- lspconfig.vale_ls.setup({ capabilities = capabilities })
+			lspconfig.volar.setup({ capabilities = capabilities })
+			lspconfig.yamlls.setup({ capabilities = capabilities })
 
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
@@ -89,10 +91,10 @@ return {
 	},
 	{
 		"towolf/vim-helm",
-    -- 24-12-12
-    -- Needed to prevent yamlls from attaching to helm filetype
-    -- This is because Helm uses the `.yaml` file extension even though it's not a YAML file
-    -- https://github.com/neovim/nvim-lspconfig/issues/2252#issuecomment-2198825338
+		-- 24-12-12
+		-- Needed to prevent yamlls from attaching to helm filetype
+		-- This is because Helm uses the `.yaml` file extension even though it's not a YAML file
+		-- https://github.com/neovim/nvim-lspconfig/issues/2252#issuecomment-2198825338
 		ft = "helm",
 	},
 	{
