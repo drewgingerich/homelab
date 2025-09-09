@@ -19,7 +19,7 @@ $ zpool status
 config:
 
         NAME        STATE     READ WRITE CKSUM
-        <pool-name> ONLINE       0     0     0
+        $POOL_NAME ONLINE       0     0     0
           mirror-0  ONLINE       0     0     0
             sda     ONLINE       0     0     0
             sdb     ONLINE       0     0     0
@@ -50,7 +50,7 @@ Take another backup, just for good measure.
 Check to make sure no processes are using files in the pool:
 
 ```sh
-$ sudo lsof | grep <pool-name>
+sudo lsof | grep $POOL_NAME
 ```
 
 No hits, so that's good.
@@ -58,23 +58,26 @@ No hits, so that's good.
 Export the pool:
 
 ```sh
-$ sudo zpool export <pool-name>
+sudo zpool export $POOL_NAME
 ```
 
 Import the pool using `by-id` names:
 
 ```sh
-$ sudo zpool import -d /dev/disk/by-id <pool-name>
+sudo zpool import -d /dev/disk/by-id $POOL_NAME
 ```
 
 ZFS now shows devices with persistent names:
 
 ```sh
+zpool status
+```
+```
 ...
 config:
 
         NAME                        STATE     READ WRITE CKSUM
-        <pool-name>                 ONLINE       0     0     0
+        $POOL_NAME                 ONLINE       0     0     0
           mirror-0                  ONLINE       0     0     0
             wwn-0x50014ee2bbbd3728  ONLINE       0     0     0
             wwn-0x50014ee266677aa0  ONLINE       0     0     0
