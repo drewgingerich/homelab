@@ -1,4 +1,4 @@
-This repository contains everything I use to set up, run, and maintain my computers.
+This repository contains everything I use to set up, run, and maintain my personal computers.
 
 I have historically relied on ad hoc configuration,
 but I've become interested in tools the provide declarative, deterministic, version-controlled configuration,
