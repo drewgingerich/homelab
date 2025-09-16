@@ -1,0 +1,24 @@
+networks:
+  service_gateway:
+    name: service_gateway
+
+services:
+  server:
+    image: deluan/navidrome:latest
+    user: 1000:1000
+    restart: unless-stopped
+    container_name: navidrome
+    environment:
+      ND_BACKUP_SCHEDULE: "0 7 * * *"
+      ND_BACKUP_PATH: /data/backups
+      ND_BACKUP_COUNT: 1 # Further backups handled by ZFS snapshots
+    volumes:
+      - ${APP_DATA_DIR}/navidrome:/data
+      - ${MEDIA_DIR}/music:/music:ro
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+      - "traefik.http.routers.navidrome.entrypoints=web-secure"
+      - "traefik.http.routers.navidrome.rule=Host(`listen.${DOMAIN}`)"
