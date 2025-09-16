@@ -33,6 +33,7 @@
       "obsidian"
       "qutebrowser"
       "raycast"
+      "reaper"
       "rectangle"
       "signal"
       "sony-ps-remote-play"
