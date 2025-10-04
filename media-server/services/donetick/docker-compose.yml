@@ -1,0 +1,21 @@
+networks:
+  service_gateway:
+    name: service_gateway
+
+services:
+  server:
+    image: donetick/donetick
+    restart: unless-stopped
+    container_name: donetick
+    environment:
+      DT_ENV: selfhosted
+      DT_SQLITE_PATH: /donetick-data/donetick.db
+    volumes:
+      - ${APP_DATA_DIR}/donetick:/donetick-data
+    networks:
+      - service_gateway
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.donetick.loadbalancer.server.port=2021"
+      - "traefik.http.routers.donetick.entrypoints=web-secure"
+      - "traefik.http.routers.donetick.rule=Host(`todo.${DOMAIN}`)"
