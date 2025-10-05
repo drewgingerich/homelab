@@ -15,6 +15,13 @@
     nixpkgs,
     ...
   }: {
+    nixosConfigurations.dusty-media-server = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        home-manager.nixosModules.home-manager
+        ./media-server/nix/configuration.nix
+      ];
+    };
     nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       modules = [
