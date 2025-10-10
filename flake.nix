@@ -9,38 +9,44 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {
-    nix-darwin,
-    home-manager,
-    nixpkgs,
-    ...
-  }: {
-    nixosConfigurations.dusty-media-server = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        home-manager.nixosModules.home-manager
-        ./media-server/nix/configuration.nix
-      ];
-    };
-    nixosConfigurations.unremarkable-game-server = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        home-manager.nixosModules.home-manager
-        ./game-server/nix/configuration.nix
-      ];
-    };
-    darwinConfigurations.unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
-      modules = [
-        home-manager.darwinModules.home-manager
-        ./laptop/nix/configuration.nix
-      ];
-    };
-    homeConfigurations = {
-      work = home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs { system = "x86_64-darwin"; };
-        modules = [ ./work-laptop/nix/users/dgingerich.nix ];
+  outputs =
+    {
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      ...
+    }:
+    {
+      nixosConfigurations = {
+        dusty-media-server = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            home-manager.nixosModules.home-manager
+            ./media-server/nix/configuration.nix
+          ];
+        };
+        unremarkable-game-server = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            home-manager.nixosModules.home-manager
+            ./game-server/nix/configuration.nix
+          ];
+        };
+      };
+      darwinConfigurations = {
+        unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
+          modules = [
+            home-manager.darwinModules.home-manager
+            ./laptop/nix/configuration.nix
+          ];
+        };
+      };
+      homeConfigurations = {
+        work = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { system = "x86_64-darwin"; };
+          modules = [ ./work-laptop/nix/users/dgingerich.nix ];
+        };
       };
     };
-  };
 }
