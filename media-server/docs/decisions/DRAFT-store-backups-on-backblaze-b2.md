@@ -28,8 +28,5 @@ All the good things backups provide.
 
 ## Context
 
-The issue motivating this decision, and any context that influences or constrains the decision.
-
-Other options are [duplicacy](https://duplicacy.com/) and [kopia](https://kopia.io/).
 
 

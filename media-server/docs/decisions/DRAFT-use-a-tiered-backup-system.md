@@ -12,24 +12,24 @@ My data loss risk analysis is as follows, with explanations below.
 
 | source           | risk     | impact   | current mitigation |
 | ---------------- | -------- | -------- | ------------------ |
-| data degredation | low      | low      | strong             |
+| data degradation | low      | low      | strong             |
 | user error       | moderate | high     | strong             |
 | software error   | low      | moderate | strong             |
-| harware error    | high     | high     | moderate           |
+| hardware error    | high     | high     | moderate           |
 | natural disaster | low      | high     | none               |
 | malware          | low      | high     | none               |
 
 [Data degredation](https://en.wikipedia.org/wiki/Data_degradation) is the accumulation of data errors due to non-critical failures in storage medium.
 A cosmic ray can flip a bit in flash storage such as RAM or an SSD, for example.
 Non-critical failures in storage generally affect a single file at a time, so the impact is low compared to losing everything.
-The single file could be an important and irreplacable document, though, so I believe this data loss vector is still important to address.
+The single file could be an important and irreplaceable document, though, so I believe this data loss vector is still important to address.
 The ECC RAM used in the server detects and fixes single-bit errors in memory.
 The ZFS filesystem detects and fixes single-bit errors in storage.
-Multi-bit errors are possible, but are less likely then single-bit errors.
-By using ECC RAM and ZFS, the risk of data loss due to data degredation is currently strongly mitigated.
+Multi-bit errors are possible, but are less likely than single-bit errors.
+By using ECC RAM and ZFS, the risk of data loss due to data degradation is currently strongly mitigated.
 
 User error refers to accidentally deleting or corrupting data.
-Let's just say that I've forgetten the `.` in `rm -rf ./` before.
+Let's just say that I've forgotten the `.` in `rm -rf ./` before.
 ZFS snapshots preserve the state of the filesystem at a point in time,
 and provide a way to retrieve files that I've accidentally lost.
 

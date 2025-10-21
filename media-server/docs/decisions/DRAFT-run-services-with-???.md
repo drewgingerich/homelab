@@ -1,3 +1,48 @@
+## Problem
+
+I need to choose a way to run services.
+
+- Secure
+    - Network isolation
+    - User namespacing
+- Declarative
+    - Configuration as code
+    - Reproducible
+- Isolated environment
+    - Easy installation and cleanup
+- Simple
+    - Easy to customize
+    - Minimize moving parts
+    - Automation of networking, DNS, etc.
+- Performant
+- Virtualization
+    - Ports
+    - Filesystem
+    - CPU
+    - Memory
+
+## Options
+
+- OCI containers
+- VMs
+- Nixpkgs + systemd nspawn containers
+
+## Decision
+
+## Exploration
+
+## Bookmarks
+
+https://quantum5.ca/2025/03/18/docker-considered-harmful/
+
+https://mwalkowski.com/post/introduction-to-systemd-nspawn-containers-chroot-on-steroids/
+https://www.reddit.com/r/NixOS/comments/1ajfl8c/nixoscontainer_vs_docker_and_friends/
+https://www.xda-developers.com/nixos-containers-are-pretty-exciting/
+
+https://github.com/microvm-nix/microvm.nix
+
+---
+
 # 2. Run services in Docker containers
 
 Date: 2023-11-28
