@@ -22,6 +22,7 @@
       pandoc
       ripgrep
       tealdeer
+      unixtools.watch
       wget
       xh
       yazi
