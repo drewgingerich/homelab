@@ -33,6 +33,7 @@ in
     awscli2
     claude-code
     devbox
+    uv
   ];
 
   programs.home-manager.enable = true;
