@@ -108,3 +108,10 @@ I will run services in Docker containers.
 ## Consequences
 
 Immutable infrastructure.
+
+## Related resources
+
+https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment
+https://medium.com/@sebastiancarlos/systemds-nuts-and-bolts-0ae7995e45d3
+https://systemd.io/CREDENTIALS/
+> Use LoadCredential=, LoadCredentialEncrypted= or SetCredentialEncrypted= (see below) to pass data to unit processes securely.
