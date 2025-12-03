@@ -21,11 +21,12 @@
 
     programs.git = {
       enable = true;
-      userName = config.custom.git.userName;
-      userEmail = config.custom.git.userEmail;
-      delta.enable = true;
       lfs.enable = true;
-      extraConfig = {
+      settings = {
+        user = {
+          name = config.custom.git.userName;
+          email = config.custom.git.userEmail;
+        };
         pull = { ff = "only"; };
         push = {
           authSetupRemote = "true";
@@ -36,6 +37,11 @@
         merge = { conflictstyle = "diff3"; };
         diff = { colorMoved = "default"; };
       };
+    };
+
+    programs.delta = {
+      enable = true;
+      enableGitIntegration = true;
     };
   };
 }
