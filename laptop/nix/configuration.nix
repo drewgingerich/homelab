@@ -15,6 +15,7 @@
     enable = true;
     casks = [
       "ableton-live-suite@11"
+      "bitwarden"
       "blender"
       "docker"
       "discord"
