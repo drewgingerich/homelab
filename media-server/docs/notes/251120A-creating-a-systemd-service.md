@@ -299,9 +299,13 @@ Looks good!
 
 ## Resources
 
+https://0pointer.de/blog/projects/systemd.html
+
 https://www.baeldung.com/linux/systemd-create-user-services
 
 https://medium.com/@sebastiancarlos/systemds-nuts-and-bolts-0ae7995e45d3
+
+https://seb.jambor.dev/posts/systemd-by-example-part-1-minimization/
 
 https://nixos.org/manual/nixpkgs/stable/#trivial-builder-text-writing
 
