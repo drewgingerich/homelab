@@ -54,13 +54,17 @@ in
           };
           search = {
             force = true;
-            default = "Kagi";
+            default = "udm14";
             engines = {
-              "Kagi" = {
+              "udm14" = {
                 urls = [
                   {
-                    template = "https://kagi.com/search?";
+                    template = "https://www.google.com/search?";
                     params = [
+                      {
+                        name = "udm";
+                        value = "14";
+                      }
                       {
                         name = "q";
                         value = "{searchTerms}";
@@ -74,6 +78,17 @@ in
         };
       };
     };
+
+    programs.qutebrowser = {
+      enable = true;
+      searchEngines = {
+        udm14 = "https://www.google.com/search?udm=14&q={}";
+        kagi = "https://kagi.com/search?q={}";
+        ddg = "https://duckduckgo.com/?q={}";
+      };
+    };
+
+    programs.obsidian.enable = true;
 
     programs.home-manager.enable = true;
     home.stateVersion = "25.11";
