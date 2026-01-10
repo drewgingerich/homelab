@@ -32,6 +32,13 @@
             ./game-server/nix/configuration.nix
           ];
         };
+        lost-laptop = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            home-manager.nixosModules.home-manager
+            ./personal-laptop/nix/configuration.nix
+          ];
+        };
       };
       darwinConfigurations = {
         unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
