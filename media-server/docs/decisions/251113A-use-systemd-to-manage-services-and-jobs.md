@@ -78,3 +78,4 @@ it can manage any sort of workload: binary, VM, containerized, or whatever.
 Then actual running of non-binary workloads is delegated to other tools, such as Docker or QEMU.
 
 I'm interested in learning more about systemd.
+
