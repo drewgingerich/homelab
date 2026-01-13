@@ -8,7 +8,7 @@ end)
 local config = {}
 
 config.color_scheme = "Navy and Ivory (terminal.sexy)"
-config.font_size = 20
+config.font_size = 10
 
 config.window_close_confirmation = "NeverPrompt"
 
