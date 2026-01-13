@@ -1,5 +1,10 @@
 local wezterm = require("wezterm")
 
+wezterm.on("gui-startup", function(_)
+  local _, _, window = wezterm.mux.spawn_window({})
+  window:gui_window():maximize()
+end)
+
 local config = {}
 
 config.color_scheme = "Navy and Ivory (terminal.sexy)"
