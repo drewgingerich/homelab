@@ -30,11 +30,13 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  services.xserver.enable = true;
-
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
+  services.displayManager.cosmic-greeter = {
+    enable = true;
+  };
+  services.desktopManager.cosmic = {
+    enable = true;
+    xwayland.enable = true;
+  };
 
   services.xserver.xkb = {
     layout = "us";
@@ -67,5 +69,8 @@
   home-manager.backupFileExtension = ".hm.bak";
   system.stateVersion = "25.11";
   nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 }
