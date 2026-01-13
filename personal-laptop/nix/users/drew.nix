@@ -88,7 +88,15 @@ in
       };
     };
 
-    programs.obsidian.enable = true;
+    programs.obsidian = {
+      enable = true;
+    };
+
+    home.packages = with pkgs; [
+      bitwarden-cli
+      bitwarden-desktop
+      signal-desktop
+    ];
 
     programs.home-manager.enable = true;
     home.stateVersion = "25.11";
