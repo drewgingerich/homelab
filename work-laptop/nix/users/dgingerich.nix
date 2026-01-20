@@ -31,8 +31,14 @@ in
   home.packages = with pkgs; [
     asdf-vm
     awscli2
+    aws-vault
     claude-code
+    colima
     devbox
+    docker-buildx
+    docker-client
+    docker-compose
+    granted
     uv
   ];
 
