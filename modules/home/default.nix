@@ -7,6 +7,7 @@
     ./git.nix
     ./karabiner.nix
     ./nvim.nix
+    ./ssh-home-config.nix
     ./starship.nix
     ./wezterm.nix
   ];

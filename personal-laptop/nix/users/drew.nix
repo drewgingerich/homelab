@@ -35,6 +35,7 @@ in
       fish.enable = true;
       git.enable = true;
       nvim.enable = true;
+      ssh-home-config.enable = true;
       starship.enable = true;
       wezterm.enable = true;
     };
