@@ -44,6 +44,7 @@
   ];
 
   boot.supportedFilesystems.zfs = true;
+  boot.zfs.extraPools = [ "wish" ];
   services.zfs.autoScrub.enable = true;
 
   services.openssh.enable = true;
