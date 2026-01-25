@@ -96,7 +96,11 @@ in
     home.packages = with pkgs; [
       bitwarden-cli
       bitwarden-desktop
+      discord
+      docker
       signal-desktop
+      wl-clipboard
+      zotero
     ];
 
     programs.home-manager.enable = true;
