@@ -89,16 +89,18 @@ in
       };
     };
 
-    programs.obsidian = {
-      enable = true;
-    };
+    programs.obsidian.enable = true;
+
+    programs.obs-studio.enable = true;
 
     home.packages = with pkgs; [
       bitwarden-cli
       bitwarden-desktop
       discord
       docker
+      easyeffects
       signal-desktop
+      tenacity
       wl-clipboard
       zotero
     ];
