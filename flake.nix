@@ -48,11 +48,12 @@
             ./laptop/nix/configuration.nix
           ];
         };
-      };
-      homeConfigurations = {
-        work = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { system = "x86_64-darwin"; };
-          modules = [ ./work-laptop/nix/users/dgingerich.nix ];
+        dgingerich-ithaka-mbp = nix-darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
+          modules = [
+            home-manager.darwinModules.home-manager
+            ./work-laptop/nix/configuration.nix
+          ];
         };
       };
     };
