@@ -48,6 +48,8 @@
 
   services.printing.enable = true;
 
+  services.fwupd.enable = true;
+
   security.rtkit.enable = true;
 
   services.pulseaudio.enable = false;
