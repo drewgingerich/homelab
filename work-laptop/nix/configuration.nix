@@ -54,7 +54,6 @@
 
   system.defaults.controlcenter.Bluetooth = true;
 
-  system.defaults.universalaccess.reduceMotion = true;
   system.defaults.trackpad.Clicking = true;
   system.defaults.NSGlobalDomain.KeyRepeat = 2;
   system.defaults.NSGlobalDomain.InitialKeyRepeat = 15;
@@ -68,5 +67,4 @@
   home-manager.backupFileExtension = ".hm.bak";
   nix.enable = false;
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.hostPlatform = "x86_64-darwin";
 }
