@@ -42,11 +42,17 @@ in
       bitwarden-desktop
       claude-code
       colima
+      crush
       devbox
       docker-buildx
       docker-client
       docker-compose
       granted
+      k9s
+      kubectl
+      opencode
+      pipx
+      python313
       raycast
       rectangle
       uv
