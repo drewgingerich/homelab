@@ -6,21 +6,23 @@
     ./users
   ];
 
-  # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/disk/by-id/wwn-0x500a0751e1f50c03";
 
-
   networking.hostName = "dusty-media-server";
-
-  # Enable networking.
   networking.networkmanager.enable = true;
   networking.hostId = "5c767c90";
+  networking.nameservers = [
+    "9.9.9.9"
+    "149.112.112.112"
+  ];
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 32400 ];
+  };
 
-  # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
