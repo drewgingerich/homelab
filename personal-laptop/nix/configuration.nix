@@ -78,4 +78,10 @@
     "nix-command"
     "flakes"
   ];
+  nix.gc = {
+    automatic = true;
+    persistent = true;
+    dates = "weekly";
+    randomizedDelaySec = "6hr";
+  };
 }
