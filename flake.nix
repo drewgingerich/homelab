@@ -7,6 +7,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   outputs =
@@ -14,6 +15,7 @@
       nixpkgs,
       nix-darwin,
       home-manager,
+      nixos-hardware,
       ...
     }:
     {
@@ -35,6 +37,7 @@
         lost-laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
+            nixos-hardware.nixosModules.framework-amd-ai-300-series
             home-manager.nixosModules.home-manager
             ./personal-laptop/nix/configuration.nix
           ];
