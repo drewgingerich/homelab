@@ -51,7 +51,7 @@
             ./laptop/nix/configuration.nix
           ];
         };
-        dgingerich-ithaka-mbp = nix-darwin.lib.darwinSystem {
+        m-dgingerich = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
             home-manager.darwinModules.home-manager

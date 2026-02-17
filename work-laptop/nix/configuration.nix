@@ -6,7 +6,7 @@
     ./users/dgingerich.nix
   ];
 
-  networking.hostName = "dgingerich-ithaka-mbp";
+  networking.hostName = "m-dgingerich";
 
   environment.systemPackages = with pkgs; [
     vim
