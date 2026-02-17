@@ -17,6 +17,13 @@
     pkgs.fish
   ];
 
+  homebrew = {
+    enable = true;
+    casks = [
+      "codex"
+    ];
+  };
+
   system.startup.chime = false;
 
   system.defaults.finder = {
