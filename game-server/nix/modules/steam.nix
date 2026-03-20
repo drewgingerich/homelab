@@ -1,6 +1,7 @@
 { ... }:
 {
   programs.steam.enable = true;
+  programs.gamemode.enable = true;
 
   home-manager.sharedModules = [(
     { config, lib, pkgs, ... }:
