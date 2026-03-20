@@ -70,9 +70,8 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   system.stateVersion = 5;
+  nix.enable = false;
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = ".hm.bak";
-  nix.enable = false;
-  nixpkgs.config.allowUnfree = true;
 }
