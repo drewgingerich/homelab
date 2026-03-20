@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/system
+    ./modules/karabiner.nix
     ./users/dgingerich.nix
   ];
 
