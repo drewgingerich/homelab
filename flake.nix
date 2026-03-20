@@ -30,7 +30,7 @@
         unremarkable-game-server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            nixos-hardware.nixosModules.common.pc.ssd
+            nixos-hardware.nixosModules.common-pc-ssd
             home-manager.nixosModules.home-manager
             ./game-server/nix/configuration.nix
           ];
