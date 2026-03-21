@@ -35,6 +35,7 @@ in
       fish.enable = true;
       git.enable = true;
       nvim.enable = true;
+      qutebrowser.enable = true;
       ssh-home-config.enable = true;
       starship.enable = true;
       wezterm.enable = true;
@@ -77,15 +78,6 @@ in
             };
           };
         };
-      };
-    };
-
-    programs.qutebrowser = {
-      enable = true;
-      searchEngines = {
-        udm14 = "https://www.google.com/search?udm=14&q={}";
-        kagi = "https://kagi.com/search?q={}";
-        ddg = "https://duckduckgo.com/?q={}";
       };
     };
 

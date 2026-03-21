@@ -7,6 +7,7 @@
     ./git.nix
     ./nix-config.nix
     ./nvim.nix
+    ./qutebrowser.nix
     ./ssh-home-config.nix
     ./starship.nix
     ./wezterm.nix
