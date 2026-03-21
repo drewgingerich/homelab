@@ -4,6 +4,7 @@
     ../../modules/system
     ./hardware.nix
     ./keyd.nix
+    ./podman.nix
     ./users
   ];
 

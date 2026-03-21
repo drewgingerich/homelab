@@ -89,7 +89,6 @@ in
       bitwarden-cli
       bitwarden-desktop
       discord
-      docker
       easyeffects
       signal-desktop
       tenacity
