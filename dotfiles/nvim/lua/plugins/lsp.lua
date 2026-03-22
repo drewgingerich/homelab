@@ -20,7 +20,13 @@ return {
 			lspconfig.jsonls.setup({ capabilities = capabilities })
 			lspconfig.lua_ls.setup({ capabilities = capabilities })
 			lspconfig.marksman.setup({ capabilities = capabilities })
-			lspconfig.nil_ls.setup({ capabilities = capabilities })
+			lspconfig.nixd.setup({
+				settings = {
+					nixd = {
+						formatting = { command = { "nixfmt" } },
+					},
+				},
+			})
 			lspconfig.pyright.setup({ capabilities = capabilities })
 			lspconfig.ruby_lsp.setup({ capabilities = capabilities })
 			lspconfig.ruff.setup({ capabilities = capabilities })

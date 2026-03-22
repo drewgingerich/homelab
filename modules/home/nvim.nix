@@ -18,7 +18,8 @@
       helm-ls
       lua-language-server
       marksman
-      nil
+      nixd
+      nixfmt
       prettierd
       pyright
       ruby-lsp
