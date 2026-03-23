@@ -7,7 +7,7 @@ in
 {
   options.custom.qutebrowser.enable = lib.mkEnableOption "Configure Qutebrowser for this user";
 
-  config = lib.mkIf config.custom.starship.enable {
+  config = lib.mkIf config.custom.qutebrowser.enable {
     programs.qutebrowser = {
       enable = true;
       package = qutebrowser;
