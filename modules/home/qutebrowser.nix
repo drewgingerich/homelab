@@ -17,6 +17,12 @@
         input.insert_mode.auto_load = true;
         tabs.last_close = "startpage";
       };
+      keyBindings = {
+        normal = {
+          J = "tab-prev";
+          K = "tab-next";
+      };
+      };
     };
   };
 }
