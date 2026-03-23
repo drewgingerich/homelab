@@ -1,10 +1,16 @@
-{ config, lib, ... }:
+{ config, pkgs, lib, ... }:
+let
+  qutebrowser = pkgs.qutebrowser.override {
+      enableWideVine = true;
+  };
+in
 {
   options.custom.qutebrowser.enable = lib.mkEnableOption "Configure Qutebrowser for this user";
 
   config = lib.mkIf config.custom.starship.enable {
     programs.qutebrowser = {
       enable = true;
+      package = qutebrowser;
       searchEngines = {
         DEFAULT = "https://kagi.com/search?q={}";
         udm14 = "https://www.google.com/search?udm=14&q={}";
