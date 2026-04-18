@@ -86,6 +86,9 @@ in
     programs.obs-studio.enable = true;
 
     home.packages = with pkgs; [
+      mgba
+      melonDS
+
       bitwarden-cli
       bitwarden-desktop
       discord
