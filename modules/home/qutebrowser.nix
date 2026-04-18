@@ -1,7 +1,12 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   qutebrowser = pkgs.qutebrowser.override {
-      enableWideVine = true;
+    enableWideVine = true;
   };
 in
 {
@@ -22,12 +27,20 @@ in
         url.start_pages = "https://smallweb.cc";
         input.insert_mode.auto_load = true;
         tabs.last_close = "startpage";
+        content.notifications.enabled = false;
+        content.geolocation = false;
+        content.media.audio_video_capture = false;
+      };
+      perDomainSettings = {
+        "cbbpdx.civicrm.org" = {
+          input.mode_override = "passthrough";
+        };
       };
       keyBindings = {
         normal = {
           J = "tab-prev";
           K = "tab-next";
-      };
+        };
       };
     };
   };
