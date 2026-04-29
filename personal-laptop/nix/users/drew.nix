@@ -27,8 +27,6 @@ in
     }
   ];
 
-  programs.steam.enable = true;
-
   home-manager.users.${username} = {
     custom = {
       cliTools.enable = true;
@@ -81,18 +79,19 @@ in
       };
     };
 
-    programs.obsidian.enable = true;
-
     programs.obs-studio.enable = true;
 
     home.packages = with pkgs; [
       mgba
       melonDS
 
+      wineWow64Packages.waylandFull
+
       bitwarden-cli
       bitwarden-desktop
       discord
       easyeffects
+      obsidian
       signal-desktop
       tenacity
       wl-clipboard
