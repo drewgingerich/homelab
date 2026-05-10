@@ -8,6 +8,8 @@
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # swhkd.url = "github:waycrate/swhkd/1.2.1";
+    # swhkd.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -45,13 +47,6 @@
         };
       };
       darwinConfigurations = {
-        unremarkable-macbook-pro = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
-          modules = [
-            home-manager.darwinModules.home-manager
-            ./laptop/nix/configuration.nix
-          ];
-        };
         m-dgingerich = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
           modules = [
