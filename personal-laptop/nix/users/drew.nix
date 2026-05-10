@@ -15,18 +15,6 @@ in
     initialPassword = username;
   };
 
-  security.sudo.extraRules = [
-    {
-      users = [ username ];
-      commands = [
-        {
-          command = "ALL";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
-
   home-manager.users.${username} = {
     custom = {
       cliTools.enable = true;

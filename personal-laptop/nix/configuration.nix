@@ -16,6 +16,8 @@
     blacklist snd_soc_dmic
   '';
 
+  services.fprintd.enable = true;
+
   networking.hostName = "lost-laptop";
 
   networking.networkmanager.enable = true;
