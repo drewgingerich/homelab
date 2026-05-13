@@ -1,24 +1,14 @@
+{ config, lib, pkgs, ... }:
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-{
-  options.custom.karabiner.enable = lib.mkEnableOption "Configure Karabiner for this user";
+  options.custom.karabiner.enable = lib.mkEnableOption "Configure Karabiner Elements for this user";
 
   config = lib.mkIf config.custom.karabiner.enable {
     assertions = [
       {
         assertion = pkgs.stdenv.isDarwin;
-        message = "This module is only configured for Darwin systems";
+        message = "This module is only intended for Darwin systems";
       }
     ];
-
-    # Better to use service option from nix-darwin
-    # home.packages = with pkgs; [
-    #   karabiner-elements
-    # ];
 
     xdg.configFile = {
       "karabiner" = {

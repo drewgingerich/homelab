@@ -5,6 +5,7 @@
     ./cli-tools.nix
     ./fish.nix
     ./git.nix
+    ./karabiner.nix
     ./nix-config.nix
     ./nvim.nix
     ./qutebrowser.nix

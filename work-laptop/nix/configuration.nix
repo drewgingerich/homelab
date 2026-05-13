@@ -3,9 +3,12 @@
 {
   imports = [
     ../../modules/system
-    ./modules/karabiner.nix
     ./users/dgingerich.nix
   ];
+
+  custom = {
+    karabiner.enable = true;
+  };
 
   networking.hostName = "m-dgingerich";
 
