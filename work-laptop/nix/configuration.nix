@@ -23,9 +23,8 @@
 
   homebrew = {
     enable = true;
-    casks = [
-      "codex"
-    ];
+    brews = [ "colima" ];
+    casks = [ "codex" ];
   };
 
   system.startup.chime = false;

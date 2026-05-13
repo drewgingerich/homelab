@@ -41,7 +41,6 @@ in
       aws-vault
       bitwarden-desktop
       claude-code
-      colima
       crush
       devbox
       docker-buildx
