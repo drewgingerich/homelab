@@ -35,6 +35,13 @@ in
         "cbbpdx.civicrm.org" = {
           input.mode_override = "passthrough";
         };
+        "cbbpdx.org" = {
+          input.mode_override = "passthrough";
+        };
+        "video.simplepractice.com" = {
+          content.media.audio_video_capture = true;
+          input.mode_override = "passthrough";
+        };
       };
       keyBindings = {
         normal = {
