@@ -65,10 +65,10 @@ Mirror and RAID-Z vdevs both provide the data redundancy needed to enable ZFS's 
 
 Fault tolerance is how many devices can fail before data is lost.
 
-A mirror vdev with $`d` devices has a fault tolerance of $`d - 1`$,
+A mirror vdev with $`d`$ devices has a fault tolerance of $`d - 1`$,
 e.g. a 3-way mirror has a fault tolerance of 2.
 
-A RAID-Z vdev with $`d` devices and $`p` parity has a fault tolerance of $`p`$,
+A RAID-Z vdev with $`d`$ devices and $`p`$ parity has a fault tolerance of $`p`$,
 e.g. raidz2 has a fault tolerance of 2 regardless of the number of disks in the vdev.
 
 Mirror and RAID-Z vdevs can both have excellent fault tolerance.
@@ -86,13 +86,13 @@ and I look at fault tolerance as a convenience rather than a protection.
 
 Storage efficiency is how much of the total drive capacity can actually be used to store data.
 
-A mirror vdev with $`d` devices has a storage efficiency of $`1 / d`$.
+A mirror vdev with $`d`$ devices has a storage efficiency of $`1 / d`$.
 E.g. efficiency of a 2-way mirror is 50%, and a 3-way mirror is 33%.
 
 The storage efficiency of a mirror plummets as redundancy goes up,
 making a 2-way mirror the only reasonable mirror for most home data.
 
-A RAID-Z vdev with $`d` devices and $`p` parity has a storage efficiency of $`d - p / d`$.
+A RAID-Z vdev with $`d`$ devices and $`p`$ parity has a storage efficiency of $`d - p / d`$.
 Increasing the number of devices in the vdev (referred to as _width_) increases efficiency,
 while increasing parity lowers efficiency.
 E.g. efficiency of a 3-wide raidz1 is 66%, a 4-wide raidz2 is 50%, and a 10-wide raidz3 is 70%.
@@ -204,7 +204,7 @@ since all devices participate in every operation,
 a RAID-Z vdev can only handle one operation at a time.
 
 For mirrors, there are huge differences.
-Regretably, only for read operations:
+Regrettably, only for read operations:
 all devices of a mirror participate in every write request,
 as with RAID-Z, so there's no ability to handle write operations in parallel.
 On the other hand, mirrors can handle read operations in parallel,
