@@ -1,0 +1,46 @@
+menu:
+  - key: "p"
+    desc: Power
+    submenu:
+      - key: "s"
+        desc: Sleep
+        cmd: systemctl suspend
+      - key: "r"
+        desc: Reboot
+        cmd: reboot
+      - key: "o"
+        desc: Off
+        cmd: poweroff
+  - key: "b"
+    desc: BitWarden
+    submenu:
+      - key: "s"
+        desc: Select
+        submenu:
+          - key: "l"
+            desc: Login
+            cmd: bw-select login
+          - key: "c"
+            desc: Credit card
+            cmd: bw-select card
+      - key: "p"
+        desc: Paste
+        submenu:
+          - key: "u"
+            desc: Login username
+            cmd: bw-paste login username
+          - key: "p"
+            desc: Login password
+            cmd: bw-paste login password
+          - key: "t"
+            desc: Login TOTP
+            cmd: bw-paste login totp
+          - key: "n"
+            desc: Credit Card Number
+            cmd: bw-paste card number
+          - key: "e"
+            desc: Credit card expiration
+            cmd: bw-paste card exp_month && bw-paste card exp_year
+          - key: "s"
+            desc: Credit card security code
+            cmd: bw-paste card code

@@ -27,6 +27,10 @@ in
       wezterm.enable = true;
     };
 
+    imports = [
+      ../modules/home/bitwarden.nix
+    ];
+
     programs.firefox = {
       enable = true;
       profiles = {
