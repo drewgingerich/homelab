@@ -28,6 +28,7 @@
       starlark-rust
       stylua
       taplo
+      terraform-ls
       typescript-language-server
       vscode-langservers-extracted
       vscode-js-debug

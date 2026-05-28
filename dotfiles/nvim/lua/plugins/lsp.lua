@@ -40,6 +40,7 @@ return {
 			-- lspconfig.vale_ls.setup({ capabilities = capabilities })
 			lspconfig.volar.setup({ capabilities = capabilities })
 			lspconfig.yamlls.setup({ capabilities = capabilities })
+			lspconfig.terraform_lsp.setup({ capabilities = capabilities })
 
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
