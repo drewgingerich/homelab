@@ -7,6 +7,8 @@ let
     runtimeInputs = with pkgs; [rbw fuzzel];
     text = ''
       item_type=$1
+      rbw unlock
+      rbw sync
       item=$(rbw list | fuzzel --dmenu --hide-prompt --minimal-lines)
       mkdir -p "${bwStateDir}"
       echo "$item" > "${bwStateDir}/$item_type"
