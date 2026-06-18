@@ -23,24 +23,28 @@ menu:
           - key: "c"
             desc: Credit card
             cmd: bw-select card
+      - key: "o"
+        desc: Open URL
+        cmd: bw-open
       - key: "p"
         desc: Paste
         submenu:
           - key: "u"
             desc: Login username
-            cmd: bw-paste login username
+            cmd: bw-get login | jq -r '.data.username' | xargs bw-paste
           - key: "p"
             desc: Login password
-            cmd: bw-paste login password
+            cmd: bw-get login | jq -r '.data.password' | xargs bw-paste
           - key: "t"
             desc: Login TOTP
-            cmd: bw-paste login totp
+            cmd: bw-totp | xargs bw-paste
           - key: "n"
             desc: Credit Card Number
-            cmd: bw-paste card number
+            cmd: bw-get card | jq -r '.data.number' | xargs bw-paste
           - key: "e"
             desc: Credit card expiration
-            cmd: bw-paste card exp_month && bw-paste card exp_year
+            cmd: bw-get card | jq -r '.data.exp_month + .data.exp_year' | xargs bw-paste
           - key: "s"
             desc: Credit card security code
-            cmd: bw-paste card code
+            cmd: bw-get card | jq -r '.data.code' | xargs bw-paste
+
