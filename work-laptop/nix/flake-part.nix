@@ -1,0 +1,10 @@
+{ inputs, ... }:
+{
+  flake.nixosConfigurations.m-dgingerich = inputs.nix-darwin.lib.darwinSystem {
+    system = "aarch64-darwin";
+    modules = [
+      inputs.home-manager.darwinModules.home-manager
+      ./configuration.nix
+    ];
+  };
+}

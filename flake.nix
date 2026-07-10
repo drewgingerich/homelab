@@ -2,58 +2,31 @@
   description = "System configs";
 
   inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    # swhkd.url = "github:waycrate/swhkd/1.2.1";
-    # swhkd.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    {
-      nixpkgs,
-      nix-darwin,
-      home-manager,
-      nixos-hardware,
-      ...
-    }:
-    {
-      nixosConfigurations = {
-        dusty-media-server = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            home-manager.nixosModules.home-manager
-            ./media-server/nix/configuration.nix
-          ];
-        };
-        unremarkable-game-server = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            nixos-hardware.nixosModules.common-pc-ssd
-            home-manager.nixosModules.home-manager
-            ./game-server/nix/configuration.nix
-          ];
-        };
-        lost-laptop = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            nixos-hardware.nixosModules.framework-amd-ai-300-series
-            home-manager.nixosModules.home-manager
-            ./personal-laptop/nix/configuration.nix
-          ];
-        };
-      };
-      darwinConfigurations = {
-        m-dgingerich = nix-darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          modules = [
-            home-manager.darwinModules.home-manager
-            ./work-laptop/nix/configuration.nix
-          ];
-        };
-      };
-    };
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+      { ... }:
+      {
+        imports = [
+          # hosts
+          ./game-server/nix/flake-part.nix
+          ./media-server/nix/flake-part.nix
+          ./personal-laptop/nix/flake-part.nix
+          ./work-laptop/nix/flake-part.nix
+
+          # modules
+          ./modules/karabiner-elements.nix
+          ./modules/nix-config.nix
+        ];
+      }
+    );
 }
