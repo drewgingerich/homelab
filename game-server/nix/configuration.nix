@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../modules/system
     ./modules
     ./users
   ];

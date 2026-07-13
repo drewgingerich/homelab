@@ -1,0 +1,33 @@
+{ inputs, ... }:
+{
+  flake.homeModules.fish =
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    {
+      options.custom.fish.enable = lib.mkEnableOption "Fish shell";
+
+      config = lib.mkIf config.custom.fish.enable {
+        home.packages = with pkgs; [
+          fish
+        ];
+
+        xdg.configFile = {
+          "fish" = {
+            source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/fish";
+          };
+        };
+      };
+
+    };
+
+  flake.nixosModules.fish =
+    { ... }:
+    {
+      programs.fish.enable = true;
+      home-manager.sharedModules = [ inputs.self.homeModules.fish ];
+    };
+}

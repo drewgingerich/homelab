@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../modules/system
     ./hardware.nix
     ./keyd.nix
     ./podman.nix
@@ -72,6 +71,8 @@
   ];
 
   services.tailscale.enable = true;
+
+  programs.steam.enable = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;

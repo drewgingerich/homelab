@@ -13,20 +13,28 @@
 
   outputs =
     inputs:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
-      { ... }:
-      {
-        imports = [
-          # hosts
-          ./game-server/nix/flake-part.nix
-          ./media-server/nix/flake-part.nix
-          ./personal-laptop/nix/flake-part.nix
-          ./work-laptop/nix/flake-part.nix
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [
+        inputs.home-manager.flakeModules.home-manager
 
-          # modules
-          ./modules/karabiner-elements.nix
-          ./modules/nix-config.nix
-        ];
-      }
-    );
+        # hosts
+        ./game-server/nix/flake-part.nix
+        ./media-server/nix/flake-part.nix
+        ./personal-laptop/nix/flake-part.nix
+        ./work-laptop/nix/flake-part.nix
+
+        # modules
+        ./modules/autorestic.nix
+        ./modules/cli-tools.nix
+        ./modules/fish.nix
+        ./modules/git.nix
+        ./modules/karabiner-elements.nix
+        ./modules/nix-config.nix
+        ./modules/nvim.nix
+        ./modules/qutebrowser.nix
+        ./modules/ssh-home-config.nix
+        ./modules/starship.nix
+        ./modules/wezterm.nix
+      ];
+    };
 }

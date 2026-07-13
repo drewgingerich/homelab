@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ../../modules/system
     ./users/dgingerich.nix
   ];
 
