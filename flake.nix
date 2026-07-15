@@ -3,6 +3,7 @@
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:denful/import-tree";
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
@@ -23,18 +24,7 @@
         ./personal-laptop/nix/flake-part.nix
         ./work-laptop/nix/flake-part.nix
 
-        # modules
-        ./modules/autorestic.nix
-        ./modules/cli-tools.nix
-        ./modules/fish.nix
-        ./modules/git.nix
-        ./modules/karabiner-elements.nix
-        ./modules/nix-config.nix
-        ./modules/nvim.nix
-        ./modules/qutebrowser.nix
-        ./modules/ssh-home-config.nix
-        ./modules/starship.nix
-        ./modules/wezterm.nix
+        (inputs.import-tree ./modules)
       ];
     };
 }
