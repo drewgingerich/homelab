@@ -5,10 +5,6 @@
     ./users/dgingerich.nix
   ];
 
-  custom = {
-    karabiner.enable = true;
-  };
-
   networking.hostName = "m-dgingerich";
 
   environment.systemPackages = with pkgs; [
@@ -22,7 +18,6 @@
 
   homebrew = {
     enable = true;
-    brews = [ "colima" ];
     casks = [ "codex" ];
   };
 

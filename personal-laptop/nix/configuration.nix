@@ -2,9 +2,7 @@
 {
   imports = [
     ./hardware.nix
-    ./keyd.nix
-    ./podman.nix
-    ./users
+    ./users/drew.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -71,8 +69,6 @@
   ];
 
   services.tailscale.enable = true;
-
-  programs.steam.enable = true;
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;

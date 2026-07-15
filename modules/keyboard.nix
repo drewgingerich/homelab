@@ -6,7 +6,7 @@
       assertions = [
         {
           assertion = pkgs.stdenv.isDarwin;
-          message = "This module is only intended for Darwin systems";
+          message = "Only works on Darwin";
         }
       ];
 
@@ -17,16 +17,33 @@
       };
     };
 
-  flake.darwinModules.karabiner-elements =
-    { pkgs, ... }:
+  flake.nixosModules.keyboard =
+    { ... }:
     {
-      assertions = [
-        {
-          assertion = pkgs.stdenv.isDarwin;
-          message = "This module is only intended for Darwin systems";
-        }
-      ];
+      services.keyd = {
+        enable = true;
+        keyboards = {
+          default = {
+            ids = [ "*" ];
+            settings = {
+              main = {
+                capslock = "overload(nav, esc)";
+              };
+              nav = {
+                h = "left";
+                j = "down";
+                k = "up";
+                l = "right";
+              };
+            };
+          };
+        };
+      };
+    };
 
+  flake.darwinModules.keyboard =
+    { ... }:
+    {
       homebrew = {
         enable = true;
         casks = [ "karabiner-elements" ];

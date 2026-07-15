@@ -3,6 +3,7 @@
   imports = [
     ./modules
     ./users
+    ./hardware.nix
   ];
 
   # Bootloader.

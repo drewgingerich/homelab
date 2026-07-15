@@ -8,13 +8,13 @@
       ...
     }:
     {
-      options = {
-        custom.git.enable = lib.mkEnableOption "Git";
-        custom.git.userName = lib.mkOption {
+      options.custom.git = {
+        enable = lib.mkEnableOption "Git";
+        userName = lib.mkOption {
           type = lib.types.str;
           default = "Drew Gingerich";
         };
-        custom.git.userEmail = lib.mkOption {
+        userEmail = lib.mkOption {
           type = lib.types.str;
           default = "drew@elsewhere.space";
         };

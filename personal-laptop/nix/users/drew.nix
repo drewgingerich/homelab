@@ -17,6 +17,7 @@ in
 
   home-manager.users.${username} = {
     custom = {
+      bitwarden.enable = true;
       cliTools.enable = true;
       fish.enable = true;
       git.enable = true;
@@ -26,10 +27,6 @@ in
       starship.enable = true;
       wezterm.enable = true;
     };
-
-    imports = [
-      ../modules/home/bitwarden.nix
-    ];
 
     programs.firefox = {
       enable = true;
@@ -79,10 +76,15 @@ in
 
       wineWow64Packages.waylandFull
 
+      lm_sensors
+      acpitool
+
       bitwarden-cli
       bitwarden-desktop
       discord
       easyeffects
+      inkscape
+      krita
       obsidian
       signal-desktop
       tenacity

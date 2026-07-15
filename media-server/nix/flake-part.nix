@@ -5,6 +5,7 @@
     modules = [
       inputs.self.nixosModules.autorestic
       inputs.self.nixosModules.cliTools
+      inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.git
       inputs.self.nixosModules.nixConfig
