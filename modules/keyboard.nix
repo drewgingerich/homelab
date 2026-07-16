@@ -1,7 +1,7 @@
 { inputs, ... }:
 {
   flake.homeModules.karabiner-elements =
-    { config, pkgs, ... }:
+    { pkgs, ... }:
     {
       assertions = [
         {
@@ -12,7 +12,7 @@
 
       xdg.configFile = {
         "karabiner" = {
-          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/karabiner";
+          source = ../dotfiles/karabiner;
         };
       };
     };
