@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   imports = [
-    ./modules
-    ./users
+    ./hardware.nix
+    ./users/drew.nix
   ];
 
   boot.loader.grub.enable = true;

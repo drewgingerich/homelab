@@ -1,8 +1,8 @@
 { pkgs, ... }:
 {
   imports = [
-    ./modules
-    ./users
+    ./users/drewg.nix
+    ./users/dreamy.nix
     ./hardware.nix
   ];
 

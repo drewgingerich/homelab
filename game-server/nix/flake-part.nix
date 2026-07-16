@@ -9,8 +9,10 @@
       inputs.self.nixosModules.cliTools
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.git
+      inputs.self.nixosModules.gnome
       inputs.self.nixosModules.nixConfig
       inputs.self.nixosModules.nvim
+      inputs.self.nixosModules.pcvr
       inputs.self.nixosModules.qutebrowser
       inputs.self.nixosModules.ssh-home-config
       inputs.self.nixosModules.starship

@@ -18,7 +18,6 @@ in
       nvim.enable = true;
       pcvr.enable = true;
       starship.enable = true;
-      steam.enable = true;
       wezterm.enable = true;
     };
 
