@@ -18,6 +18,7 @@
         xdg.configFile = {
           "wezterm" = {
             source = ../dotfiles/wezterm;
+            recursive = true;
           };
         };
       };
