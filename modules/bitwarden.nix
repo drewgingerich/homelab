@@ -107,6 +107,7 @@
         xdg.configFile = {
           "wlr-which-key" = {
             source = ../dotfiles/wlr-which-key;
+            recursive = true;
           };
         };
 
