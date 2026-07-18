@@ -9,14 +9,14 @@
         programs.ssh = {
           enable = true;
           enableDefaultConfig = false;
-          matchBlocks = {
-            "dusty-media-server" = {
-              hostname = "100.65.171.21";
-              user = "drew";
+          settings = {
+            dusty-media-server = {
+              HostName = "100.65.171.21";
+              User = "drew";
             };
-            "unremarkable-game-server" = {
-              hostname = "100.72.211.58";
-              user = "drewg";
+            unremarkable-game-server = {
+              HostName = "100.72.211.58";
+              User = "drewg";
             };
           };
         };
