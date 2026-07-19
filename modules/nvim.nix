@@ -50,7 +50,9 @@
         xdg.configFile = {
           "nvim" = {
             source = ../dotfiles/nvim;
+            # source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/data/code/homelab/dotfiles/nvim";
             recursive = true;
+            force = true;
           };
         };
       };

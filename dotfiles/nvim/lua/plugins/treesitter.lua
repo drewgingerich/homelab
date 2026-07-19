@@ -1,54 +1,34 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-textobjects",
-			"RRethy/nvim-treesitter-textsubjects",
-		},
+		lazy = false,
 		build = ":TSUpdate",
 		config = function()
-			local configs = require("nvim-treesitter.configs")
-			configs.setup({
-				auto_install = true,
-				highlight = {
-					enable = true,
-					disable = { "dockerfile" },
-				},
-				indent = { enable = true },
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						init_selection = "<leader>ss",
-						node_incremental = "<leader>si",
-						scope_incremental = "<leader>sc",
-						node_decremental = "<leader>sd",
-					},
-				},
-				textobjects = {
-					select = {
-						enable = true,
-						lookahead = true,
-						keymaps = {
-							["af"] = { query = "@function.outer", desc = "function" },
-							["if"] = { query = "@function.inner", desc = "function body" },
-							["aa"] = { query = "@parameter.outer", desc = "function argument" },
-						},
-						include_surrounding_whitespace = true,
-					},
-				},
-				textsubjects = {
-					enable = true,
-					prev_selection = ",",
-					keymaps = {
-						["."] = { "textsubjects-smart", desc = "smart selection" },
-						[";"] = { "textsubjects-container-outer", desc = "container" },
-						["i;"] = { "textsubjects-container-inner", desc = "inside container" },
-					},
-				},
-			})
+			require("nvim-treesitter").setup({
+        auto_install = true,
+      })
+		end,
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+		},
+		init = function()
+			vim.g.no_plugin_maps = true
+		end,
+		config = function()
+			local ts = require("nvim-treesitter-textobjects.select")
+			vim.keymap.set({ "x", "o" }, "af", function()
+				ts.select_textobject("@function.outer", "textobjects")
+			end)
+			vim.keymap.set({ "x", "o" }, "if", function()
+				ts.select_textobject("@function.inner", "textobjects")
+			end)
+			vim.keymap.set({ "x", "o" }, "aa", function()
+				ts.select_textobject("@parameter.outer", "textobjects")
+			end)
 		end,
 	},
 }
-
--- Resources
--- https://www.youtube.com/watch?v=ff0GYrK3nT0

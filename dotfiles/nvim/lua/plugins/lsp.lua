@@ -1,46 +1,27 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = { "nvim-telescope/telescope.nvim" },
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-			local lspconfig = require("lspconfig")
-
-			lspconfig.astro.setup({ capabilities = capabilities })
-			lspconfig.cssls.setup({ capabilities = capabilities })
-			lspconfig.gdscript.setup({
-				name = "godot",
-				cmd = vim.lsp.rpc.connect("127.0.0.1", 6005),
-			})
-			lspconfig.gopls.setup({ capabilities = capabilities })
-			lspconfig.gleam.setup({ capabilities = capabilities })
-			lspconfig.harper_ls.setup({ capabilities = capabilities })
-			lspconfig.helm_ls.setup({ capabilities = capabilities })
-			lspconfig.html.setup({ capabilities = capabilities })
-			lspconfig.jsonls.setup({ capabilities = capabilities })
-			lspconfig.lua_ls.setup({ capabilities = capabilities })
-			lspconfig.marksman.setup({ capabilities = capabilities })
-			lspconfig.nixd.setup({
-				settings = {
-					nixd = {
-						formatting = { command = { "nixfmt" } },
-					},
-				},
-			})
-			lspconfig.pyright.setup({ capabilities = capabilities })
-			lspconfig.ruby_lsp.setup({ capabilities = capabilities })
-			lspconfig.ruff.setup({ capabilities = capabilities })
-			lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-			lspconfig.starlark_rust.setup({
-				capabilities = capabilities,
-				filetypes = { "star", "bzl", "BUILD.bazel", "Tiltfile" },
-			})
-			lspconfig.taplo.setup({ capabilities = capabilities })
-			lspconfig.ts_ls.setup({ capabilities = capabilities })
-			-- lspconfig.vale_ls.setup({ capabilities = capabilities })
-			lspconfig.volar.setup({ capabilities = capabilities })
-			lspconfig.yamlls.setup({ capabilities = capabilities })
-			lspconfig.terraform_lsp.setup({ capabilities = capabilities })
+			vim.lsp.enable("astro")
+			vim.lsp.enable("cssls")
+			vim.lsp.enable("gdscript")
+			vim.lsp.enable("gopls")
+			vim.lsp.enable("html")
+			vim.lsp.enable("jsonls")
+			vim.lsp.enable("lua_ls")
+			vim.lsp.enable("marksman")
+			vim.lsp.enable("nixd")
+			vim.lsp.enable("pyright")
+			vim.lsp.enable("ruby_lsp")
+			vim.lsp.enable("ruff")
+			vim.lsp.enable("rust_analyzer")
+			vim.lsp.enable("starlark_rust")
+			vim.lsp.enable("taplo")
+			vim.lsp.enable("terraform_lsp")
+			vim.lsp.enable("ts_ls")
+			vim.lsp.enable("volar")
+			vim.lsp.enable("yamlls")
 
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open LSP diagnostic float" })
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic" })
@@ -94,18 +75,5 @@ return {
 				end,
 			})
 		end,
-		dependencies = { "nvim-telescope/telescope.nvim", "towolf/vim-helm" },
-	},
-	{
-		"towolf/vim-helm",
-		-- 24-12-12
-		-- Needed to prevent yamlls from attaching to helm filetype
-		-- This is because Helm uses the `.yaml` file extension even though it's not a YAML file
-		-- https://github.com/neovim/nvim-lspconfig/issues/2252#issuecomment-2198825338
-		ft = "helm",
-	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 }
