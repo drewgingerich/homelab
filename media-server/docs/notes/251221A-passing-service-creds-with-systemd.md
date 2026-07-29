@@ -244,3 +244,4 @@ such as `plex.claim` or `nextcloud.database_password`.
 - https://systemd.io/CREDENTIALS/
 - https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Credentials
 - https://partial.solutions/2024/understanding-systemd-credentials.html
+- https://www.youtube.com/watch?v=YFXwV0ZO9NE

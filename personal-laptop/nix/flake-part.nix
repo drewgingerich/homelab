@@ -6,6 +6,7 @@
       inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
       inputs.home-manager.nixosModules.home-manager
       inputs.self.nixosModules.autorestic
+      inputs.self.nixosModules.backup
       inputs.self.nixosModules.bitwarden
       inputs.self.nixosModules.cliTools
       inputs.self.nixosModules.containers
