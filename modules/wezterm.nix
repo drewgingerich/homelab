@@ -29,4 +29,10 @@
     {
       home-manager.sharedModules = [ inputs.self.homeModules.wezterm ];
     };
+
+  flake.darwinModules.wezterm =
+    { ... }:
+    {
+      home-manager.sharedModules = [ inputs.self.homeModules.wezterm ];
+    };
 }

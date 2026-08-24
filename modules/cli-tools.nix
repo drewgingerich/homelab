@@ -45,4 +45,10 @@
     {
       home-manager.sharedModules = [ inputs.self.homeModules.cliTools ];
     };
+
+  flake.darwinModules.cliTools =
+    { ... }:
+    {
+      home-manager.sharedModules = [ inputs.self.homeModules.cliTools ];
+    };
 }

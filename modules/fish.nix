@@ -31,4 +31,11 @@
       programs.fish.enable = true;
       home-manager.sharedModules = [ inputs.self.homeModules.fish ];
     };
+
+  flake.darwinModules.fish =
+    { ... }:
+    {
+      programs.fish.enable = true;
+      home-manager.sharedModules = [ inputs.self.homeModules.fish ];
+    };
 }

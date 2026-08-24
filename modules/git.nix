@@ -69,4 +69,10 @@
     {
       home-manager.sharedModules = [ inputs.self.homeModules.git ];
     };
+
+  flake.darwinModules.git =
+    { ... }:
+    {
+      home-manager.sharedModules = [ inputs.self.homeModules.git ];
+    };
 }

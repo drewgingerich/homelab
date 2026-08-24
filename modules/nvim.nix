@@ -63,4 +63,10 @@
     {
       home-manager.sharedModules = [ inputs.self.homeModules.nvim ];
     };
+
+  flake.darwinModules.nvim =
+    { ... }:
+    {
+      home-manager.sharedModules = [ inputs.self.homeModules.nvim ];
+    };
 }

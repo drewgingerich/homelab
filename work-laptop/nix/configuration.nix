@@ -18,7 +18,6 @@
 
   homebrew = {
     enable = true;
-    casks = [ "codex" ];
   };
 
   system.startup.chime = false;

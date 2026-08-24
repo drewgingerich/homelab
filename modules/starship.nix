@@ -28,4 +28,10 @@
     {
       home-manager.sharedModules = [ inputs.self.homeModules.starship ];
     };
+
+  flake.darwinModules.starship =
+    { ... }:
+    {
+      home-manager.sharedModules = [ inputs.self.homeModules.starship ];
+    };
 }
