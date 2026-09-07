@@ -86,8 +86,6 @@ in
       lm_sensors
       acpitool
 
-      bitwarden-cli
-      bitwarden-desktop
       discord
       easyeffects
       inkscape
