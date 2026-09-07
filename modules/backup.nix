@@ -1,12 +1,17 @@
 { ... }: {
   flake.nixosModules.backup =
-    { pkgs, ... }:
+    {
+      lib,
+      pkgs,
+      config,
+      ...
+    }:
     let
-      backup-run = pkgs.writeShellApplication {
-        name = "backup-run";
+      restic-systemd-exec = pkgs.writeShellApplication {
+        name = "restic-systemd-exec";
         runtimeInputs = with pkgs; [
           restic
-          toybox
+          toybox # Needed for xargs
         ];
         text = ''
           export RESTIC_REPOSITORY_FILE=$CREDENTIALS_DIRECTORY/restic.repository
@@ -17,85 +22,70 @@
           restic "$@"
         '';
       };
-      rr = pkgs.writeShellApplication {
-        name = "rr";
-        runtimeInputs = [
-          pkgs.restic
-          backup-run
-        ];
+      wrestic = pkgs.writeShellApplication {
+        name = "wrestic";
+        runtimeInputs = [ restic-systemd-exec ];
         text = ''
-          systemd-run --pipe --wait --quiet --property 'ImportCredential=restic.*' backup-run "$@"
+          systemd-run --pipe --wait --quiet --property 'ImportCredential=restic.*' restic-systemd-exec "$@"
         '';
       };
     in
     {
-      # options.custom.restic = {
-      #   paths =
-      #     with lib.types;
-      #     listOf submodule {
-      #       include = listOf str;
-      #       exclude = listOf str;
-      #       preScript = str;
-      #       postScript = str;
-      #     };
-      # };
+      options.custom.backups = lib.mkOption {
+        type =
+          with lib.types;
+          attrsOf (submodule {
+            options = {
+              paths = lib.mkOption {
+                type = listOf str;
+                default = [ ];
+              };
+              excludes = lib.mkOption {
+                type = listOf str;
+                default = [ ];
+              };
+            };
+          });
+        default = { };
+      };
 
       config = {
         environment.systemPackages = [
-          backup-run
-          rr
+          wrestic
         ];
 
-        # systemd.services."restic-backup-creds" =
-        #   let
-        #     paths = [
-        #       # "/wish/app-data"
-        #       # "/wish/media/home-video"
-        #       # "/wish/media/pictures"
-        #       "/etc/credstore"
-        #     ];
-        #     host = "media-server";
-        #
-        #     # Surround each path in quotes to handle whitespace, then join into one string
-        #     formatted_paths = builtins.concatStringsSep " " (builtins.map (x: "\"${x}\"") paths);
-        #
-        #     restic_backup_script = pkgs.writeShellScript "run_restic_backup_creds.sh" ''
-        #        set -euo pipefail
-        #
-        #        export RESTIC_REPOSITORY="$(cat $CREDENTIALS_DIRECTORY/restic.repository)";
-        #        export B2_ACCOUNT_ID="$(cat $CREDENTIALS_DIRECTORY/restic.b2_account_id)";
-        #        export B2_ACCOUNT_KEY="$(cat $CREDENTIALS_DIRECTORY/restic.b2_account_key)";
-        #
-        #        export RESTIC_PASSWORD_FILE="$CREDENTIALS_DIRECTORY/restic.password";
-        #
-        #       ${pkgs.restic}/bin/restic backup ${formatted_paths} --host "${host}"
-        #     '';
-        #   in
-        #   {
-        #     enable = true;
-        #     restartIfChanged = false;
-        #     wants = [ "network-online.target" ];
-        #     after = [ "network-online.target" ];
-        #     serviceConfig = {
-        #       Type = "oneshot";
-        #       LoadCredential = [
-        #         "restic.repository"
-        #         "restic.password"
-        #         "restic.environment"
-        #       ];
-        #       ExecStart = "${pkgs.bash}/bin/bash ${restic_backup_script}";
-        #     };
-        #   };
-        #
-        # systemd.timers."restic-backup" = {
-        #   enable = true;
-        #   wantedBy = [ "timers.target" ];
-        #   timerConfig = {
-        #     OnUnitActiveSec = "5m";
-        #     # OnCalendar=Mon..Fri *-*-* 10:00:*
-        #     Unit = "restic-backup.service";
-        #   };
-        # };
+        systemd.services = lib.mapAttrs' (
+          name: backup:
+          let
+            joinedPaths = lib.concatStringsSep " " backup.paths;
+            joinedExcludes = lib.concatStringsSep " " (
+              lib.map (x: "--exclude ${x}") backup.excludes
+            );
+          in
+          lib.nameValuePair "backup-${name}" {
+            enable = true;
+            restartIfChanged = false;
+            wants = [ "network-online.target" ];
+            after = [ "network-online.target" ];
+            serviceConfig = {
+              Type = "oneshot";
+              ImportCredential = "restic.*";
+              ExecStart = "${restic-systemd-exec}/bin/restic-systemd-exec backup ${joinedPaths} ${joinedExcludes}";
+            };
+          }
+        ) config.custom.backups;
+
+        systemd.timers = lib.mapAttrs' (
+          name: backup:
+          lib.nameValuePair "backup-${name}" {
+            wantedBy = [ "timers.target" ];
+            timerConfig = {
+              OnCalendar = "daily";
+              Persistent = true;
+            };
+            unitConfig.X-OnlyManualStart = true;
+          }
+        ) config.custom.backups;
       };
     };
 }

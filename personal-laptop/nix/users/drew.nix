@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   username = "drew";
 in
@@ -13,6 +13,13 @@ in
     ];
     shell = pkgs.fish;
     initialPassword = username;
+  };
+
+  custom.backups = {
+    drewData = {
+      paths = [ "${config.users.users.${username}.home}/data" ];
+      excludes = [ ".git" ];
+    };
   };
 
   home-manager.users.${username} = {
