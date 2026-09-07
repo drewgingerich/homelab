@@ -78,8 +78,10 @@ in
     programs.obs-studio.enable = true;
 
     home.packages = with pkgs; [
+      limo
       mgba
       melonds
+      openmw
 
       wineWow64Packages.waylandFull
 
