@@ -54,6 +54,21 @@
 
   virtualisation.docker.enable = true;
 
+  custom.backups = {
+    app-data = {
+      paths = [ "/wish/app-data" ];
+    };
+    media = {
+      paths = [
+        "/wish/media/home-video"
+        "/wish/media/pictures"
+      ];
+    };
+    creds = {
+      paths = [ "/etc/credstore" ];
+    };
+  };
+
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
   home-manager.backupFileExtension = ".hm.bak";
