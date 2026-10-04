@@ -1,69 +1,53 @@
 ## Problem
 
-I need to choose a way to run services.
+I need a way to run services that provides:
 
-- Secure
-    - Network isolation
-    - User namespacing
-- Declarative
-    - Configuration as code
-    - Reproducible
-- Isolated environment
-    - Easy installation and cleanup
-- Simple
-    - Easy to customize
-    - Minimize moving parts
-    - Automation of networking, DNS, etc.
-- Performant
+- Network isolation: only accessible through a reverse-proxy
+- Version-controlled, declarative configuration: self-documenting and reproducible installation and configuration,
+  simple and complete uninstallation.
+- Secure: vulnerabilities in the service can't be used to compromise the rest of the system.
+- Performant: may as well consider it, but good enough is fine.
+
+- Per-service network isolation to avoid port conflicts and ensure services are only exposed
+I need to choose a way to run services.
+I want:
+
+- Network isolation per service.
+- User namespacing, ideally without root mapped to the host root.
+- Declarative, reproducible way to run.
 - Virtualization
-    - Ports
-    - Filesystem
-    - CPU
-    - Memory
 
 ## Options
 
 - OCI containers
 - VMs
-- Nixpkgs + systemd nspawn containers
+- systemd services
+- systemd-nspawn containers
 
 ## Decision
 
 ## Exploration
 
-## Bookmarks
+I currently run services using OCI containers.
+This provides benefits I appreciate:
 
-https://quantum5.ca/2025/03/18/docker-considered-harmful/
-
-https://mwalkowski.com/post/introduction-to-systemd-nspawn-containers-chroot-on-steroids/
-https://www.reddit.com/r/NixOS/comments/1ajfl8c/nixoscontainer_vs_docker_and_friends/
-https://www.xda-developers.com/nixos-containers-are-pretty-exciting/
-
-https://github.com/microvm-nix/microvm.nix
-
----
-
-# 2. Run services in Docker containers
-
-Date: 2023-11-28
-
-## Status
-
-Accepted
-
-## Context
-
-I am currently running services in Docker containers.
-This provides benefits I appreciate.
-
-- I generally don't need to know how a service is installed. Installation details are handled for me in the Docker image. I can concentrate on post-installation configuration.
-- Dockerfiles provide a self-documenting, reproducible, and version-controlled installation procedure. If I ever do need to understand how a service is installed, looking at the Dockerfile shows me.
-- I can extend existing images. If one doesn't meet my needs, I can use it as a base for a custom image and add the additional functionality I need.
-- Service installations are isolated to the container. This avoids dependency conflicts between services and makes uninstalling a service and its dependencies as simple as deleting the container.
-- Provides an abstraction over resources (virtualization). Bind mounts let me control where each service saves its data. Port mapping lets me control what ports each service uses to handle traffic. Services are not aware of this inside their containers, which lets them use default configurations. This gives me flexibility to move data around without needing to reconfigure the service.
-- The isolated installation, reproducable builds, and resource virtualization let me work with services as immutable units. Instead of updating a service in place, I replace its container with a new one that has the new version of the service. The state of the service remains well-known. It prevents build-up of old or stale cached files. There is peace of mind from knowing that if container disappeared, I could get a new one going in a few minutes.
+- I generally don't need to know hor a service is installed.
+  Installation details are handled for me in the container image,
+  and I can concentrate on post-installation configuration.
+- I can extend existing images, , I can use it as a base for a custom image and add the additional functionality I need.
+- Service installations are isolated to the container.
+  This avoids dependency conflicts between services and makes uninstalling a service and its dependencies as simple as deleting the container.
+- Private network per container
+- Virtualized resources including networking ports and filesystems,
+  giving flexibility to move data around without needing to reconfigure the service.
+- The isolated installation, reproducable builds, and resource virtualization let me work with services as immutable units.
+  Instead of updating a service in place, I replace its container with a new one that has the new version of the service.
+  The state of the service remains well-known.
+  It prevents build-up of old or stale cached files.
+  There is peace of mind from knowing that if container disappeared, I could get a new one going in a few minutes.
 - Docker provides DNS that lets containers contact each other using their pod names.
-- Provides process and network isolation. This helps restrict the damage if a service is compromised.
+- Provides process and network isolation.
+  This helps restrict the damage if a service is compromised.
 
 There are also downsides.
 
@@ -115,3 +99,13 @@ https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Enviro
 https://medium.com/@sebastiancarlos/systemds-nuts-and-bolts-0ae7995e45d3
 https://systemd.io/CREDENTIALS/
 > Use LoadCredential=, LoadCredentialEncrypted= or SetCredentialEncrypted= (see below) to pass data to unit processes securely.
+
+https://quantum5.ca/2025/03/18/docker-considered-harmful/
+
+https://mwalkowski.com/post/introduction-to-systemd-nspawn-containers-chroot-on-steroids/
+https://www.reddit.com/r/NixOS/comments/1ajfl8c/nixoscontainer_vs_docker_and_friends/
+https://www.xda-developers.com/nixos-containers-are-pretty-exciting/
+
+https://github.com/microvm-nix/microvm.nix
+
+---
