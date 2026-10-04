@@ -1,4 +1,7 @@
 menu:
+  - key: "s"
+    desc: Screenshot
+    cmd: cosmic-screenshot --save-dir $HOME/Downloads --notify=false
   - key: "p"
     desc: Power
     submenu:
