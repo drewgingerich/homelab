@@ -9,6 +9,7 @@
       inputs.self.nixosModules.nixConfig
       inputs.self.nixosModules.backup
       inputs.self.nixosModules.keyboard
+      inputs.self.nixosModules.mouse
 
       # CLI
       inputs.self.nixosModules.cliTools
