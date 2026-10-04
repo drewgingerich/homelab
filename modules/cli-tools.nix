@@ -13,6 +13,7 @@
       config = lib.mkIf config.custom.cliTools.enable {
         home.packages = with pkgs; [
           bat
+          busybox
           btop
           cue
           eza
@@ -30,8 +31,6 @@
           pandoc
           ripgrep
           tealdeer
-          unixtools.watch
-          wget
           xh
           yazi
           yq
