@@ -10,6 +10,7 @@
     let
       qutebrowser = pkgs.qutebrowser.override {
         enableWideVine = true;
+        enableVulkan = true;
       };
     in
     {
