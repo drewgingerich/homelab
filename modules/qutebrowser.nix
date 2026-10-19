@@ -10,7 +10,6 @@
     let
       qutebrowser = pkgs.qutebrowser.override {
         enableWideVine = true;
-        enableVulkan = true;
       };
     in
     {
@@ -27,6 +26,7 @@
             wp = "https://en.wikipedia.org/wiki/Special:Search?search={}&go=Go&ns0=1";
           };
           settings = {
+            search.incremental = false;
             url.default_page = "about:blank";
             url.start_pages = "https://smallweb.cc";
             input.insert_mode.auto_load = true;
