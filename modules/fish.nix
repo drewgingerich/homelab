@@ -1,41 +1,40 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.fish =
     {
       pkgs,
-      lib,
-      config,
+      osConfig ? null,
       ...
     }:
     {
-      options.custom.fish.enable = lib.mkEnableOption "Fish shell";
+      assertions = [
+        {
+          assertion = isNull osConfig || osConfig.programs.fish.enable;
+          message = "programs.fish.enable = false in OS config";
+        }
+      ];
 
-      config = lib.mkIf config.custom.fish.enable {
-        home.packages = with pkgs; [
-          fish
-        ];
+      home.packages = with pkgs; [
+        fish
+      ];
 
-        xdg.configFile = {
-          "fish" = {
-            source = ../dotfiles/fish;
-            recursive = true;
-          };
+      xdg.configFile = {
+        "fish" = {
+          source = ../dotfiles/fish;
+          recursive = true;
         };
       };
-
     };
 
   flake.nixosModules.fish =
     { ... }:
     {
       programs.fish.enable = true;
-      home-manager.sharedModules = [ inputs.self.homeModules.fish ];
     };
 
   flake.darwinModules.fish =
     { ... }:
     {
       programs.fish.enable = true;
-      home-manager.sharedModules = [ inputs.self.homeModules.fish ];
     };
 }

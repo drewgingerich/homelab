@@ -34,10 +34,10 @@ in
   home-manager.users.${username} = {
     imports = [
       inputs.self.homeModules.cliTools
+      inputs.self.homeModules.fish
     ];
 
     custom = {
-      fish.enable = true;
       git.enable = true;
       nvim.enable = true;
       starship.enable = true;
