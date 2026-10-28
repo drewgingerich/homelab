@@ -1,37 +1,14 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.starship =
+    { pkgs, ... }:
     {
-      config,
-      pkgs,
-      lib,
-      ...
-    }:
-    {
-      options.custom.starship.enable = lib.mkEnableOption "Starship";
+      home.packages = [ pkgs.starship ];
 
-      config = lib.mkIf config.custom.starship.enable {
-        home.packages = with pkgs; [
-          starship
-        ];
-
-        xdg.configFile = {
-          "starship.toml" = {
-            source = ../dotfiles/starship/starship.toml;
-          };
+      xdg.configFile = {
+        "starship.toml" = {
+          source = ../dotfiles/starship/starship.toml;
         };
       };
-    };
-
-  flake.nixosModules.starship =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.starship ];
-    };
-
-  flake.darwinModules.starship =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.starship ];
     };
 }

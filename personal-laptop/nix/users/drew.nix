@@ -31,6 +31,7 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.starship
     ];
 
     custom = {
@@ -39,7 +40,6 @@ in
       nvim.enable = true;
       qutebrowser.enable = true;
       ssh-home-config.enable = true;
-      starship.enable = true;
       wezterm.enable = true;
     };
 

@@ -14,6 +14,7 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.starship
     ];
 
     custom = {
@@ -22,7 +23,6 @@ in
         userEmail = "drew.gingerich@ithaka.org";
       };
       nvim.enable = true;
-      starship.enable = true;
       wezterm.enable = true;
     };
 

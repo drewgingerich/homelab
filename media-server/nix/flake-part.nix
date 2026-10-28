@@ -12,7 +12,6 @@
       inputs.self.nixosModules.nvim
       inputs.self.nixosModules.qutebrowser
       inputs.self.nixosModules.ssh-home-config
-      inputs.self.nixosModules.starship
       inputs.self.nixosModules.wezterm
       ./configuration.nix
     ];
