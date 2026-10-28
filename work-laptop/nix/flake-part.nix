@@ -12,7 +12,6 @@
       inputs.self.darwinModules.nvim
       inputs.self.darwinModules.obsidian
       # inputs.self.darwinModules.raycast
-      inputs.self.darwinModules.wezterm
       ./configuration.nix
     ];
   };

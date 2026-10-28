@@ -33,6 +33,7 @@ in
       inputs.self.homeModules.fish
       inputs.self.homeModules.qutebrowser
       inputs.self.homeModules.starship
+      inputs.self.homeModules.wezterm
     ];
 
     custom = {
@@ -40,7 +41,6 @@ in
       git.enable = true;
       nvim.enable = true;
       ssh-home-config.enable = true;
-      wezterm.enable = true;
     };
 
     programs.firefox = {

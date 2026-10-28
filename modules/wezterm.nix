@@ -1,38 +1,15 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.wezterm =
+    { pkgs, ... }:
     {
-      config,
-      pkgs,
-      lib,
-      ...
-    }:
-    {
-      options.custom.wezterm.enable = lib.mkEnableOption "WezTerm";
+      home.packages = [ pkgs.wezterm ];
 
-      config = lib.mkIf config.custom.wezterm.enable {
-        home.packages = with pkgs; [
-          wezterm
-        ];
-
-        xdg.configFile = {
-          "wezterm" = {
-            source = ../dotfiles/wezterm;
-            recursive = true;
-          };
+      xdg.configFile = {
+        "wezterm" = {
+          source = ../dotfiles/wezterm;
+          recursive = true;
         };
       };
-    };
-
-  flake.nixosModules.wezterm =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.wezterm ];
-    };
-
-  flake.darwinModules.wezterm =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.wezterm ];
     };
 }

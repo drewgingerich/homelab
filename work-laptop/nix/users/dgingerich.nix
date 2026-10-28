@@ -15,6 +15,7 @@ in
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
       inputs.self.homeModules.starship
+      inputs.self.homeModules.wezterm
     ];
 
     custom = {
@@ -23,7 +24,6 @@ in
         userEmail = "drew.gingerich@ithaka.org";
       };
       nvim.enable = true;
-      wezterm.enable = true;
     };
 
     # programs.qutebrowser = {
