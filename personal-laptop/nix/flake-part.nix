@@ -2,6 +2,7 @@
 {
   flake.nixosConfigurations.lost-laptop = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
     modules = [
       # system
       inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series

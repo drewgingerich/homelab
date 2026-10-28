@@ -2,6 +2,7 @@
 {
   flake.nixosConfigurations.unremarkable-game-server = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
     modules = [
       inputs.nixos-hardware.nixosModules.common-pc-ssd
       inputs.home-manager.nixosModules.home-manager
