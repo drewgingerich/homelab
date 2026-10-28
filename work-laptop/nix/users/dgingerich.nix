@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 let
   username = "dgingerich";
 in
@@ -11,8 +11,11 @@ in
   system.primaryUser = username;
 
   home-manager.users.${username} = {
+    imports = [
+      inputs.self.homeModules.cliTools
+    ];
+
     custom = {
-      cliTools.enable = true;
       fish.enable = true;
       git = {
         enable = true;

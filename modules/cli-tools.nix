@@ -1,53 +1,32 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.cliTools =
+    { pkgs, ... }:
     {
-      pkgs,
-      lib,
-      config,
-      ...
-    }:
-    {
-      options.custom.cliTools.enable = lib.mkEnableOption "CLI tools";
-
-      config = lib.mkIf config.custom.cliTools.enable {
-        home.packages = with pkgs; [
-          bat
-          busybox
-          btop
-          cue
-          eza
-          direnv
-          dust
-          fd
-          ffmpeg
-          fselect
-          fzf
-          gcc
-          gnupg
-          hyperfine
-          imagemagick
-          jq
-          pandoc
-          ripgrep
-          tealdeer
-          xh
-          yazi
-          yq
-          zoxide
-        ];
-      };
-    };
-
-  flake.nixosModules.cliTools =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.cliTools ];
-    };
-
-  flake.darwinModules.cliTools =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.cliTools ];
+      home.packages = with pkgs; [
+        bat
+        busybox
+        btop
+        cue
+        eza
+        direnv
+        dust
+        fd
+        ffmpeg
+        fselect
+        fzf
+        gcc
+        gnupg
+        hyperfine
+        imagemagick
+        jq
+        pandoc
+        ripgrep
+        tealdeer
+        xh
+        yazi
+        yq
+        zoxide
+      ];
     };
 }

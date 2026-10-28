@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 let
   username = "drew";
 in
@@ -32,8 +32,11 @@ in
   ];
 
   home-manager.users.${username} = {
+    imports = [
+      inputs.self.homeModules.cliTools
+    ];
+
     custom = {
-      cliTools.enable = true;
       fish.enable = true;
       git.enable = true;
       nvim.enable = true;

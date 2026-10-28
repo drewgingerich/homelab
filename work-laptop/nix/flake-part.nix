@@ -5,7 +5,6 @@
     specialArgs = { inherit inputs; };
     modules = [
       inputs.home-manager.darwinModules.home-manager
-      inputs.self.darwinModules.cliTools
       inputs.self.darwinModules.containers
       inputs.self.darwinModules.fish
       inputs.self.darwinModules.git

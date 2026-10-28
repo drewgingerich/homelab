@@ -13,7 +13,6 @@
       inputs.self.nixosModules.mouse
 
       # CLI
-      inputs.self.nixosModules.cliTools
       inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.git
