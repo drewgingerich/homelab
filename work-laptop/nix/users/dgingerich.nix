@@ -14,15 +14,13 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.fish
       inputs.self.homeModules.starship
       inputs.self.homeModules.wezterm
     ];
 
     custom = {
-      git = {
-        enable = true;
-        userEmail = "drew.gingerich@ithaka.org";
-      };
+      git.userEmail = "drew.gingerich@ithaka.org";
       nvim.enable = true;
     };
 

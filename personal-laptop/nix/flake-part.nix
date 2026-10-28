@@ -15,7 +15,6 @@
       # CLI
       inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
-      inputs.self.nixosModules.git
       inputs.self.nixosModules.nvim
       inputs.self.nixosModules.ssh-home-config
 

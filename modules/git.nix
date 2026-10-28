@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.git =
     {
@@ -9,7 +9,6 @@
     }:
     {
       options.custom.git = {
-        enable = lib.mkEnableOption "Git";
         userName = lib.mkOption {
           type = lib.types.str;
           default = "Drew Gingerich";
@@ -20,7 +19,7 @@
         };
       };
 
-      config = lib.mkIf config.custom.git.enable {
+      config = {
         home.packages = with pkgs; [
           gh
           glab
@@ -62,17 +61,5 @@
           enableGitIntegration = true;
         };
       };
-    };
-
-  flake.nixosModules.git =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.git ];
-    };
-
-  flake.darwinModules.git =
-    { ... }:
-    {
-      home-manager.sharedModules = [ inputs.self.homeModules.git ];
     };
 }

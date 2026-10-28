@@ -7,7 +7,6 @@
       inputs.home-manager.darwinModules.home-manager
       inputs.self.darwinModules.containers
       inputs.self.darwinModules.fish
-      inputs.self.darwinModules.git
       inputs.self.darwinModules.keyboard
       inputs.self.darwinModules.nvim
       inputs.self.darwinModules.obsidian

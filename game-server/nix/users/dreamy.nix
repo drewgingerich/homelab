@@ -14,12 +14,12 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.git
       inputs.self.homeModules.starship
       inputs.self.homeModules.wezterm
     ];
 
     custom = {
-      git.enable = true;
       nvim.enable = true;
       pcvr.enable = true;
     };

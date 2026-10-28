@@ -31,6 +31,7 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.git
       inputs.self.homeModules.qutebrowser
       inputs.self.homeModules.starship
       inputs.self.homeModules.wezterm
@@ -38,7 +39,6 @@ in
 
     custom = {
       bitwarden.enable = true;
-      git.enable = true;
       nvim.enable = true;
       ssh-home-config.enable = true;
     };
