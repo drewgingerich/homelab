@@ -6,7 +6,6 @@
     modules = [
       inputs.nixos-hardware.nixosModules.common-pc-ssd
       inputs.home-manager.nixosModules.home-manager
-      inputs.self.nixosModules.autorestic
       inputs.self.nixosModules.cliTools
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.git
