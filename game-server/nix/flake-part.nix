@@ -11,7 +11,6 @@
       inputs.self.nixosModules.nixConfig
       inputs.self.nixosModules.nvim
       inputs.self.nixosModules.pcvr
-      inputs.self.nixosModules.ssh-home-config
       inputs.self.nixosModules.steam
       inputs.self.nixosModules.nvidiaGpu
       ./configuration.nix

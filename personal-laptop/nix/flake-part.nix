@@ -16,7 +16,6 @@
       inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.nvim
-      inputs.self.nixosModules.ssh-home-config
 
       # apps
       inputs.self.nixosModules.bitwarden
