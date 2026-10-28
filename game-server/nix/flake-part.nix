@@ -12,7 +12,6 @@
       inputs.self.nixosModules.nixConfig
       inputs.self.nixosModules.nvim
       inputs.self.nixosModules.pcvr
-      inputs.self.nixosModules.qutebrowser
       inputs.self.nixosModules.ssh-home-config
       inputs.self.nixosModules.wezterm
       inputs.self.nixosModules.steam

@@ -31,6 +31,7 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
+      inputs.self.homeModules.qutebrowser
       inputs.self.homeModules.starship
     ];
 
@@ -38,7 +39,6 @@ in
       bitwarden.enable = true;
       git.enable = true;
       nvim.enable = true;
-      qutebrowser.enable = true;
       ssh-home-config.enable = true;
       wezterm.enable = true;
     };

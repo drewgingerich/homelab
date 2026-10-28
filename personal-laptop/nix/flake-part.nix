@@ -21,7 +21,6 @@
 
       # apps
       inputs.self.nixosModules.bitwarden
-      inputs.self.nixosModules.qutebrowser
       inputs.self.nixosModules.steam
       inputs.self.nixosModules.wezterm
       ./configuration.nix
