@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake.homeModules.bitwarden =
     {
@@ -86,58 +86,46 @@
       };
     in
     {
-      options.custom.bitwarden.enable = lib.mkEnableOption "Bitwarden";
 
-      config = lib.mkIf config.custom.bitwarden.enable {
-        assertions = [
-          {
-            assertion = pkgs.stdenv.isLinux;
-            message = "Only works on Linux";
-          }
-        ];
-
-        programs.rbw = {
-          enable = true;
-          settings = {
-            email = "bitwarden@elsewhere.space";
-            pinentry = pkgs.pinentry-qt;
-          };
-        };
-
-        xdg.configFile = {
-          "wlr-which-key" = {
-            source = ../dotfiles/wlr-which-key;
-          };
-        };
-
-        home.packages =
-          with pkgs;
-          [
-            bitwarden-cli
-            bitwarden-desktop
-            fuzzel
-            libsecret
-            rbw
-            wlr-which-key
-            wtype
-          ]
-          ++ [
-            bwSync
-            bwSelect
-            bwGet
-            bwTotp
-            bwOpen
-            bwPaste
-          ];
-      };
-    };
-
-  flake.nixosModules.bitwarden =
-    { ... }:
-    {
-      nixpkgs.config.permittedInsecurePackages = [
-        "electron-39.8.10"
+      assertions = [
+        {
+          assertion = pkgs.stdenv.isLinux;
+          message = "Only works on Linux";
+        }
       ];
-      home-manager.sharedModules = [ inputs.self.homeModules.bitwarden ];
+
+      programs.rbw = {
+        enable = true;
+        settings = {
+          email = "bitwarden@elsewhere.space";
+          pinentry = pkgs.pinentry-qt;
+        };
+      };
+
+      xdg.configFile = {
+        "wlr-which-key" = {
+          source = ../dotfiles/wlr-which-key;
+        };
+      };
+
+      home.packages =
+        with pkgs;
+        [
+          bitwarden-cli
+          bitwarden-desktop
+          fuzzel
+          libsecret
+          rbw
+          wlr-which-key
+          wtype
+        ]
+        ++ [
+          bwSync
+          bwSelect
+          bwGet
+          bwTotp
+          bwOpen
+          bwPaste
+        ];
     };
 }

@@ -29,6 +29,7 @@ in
 
   home-manager.users.${username} = {
     imports = [
+      inputs.self.homeModules.bitwarden
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
       inputs.self.homeModules.git
@@ -39,9 +40,6 @@ in
       inputs.self.homeModules.wezterm
     ];
 
-    custom = {
-      bitwarden.enable = true;
-    };
 
     programs.firefox = {
       enable = true;

@@ -17,7 +17,6 @@
       inputs.self.nixosModules.fish
 
       # apps
-      inputs.self.nixosModules.bitwarden
       inputs.self.nixosModules.steam
       ./configuration.nix
     ];
