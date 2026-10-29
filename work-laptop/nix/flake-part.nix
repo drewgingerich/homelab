@@ -8,7 +8,6 @@
       inputs.self.darwinModules.containers
       inputs.self.darwinModules.fish
       inputs.self.darwinModules.keyboard
-      inputs.self.darwinModules.nvim
       inputs.self.darwinModules.obsidian
       # inputs.self.darwinModules.raycast
       ./configuration.nix

@@ -8,7 +8,6 @@
       inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.nixConfig
-      inputs.self.nixosModules.nvim
       ./configuration.nix
     ];
   };

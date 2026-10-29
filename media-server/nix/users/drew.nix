@@ -36,13 +36,10 @@ in
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
       inputs.self.homeModules.git
+      inputs.self.homeModules.nvim
       inputs.self.homeModules.starship
       inputs.self.homeModules.wezterm
     ];
-
-    custom = {
-      nvim.enable = true;
-    };
 
     programs.home-manager.enable = true;
     home.stateVersion = "26.05";

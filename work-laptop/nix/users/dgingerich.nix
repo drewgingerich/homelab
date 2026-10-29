@@ -14,14 +14,13 @@ in
     imports = [
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
-      inputs.self.homeModules.fish
+      inputs.self.homeModules.nvim
       inputs.self.homeModules.starship
       inputs.self.homeModules.wezterm
     ];
 
     custom = {
       git.userEmail = "drew.gingerich@ithaka.org";
-      nvim.enable = true;
     };
 
     # programs.qutebrowser = {

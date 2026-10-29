@@ -9,7 +9,6 @@
       inputs.self.nixosModules.fish
       inputs.self.nixosModules.gnome
       inputs.self.nixosModules.nixConfig
-      inputs.self.nixosModules.nvim
       inputs.self.nixosModules.pcvr
       inputs.self.nixosModules.steam
       inputs.self.nixosModules.nvidiaGpu

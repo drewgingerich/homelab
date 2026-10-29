@@ -32,6 +32,7 @@ in
       inputs.self.homeModules.cliTools
       inputs.self.homeModules.fish
       inputs.self.homeModules.git
+      inputs.self.homeModules.nvim
       inputs.self.homeModules.personalSshConfig
       inputs.self.homeModules.qutebrowser
       inputs.self.homeModules.starship
@@ -40,7 +41,6 @@ in
 
     custom = {
       bitwarden.enable = true;
-      nvim.enable = true;
     };
 
     programs.firefox = {

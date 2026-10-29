@@ -15,7 +15,6 @@
       # CLI
       inputs.self.nixosModules.containers
       inputs.self.nixosModules.fish
-      inputs.self.nixosModules.nvim
 
       # apps
       inputs.self.nixosModules.bitwarden
