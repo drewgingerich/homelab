@@ -5,6 +5,21 @@
     ./users/drew.nix
   ];
 
+  custom.backups = {
+    creds = {
+      paths = [ "/etc/credstore" ];
+    };
+    appData = {
+      paths = [ "/wish/app-data" ];
+    };
+    homeVideo = {
+      paths = [ "/wish/media/home-video" ];
+    };
+    pictures = {
+      paths = [ "/wish/media/pictures" ];
+    };
+  };
+
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/disk/by-id/wwn-0x500a0751e1f50c03";
 
