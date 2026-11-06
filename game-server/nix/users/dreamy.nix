@@ -26,7 +26,11 @@ in
 
     home.packages = with pkgs; [
       cemu
-      xivlauncher
+      itgmania
+      limo
+      melonds
+      mgba
+      openmw
     ];
 
     programs.home-manager.enable = true;
