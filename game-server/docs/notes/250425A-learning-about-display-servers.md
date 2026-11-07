@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Learning about display servers
 
 In the era of room-sized computers, terminals were stations where users could interact with the computer.

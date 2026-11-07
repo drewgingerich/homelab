@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 I tried to install https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/networking/sunshine.nix,
 but got error that `services.sunshine` didn't exist.
 

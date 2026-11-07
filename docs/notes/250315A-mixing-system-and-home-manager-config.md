@@ -1,3 +1,9 @@
+---
+tags:
+  - "scope:global"
+  - nix
+---
+
 # Mixing system and Home Manager config
 
 Currently my flake outputs look something like this:

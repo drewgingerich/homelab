@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 I [recently decided](/game-server/docs/decisions/240706-directly-connect-server-and-tv.md) to directly wire my game server to my TV.
 
 Since the TV only has HDMI ports, I got a long HDMI cable.

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # NixOS: Disable lock screen
 
 In addition to setting up automatic login in [240604-nixos-configure-automatic-login](./240604-nixos-configure-automatic-login.md),

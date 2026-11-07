@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Passing creds to a nixos container
 
 

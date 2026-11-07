@@ -1,4 +1,9 @@
-# DRAFT: Get a UPS
+---
+tags:
+  - "scope:global"
+---
+
+# Get a UPS
 
 ## Problem
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Expanding VM partition, part 2
 
 Wanted to expand disk [as before](/game-server/docs/log/240314-expand-vm-disk.md).

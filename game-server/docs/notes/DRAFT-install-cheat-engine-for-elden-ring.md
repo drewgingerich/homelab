@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Install Cheat Engine for Elden Ring
 
 I want to make a few characters for different PvP builds.

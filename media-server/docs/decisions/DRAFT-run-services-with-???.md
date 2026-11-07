@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 ## Problem
 
 I need a way to run services that provides:

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # NixOS: Configuring automatic login
 
 I want to set up automatic login like I did for Ubuntu in [240324-configure-automatic-login](./240324-configure-automatic-login.md).

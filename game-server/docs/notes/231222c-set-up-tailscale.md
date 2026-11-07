@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Set up remote access using Tailscale
 
 I followed the [installation instructions for Debian](https://tailscale.com/kb/1174/install-debian-bookworm),

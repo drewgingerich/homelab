@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # Installing nix-darwin
 
 Installed Nix with the [Determinant Nix installer](https://determinate.systems/posts/determinate-nix-installer/).

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 I thought the issue might be due to using Wayland somehow,
 so I tried forcing use of X11 instead.
 

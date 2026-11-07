@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 
 ```nix
 

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 ```sh
 systemd-analyze has-tpm2
 ```

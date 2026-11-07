@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # 22. Use Traefik middleware to set HTTP security headers
 
 Date: 2023-09-09

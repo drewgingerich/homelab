@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 ## Installing Flatpak
 
 Flatpak is a simple way to install applications.

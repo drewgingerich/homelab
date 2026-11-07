@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Use ZFS to manage media storage
 
 ## Goals

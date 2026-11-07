@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Troubleshooting Plex hardware transcoding 
 
 While streaming a 1080p video to a Plex browser client,

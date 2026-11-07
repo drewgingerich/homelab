@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 Configuration can be broken out into modules.
 This can help with organization, though I don't know how I want to organize things yet.
 

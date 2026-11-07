@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Solving PXE boot error for UEFI NixOS VM
 
 I want to explore NixOS.

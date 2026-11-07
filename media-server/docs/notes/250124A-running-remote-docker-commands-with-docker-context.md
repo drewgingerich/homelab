@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Running remote Docker commands with Docker context
 
 A [Docker context](https://docs.docker.com/engine/manage-resources/contexts/) allows me to run Docker commands on my laptop and

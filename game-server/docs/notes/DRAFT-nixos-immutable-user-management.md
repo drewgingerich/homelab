@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 I want to change my user and group set up.
 When I first installed NixOS, I hadn't given much though to it.
 

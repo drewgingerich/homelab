@@ -1,10 +1,9 @@
-# 5. Build a game server
+---
+tags:
+  - "scope:global"
+---
 
-Date: 2023-11-12
-
-## Status
-
-Pending
+# Build a game server
 
 ## Context
 

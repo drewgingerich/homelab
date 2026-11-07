@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 A new problem appeared!
 The graphics freeze a few seconds after starting a game through Steam.
 The game and audio continued to run fine.

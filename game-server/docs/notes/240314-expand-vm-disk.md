@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Expanding the game server VM disk
 
 When I created the game server VM, I gave it only 32 G of disk space.

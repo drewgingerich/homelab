@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Testing a new HDD
 
 I want to make sure that the new HDD I have is working well before I start putting data on it.

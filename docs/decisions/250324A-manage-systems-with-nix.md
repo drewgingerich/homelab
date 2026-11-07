@@ -1,3 +1,8 @@
+---
+tags:
+  - "scope:global"
+---
+
 # Manage systems with Nix
 
 Informed by [game-server/250301A: Use NixOS](/game-server/docs/decisions/250301A-use-nixos.md).

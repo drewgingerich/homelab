@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # 16. Use Restic to create and manage cloud backups to Backblaze B2
 
 ## Goals

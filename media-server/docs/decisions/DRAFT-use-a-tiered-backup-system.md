@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # 10. Use local offline backups
 
 Date: 2023-07-15

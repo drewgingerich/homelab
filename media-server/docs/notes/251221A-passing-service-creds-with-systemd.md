@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Passing service credentials with systemd
 
 I want secrets to live outside of my service definitions

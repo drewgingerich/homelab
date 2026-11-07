@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Configuring Steam to start on login
 
 I have been using Steam remote play.

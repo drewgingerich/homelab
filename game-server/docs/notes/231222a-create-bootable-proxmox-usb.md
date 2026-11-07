@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Create a bootable USB drive containing the Proxmox installer
 
 Proxmox has [installation instructions](https://pve.proxmox.com/pve-docs/chapter-pve-installation.html),

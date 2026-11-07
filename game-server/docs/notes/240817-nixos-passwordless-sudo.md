@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # NixOS: Passwordless sudo for user
 
 ```nix

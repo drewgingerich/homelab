@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 [Bazzite](https://bazzite.gg/) is a Linux distro focused on gaming.
 
 I added the Bazzite ISO to Proxmox and created a VM with settings for PCIe passthrough for the GPU.

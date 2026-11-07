@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Configure PCIe passthrough for the GPU
 
 PCIe passthrough allows IO devices like a GPU to be used directly by a VM,

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Setting up wireless PCVR
 
 I have a Meta Quest 3 headset.

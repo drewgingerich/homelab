@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Setting the resolution of a dummy HDMI plug
 
 I bought a [dummy HDMI plug from Adafruit](https://www.adafruit.com/product/4247)

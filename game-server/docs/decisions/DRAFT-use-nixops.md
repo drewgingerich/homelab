@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # 2. Use NixOS VM
 
 ## Problem

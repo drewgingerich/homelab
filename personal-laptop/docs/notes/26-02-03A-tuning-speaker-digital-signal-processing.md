@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 # Tuning the speakers
 
 Like the microphone, no digital signal processing appears to be applied to the speaker output by default.

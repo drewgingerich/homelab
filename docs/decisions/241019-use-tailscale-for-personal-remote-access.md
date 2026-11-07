@@ -1,3 +1,8 @@
+---
+tags:
+  - "scope:global"
+---
+
 # Use Tailscale to access computers remotely
 
 ## Problem

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Browsing files in a ZFS snapshot
 
 Recently I noticed that all the data for Actual budget had disappeared.

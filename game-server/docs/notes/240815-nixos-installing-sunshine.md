@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 https://github.com/NixOS/nixpkgs/blob/nixos-24.05/nixos/modules/services/networking/sunshine.nix
 
 ```nix

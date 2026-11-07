@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 # Troubleshooting slow wifi
 
 WiFi speed should be over 500 Mbps download, but I'm only getting 10.

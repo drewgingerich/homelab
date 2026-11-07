@@ -1,10 +1,9 @@
-# 2. Maintain a custom home media server
+---
+tags:
+  - "scope:global"
+---
 
-Date: 2023-09-27
-
-## Status
-
-Accepted
+# Maintain a custom home media server
 
 ## Context
 

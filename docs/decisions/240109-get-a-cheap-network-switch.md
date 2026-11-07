@@ -1,10 +1,9 @@
-# 6. Get a cheap network switch
+---
+tags:
+  - "scope:global"
+---
 
-Date: 2024-01-09
-
-## Status
-
-Accepted
+# Get a cheap network switch
 
 ## Context
 

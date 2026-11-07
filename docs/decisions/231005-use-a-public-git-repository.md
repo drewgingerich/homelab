@@ -1,10 +1,9 @@
-# 3. Use a public Git repository
+---
+tags:
+  - "scope:global"
+---
 
-Date: 2023-10-05
-
-## Status
-
-Accepted
+# Use a public Git repository
 
 ## Context
 

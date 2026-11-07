@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Installing NixOS on bare metal
 
 Now that I've [decided to go with a bare metal NixOS installation](/game-server/docs/decisions/250301A-use-nixos.md),

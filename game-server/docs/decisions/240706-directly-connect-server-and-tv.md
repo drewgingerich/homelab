@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Run cables to directly connect server to TV
 
 ## Problem

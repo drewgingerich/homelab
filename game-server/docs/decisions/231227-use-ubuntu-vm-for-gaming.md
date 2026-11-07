@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # 5. Use Ubuntu VM for gaming
 
 Date: 2023-12-27

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Auto-Mounting ZFS Datasets
 
 When the server reboots, the ZFS volumes are not automatically mounted.

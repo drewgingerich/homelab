@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Attaching a spare drive to an existing ZFS pool
 
 I have an extra HDD that I'd like to add to my ZFS pool as a hot spare.

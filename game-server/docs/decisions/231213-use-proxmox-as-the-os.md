@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # 2. Use Proxmox as the OS
 
 Date: 2023-12-13

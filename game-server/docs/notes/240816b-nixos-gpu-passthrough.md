@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 After adding the GPU as a PCIe device to the NixOS VM, I was no longer able to connect to Sunshine
 
 Getting the status from systemctl, it looks like the service is inactive.

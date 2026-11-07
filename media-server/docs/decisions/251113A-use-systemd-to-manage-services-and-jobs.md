@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Use systemd to manage services and jobs
 
 ## Problem

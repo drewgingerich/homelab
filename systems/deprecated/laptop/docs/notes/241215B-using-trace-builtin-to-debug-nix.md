@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # Using the trace builtin to debug nix
 
 The `builtins.trace` function can be used to print a value to stderr.

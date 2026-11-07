@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Install Proxmox
 
 I plugged in the bootable USB I [created earlier](./0001-create-bootable-proxmox-usb.md) and started the computer.

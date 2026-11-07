@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 ## Resources
 
 https://stackoverflow.com/questions/79719516/confused-as-to-what-systemd-credentials-does-for-me

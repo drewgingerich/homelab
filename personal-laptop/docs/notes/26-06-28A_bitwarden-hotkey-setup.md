@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 # Bitwarden hotkey setup
 
 I need to find a way to set up hotkeys for filling out login forms using credentials managed by Bitwarden.

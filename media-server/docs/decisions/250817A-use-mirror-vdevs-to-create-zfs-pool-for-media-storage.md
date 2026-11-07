@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Use 2-way mirror vdevs to create a ZFS pool for media storage
 
 Follows up [241106A - Use ZFS to manage media storage](media-server/docs/decisions/241106A-use-zfs-to-manage-media-storage.md)

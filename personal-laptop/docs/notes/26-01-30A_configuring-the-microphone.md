@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 # Configuring the microphone
 
 Out of the box, the builtin microphone doesn't work.

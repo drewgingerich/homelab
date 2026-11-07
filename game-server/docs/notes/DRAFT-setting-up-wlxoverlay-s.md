@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Setting up WlxOverlay-S
 
 I am trying to get [WlxOverlay-S](https://github.com/galister/wlx-overlay-s) to work.

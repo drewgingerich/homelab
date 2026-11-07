@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Migrating to NixOS
 
 Now that [I've decided to install NixOS on my media server](/media-server/docs/decisions/251004A-use-nixos.md),

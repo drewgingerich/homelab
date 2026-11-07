@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Use Moonlight and Sunshine to stream games
 
 ## Problem

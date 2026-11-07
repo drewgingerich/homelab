@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Troubleshooting bad IPMI password reset
 
 I tried changing the password of the IPMI admin user,

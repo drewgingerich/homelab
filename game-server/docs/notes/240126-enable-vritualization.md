@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Enable virtualization
 
 When I tried to start a virtual machine via the Proxmox UI,

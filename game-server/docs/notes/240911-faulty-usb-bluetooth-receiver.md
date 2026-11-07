@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 I bought a [StarTech.com USB Bluetooth 5.0 receiver](https://www.amazon.com/dp/B0B2737HPS?ref=ppx_pop_dt_b_product_details&th=1) to connect my controller using the ezcoo hub.
 At first this worked great, but pretty soon I experienced connection issues:
 

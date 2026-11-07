@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Configuring automatic suspend
 
 I don't want this computer to suspend when:

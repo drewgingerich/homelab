@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:media-server'
+---
+
 # Troubleshooting cyclic fan speeds
 
 After moving to the new case, I noticed that the fans would spin up a lot every few seconds.

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 Installing [Cemu](https://cemu.info/) was as fast as adding it as a system package:
 
 ```nix

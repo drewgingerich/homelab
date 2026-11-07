@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # Install home-manager
 
 I want to use [home-manager](https://github.com/nix-community/home-manager) to set up my user configuration.

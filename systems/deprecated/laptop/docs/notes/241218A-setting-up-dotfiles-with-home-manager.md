@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # Setting up dotfiles with Home Manager
 
 I want to use Home Manager to declaratively manage my dotfiles.

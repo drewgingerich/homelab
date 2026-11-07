@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 
 https://steamcommunity.com/sharedfiles/filedetails/?id=3202150060
 https://steamcommunity.com/sharedfiles/filedetails/?id=2386287653

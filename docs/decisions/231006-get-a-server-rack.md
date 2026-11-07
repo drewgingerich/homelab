@@ -1,10 +1,9 @@
-# 4. Get a server rack
+---
+tags:
+  - "scope:global"
+---
 
-Date: 2023-10-06
-
-## Status
-
-Accepted
+# Get a server rack
 
 ## Context
 

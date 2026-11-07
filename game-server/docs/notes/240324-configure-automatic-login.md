@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Configure Automatic User Login
 
 I don't want to have to log in when the computer boots.

@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 I'm curious about NixOS containers.
 
 I currently run services in Docker containers,

@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # `nix-darwin`: setting the user shell
 
 I currently like using the [fish shell](https://fishshell.com/),

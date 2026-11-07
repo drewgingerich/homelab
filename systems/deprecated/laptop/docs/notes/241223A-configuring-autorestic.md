@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 # Configuring autorestic
 
 I like to use [restic](https://restic.net/) for backups.

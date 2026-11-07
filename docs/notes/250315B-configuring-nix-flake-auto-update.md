@@ -1,3 +1,9 @@
+---
+tags:
+  - "scope:global"
+  - nix
+---
+
 # Configuring nix flake automatic updates
 
 I want to keep my system updated,

@@ -1,3 +1,9 @@
+---
+tags:
+  - 'scope:personal-laptop'
+  - 'os:darwin'
+---
+
 https://cuelang.org/
 https://www.reddit.com/r/NixOS/comments/uxsrd6/validate_and_generate_configuration_files_using/
 

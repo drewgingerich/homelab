@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Troubleshooting NixOS error: `access to absolute path '/home' is forbidden`
 
 While trying to integrate Home Manager into my NixOS config,

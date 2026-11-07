@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 After installing the rails and inserting the case, I noticed that one of the rails was not able to fully extend because it was getting stuck behind the rack.
 I did some research and saw that [poor fitment is a known issue with StarTech open racks](https://web.archive.org/web/20240106075009/https://old.reddit.com/r/sliger/comments/11bvvww/these_cases_will_not_fit_a_standard_19_rack/).
 

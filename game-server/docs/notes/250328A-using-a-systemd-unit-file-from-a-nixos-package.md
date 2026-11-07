@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:game-server'
+---
+
 # Using a systemd unit file from a NixOS package
 
 The [WiVRn NixOS module](https://github.com/NixOS/nixpkgs/blob/nixos-24.11/nixos/modules/services/video/wivrn.nix)

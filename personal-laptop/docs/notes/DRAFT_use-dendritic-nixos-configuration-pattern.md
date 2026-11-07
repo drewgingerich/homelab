@@ -1,3 +1,8 @@
+---
+tags:
+  - 'scope:personal-laptop'
+---
+
 # Use dendritic NixOS configuration pattern
 
 ## Problem
