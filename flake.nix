@@ -21,11 +21,11 @@
       imports = [
         inputs.home-manager.flakeModules.home-manager
 
-        # hosts
-        ./game-server/nix/flake-part.nix
-        ./media-server/nix/flake-part.nix
-        ./personal-laptop/nix/flake-part.nix
-        ./work-laptop/nix/flake-part.nix
+        # systems
+        ./systems/game-server/flake-part.nix
+        ./systems/media-server/flake-part.nix
+        ./systems/personal-laptop/flake-part.nix
+        ./systems/work-laptop/flake-part.nix
 
         (inputs.import-tree ./modules)
       ];
